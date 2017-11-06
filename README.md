@@ -17,17 +17,11 @@ To check if node and npm have been successfully installed, write the following c
 * `node --version`
 * `npm -version`
 
-![Version Check](https://apidocs.io/illustration/nodejs?step=versionCheck&workspaceFolder=Telstra%20Messaging%20API-Node)
-
 Now use npm to resolve all dependencies by running the following command in the root directory (of the SDK folder):
 
 ```bash
 npm install
 ```
-
-![Resolve Dependencies](https://apidocs.io/illustration/nodejs?step=resolveDependency1&workspaceFolder=Telstra%20Messaging%20API-Node)
-
-![Resolve Dependencies](https://apidocs.io/illustration/nodejs?step=resolveDependency2)
 
 This will install all dependencies in the `node_modules` folder.
 
