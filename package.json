@@ -1,39 +1,21 @@
 {
-  "name": "telstramessagingapilib",
-  "version": "2.2.3",
-  "description": " The Telstra SMS Messaging API allows your applications to send and receive SMS text messages from Australia's leading network operator.  It also allows your application to track the delivery status of both sent and received SMS messages. ",
-  "main": "./lib/index.js",
+  "name": "Telstra_Messaging",
+  "version": "1.0.1",
+  "description": "The_Telstra_SMS_Messaging_API_allows_your_applications_to_send_and_receive_SMS_text_messages_from_Australias_leading_network_operator_It_also_allows_your_application_to_track_the_delivery_status_of_both_sent_and_received_SMS_messages_",
+  "license": "MIT",
+  "main": "src/index.js",
   "scripts": {
-    "lint": "eslint lib"
+    "test": "./node_modules/mocha/bin/mocha --recursive"
   },
-  "keywords": [],
-  "author": "APIMATIC SDK Generator",
-  "bugs": {
-    "email": "support@apimatic.io"
-  },
-  "devDependencies": {
-    "eslint": "^3.18.0",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.10.3"
+  "browser": {
+    "fs": false
   },
   "dependencies": {
-    "request": "^2.55.0",
-    "moment": "^2.17.1"
+    "superagent": "3.5.2"
   },
-  "eslintConfig": {
-    "extends": "airbnb",
-    "env": {
-      "commonjs": true,
-      "node": true,
-      "mocha": true
-    },
-    "rules": {
-      "indent": ["error", 4],
-      "no-underscore-dangle": 0,
-      "strict": 0,
-      "prefer-rest-params": 0
-    }
+  "devDependencies": {
+    "mocha": "~2.3.4",
+    "sinon": "1.17.3",
+    "expect.js": "~0.3.1"
   }
 }
