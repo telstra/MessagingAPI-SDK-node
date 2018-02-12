@@ -16,18 +16,18 @@
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/ProvisionNumberRequest', 'model/ProvisionNumberResponse'], factory);
+    define(['ApiClient', 'model/DeleteNumberRequest', 'model/GetSubscriptionResponse', 'model/ProvisionNumberRequest', 'model/ProvisionNumberResponse'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('../ApiClient'), require('../model/ProvisionNumberRequest'), require('../model/ProvisionNumberResponse'));
+    module.exports = factory(require('../ApiClient'), require('../model/DeleteNumberRequest'), require('../model/GetSubscriptionResponse'), require('../model/ProvisionNumberRequest'), require('../model/ProvisionNumberResponse'));
   } else {
     // Browser globals (root is window)
     if (!root.TelstraMessaging) {
       root.TelstraMessaging = {};
     }
-    root.TelstraMessaging.ProvisioningApi = factory(root.TelstraMessaging.ApiClient, root.TelstraMessaging.ProvisionNumberRequest, root.TelstraMessaging.ProvisionNumberResponse);
+    root.TelstraMessaging.ProvisioningApi = factory(root.TelstraMessaging.ApiClient, root.TelstraMessaging.DeleteNumberRequest, root.TelstraMessaging.GetSubscriptionResponse, root.TelstraMessaging.ProvisionNumberRequest, root.TelstraMessaging.ProvisionNumberResponse);
   }
-}(this, function(ApiClient, ProvisionNumberRequest, ProvisionNumberResponse) {
+}(this, function(ApiClient, DeleteNumberRequest, GetSubscriptionResponse, ProvisionNumberRequest, ProvisionNumberResponse) {
   'use strict';
 
   /**
@@ -58,18 +58,12 @@
     /**
      * Create Subscription
      * Provision a mobile number
-     * @param {String} authorization An OAUTH bearer token that is entitled to use the &#39;SUBSCRIPTION&#39; scope.
      * @param {module:model/ProvisionNumberRequest} body A JSON payload containing the required attributes
      * @param {module:api/ProvisioningApi~createSubscriptionCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link module:model/ProvisionNumberResponse}
      */
-    this.createSubscription = function(authorization, body, callback) {
+    this.createSubscription = function(body, callback) {
       var postBody = body;
-
-      // verify the required parameter 'authorization' is set
-      if (authorization === undefined || authorization === null) {
-        throw new Error("Missing the required parameter 'authorization' when calling createSubscription");
-      }
 
       // verify the required parameter 'body' is set
       if (body === undefined || body === null) {
@@ -84,7 +78,6 @@
       var collectionQueryParams = {
       };
       var headerParams = {
-        'Authorization': authorization
       };
       var formParams = {
       };
@@ -112,15 +105,15 @@
     /**
      * Delete Subscription
      * Delete a mobile number subscription from an account
-     * @param {String} authorization An OAUTH bearer token that is entitled to use the &#39;SUBSCRIPTION&#39; scope.
+     * @param {module:model/DeleteNumberRequest} body EmptyArr
      * @param {module:api/ProvisioningApi~deleteSubscriptionCallback} callback The callback function, accepting three arguments: error, data, response
      */
-    this.deleteSubscription = function(authorization, callback) {
-      var postBody = null;
+    this.deleteSubscription = function(body, callback) {
+      var postBody = body;
 
-      // verify the required parameter 'authorization' is set
-      if (authorization === undefined || authorization === null) {
-        throw new Error("Missing the required parameter 'authorization' when calling deleteSubscription");
+      // verify the required parameter 'body' is set
+      if (body === undefined || body === null) {
+        throw new Error("Missing the required parameter 'body' when calling deleteSubscription");
       }
 
 
@@ -131,7 +124,6 @@
       var collectionQueryParams = {
       };
       var headerParams = {
-        'Authorization': authorization
       };
       var formParams = {
       };
@@ -152,24 +144,18 @@
      * Callback function to receive the result of the getSubscription operation.
      * @callback module:api/ProvisioningApi~getSubscriptionCallback
      * @param {String} error Error message, if any.
-     * @param {Array.<module:model/ProvisionNumberResponse>} data The data returned by the service call.
+     * @param {module:model/GetSubscriptionResponse} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
     /**
      * Get Subscription
      * Get mobile number subscription for an account
-     * @param {String} authorization An OAUTH bearer token that is entitled to use the &#39;SUBSCRIPTION&#39; scope.
      * @param {module:api/ProvisioningApi~getSubscriptionCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/ProvisionNumberResponse>}
+     * data is of type: {@link module:model/GetSubscriptionResponse}
      */
-    this.getSubscription = function(authorization, callback) {
+    this.getSubscription = function(callback) {
       var postBody = null;
-
-      // verify the required parameter 'authorization' is set
-      if (authorization === undefined || authorization === null) {
-        throw new Error("Missing the required parameter 'authorization' when calling getSubscription");
-      }
 
 
       var pathParams = {
@@ -179,7 +165,6 @@
       var collectionQueryParams = {
       };
       var headerParams = {
-        'Authorization': authorization
       };
       var formParams = {
       };
@@ -187,7 +172,7 @@
       var authNames = ['auth'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = [ProvisionNumberResponse];
+      var returnType = GetSubscriptionResponse;
 
       return this.apiClient.callApi(
         '/messages/provisioning/subscriptions', 'GET',

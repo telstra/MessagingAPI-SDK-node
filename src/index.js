@@ -16,12 +16,12 @@
 (function(factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['ApiClient', 'model/ErrorError', 'model/ErrorErrorError', 'model/InboundPollResponse', 'model/MMSContent', 'model/Message', 'model/MessageSentResponse', 'model/MessageType', 'model/OAuthRequest', 'model/OAuthResponse', 'model/OutboundPollResponse', 'model/ProvisionNumberRequest', 'model/ProvisionNumberResponse', 'model/SendMmsRequest', 'model/SendSMSRequest', 'model/Status', 'api/AuthenticationApi', 'api/MessagingApi', 'api/ProvisioningApi'], factory);
+    define(['ApiClient', 'model/DeleteNumberRequest', 'model/ErrorError', 'model/ErrorErrorError', 'model/GetSubscriptionResponse', 'model/InboundPollResponse', 'model/MMSContent', 'model/Message', 'model/MessageSentResponse', 'model/MessageType', 'model/OAuthRequest', 'model/OAuthResponse', 'model/OutboundPollResponse', 'model/ProvisionNumberRequest', 'model/ProvisionNumberResponse', 'model/SendMmsRequest', 'model/SendSMSRequest', 'model/Status', 'api/AuthenticationApi', 'api/MessagingApi', 'api/ProvisioningApi'], factory);
   } else if (typeof module === 'object' && module.exports) {
     // CommonJS-like environments that support module.exports, like Node.
-    module.exports = factory(require('./ApiClient'), require('./model/ErrorError'), require('./model/ErrorErrorError'), require('./model/InboundPollResponse'), require('./model/MMSContent'), require('./model/Message'), require('./model/MessageSentResponse'), require('./model/MessageType'), require('./model/OAuthRequest'), require('./model/OAuthResponse'), require('./model/OutboundPollResponse'), require('./model/ProvisionNumberRequest'), require('./model/ProvisionNumberResponse'), require('./model/SendMmsRequest'), require('./model/SendSMSRequest'), require('./model/Status'), require('./api/AuthenticationApi'), require('./api/MessagingApi'), require('./api/ProvisioningApi'));
+    module.exports = factory(require('./ApiClient'), require('./model/DeleteNumberRequest'), require('./model/ErrorError'), require('./model/ErrorErrorError'), require('./model/GetSubscriptionResponse'), require('./model/InboundPollResponse'), require('./model/MMSContent'), require('./model/Message'), require('./model/MessageSentResponse'), require('./model/MessageType'), require('./model/OAuthRequest'), require('./model/OAuthResponse'), require('./model/OutboundPollResponse'), require('./model/ProvisionNumberRequest'), require('./model/ProvisionNumberResponse'), require('./model/SendMmsRequest'), require('./model/SendSMSRequest'), require('./model/Status'), require('./api/AuthenticationApi'), require('./api/MessagingApi'), require('./api/ProvisioningApi'));
   }
-}(function(ApiClient, ErrorError, ErrorErrorError, InboundPollResponse, MMSContent, Message, MessageSentResponse, MessageType, OAuthRequest, OAuthResponse, OutboundPollResponse, ProvisionNumberRequest, ProvisionNumberResponse, SendMmsRequest, SendSMSRequest, Status, AuthenticationApi, MessagingApi, ProvisioningApi) {
+}(function(ApiClient, DeleteNumberRequest, ErrorError, ErrorErrorError, GetSubscriptionResponse, InboundPollResponse, MMSContent, Message, MessageSentResponse, MessageType, OAuthRequest, OAuthResponse, OutboundPollResponse, ProvisionNumberRequest, ProvisionNumberResponse, SendMmsRequest, SendSMSRequest, Status, AuthenticationApi, MessagingApi, ProvisioningApi) {
   'use strict';
 
   /**
@@ -62,6 +62,11 @@
      */
     ApiClient: ApiClient,
     /**
+     * The DeleteNumberRequest model constructor.
+     * @property {module:model/DeleteNumberRequest}
+     */
+    DeleteNumberRequest: DeleteNumberRequest,
+    /**
      * The ErrorError model constructor.
      * @property {module:model/ErrorError}
      */
@@ -71,6 +76,11 @@
      * @property {module:model/ErrorErrorError}
      */
     ErrorErrorError: ErrorErrorError,
+    /**
+     * The GetSubscriptionResponse model constructor.
+     * @property {module:model/GetSubscriptionResponse}
+     */
+    GetSubscriptionResponse: GetSubscriptionResponse,
     /**
      * The InboundPollResponse model constructor.
      * @property {module:model/InboundPollResponse}

@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**activeDays** | **Number** |  | [optional] 
-**notifyURL** | **String** |  | [optional] 
+**activeDays** | **Number** | Number of active days | [optional] 
+**notifyURL** | **String** | Notify url | [optional] 
 
 

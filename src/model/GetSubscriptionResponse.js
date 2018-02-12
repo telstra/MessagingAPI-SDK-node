@@ -25,7 +25,7 @@
     if (!root.TelstraMessaging) {
       root.TelstraMessaging = {};
     }
-    root.TelstraMessaging.ProvisionNumberResponse = factory(root.TelstraMessaging.ApiClient);
+    root.TelstraMessaging.GetSubscriptionResponse = factory(root.TelstraMessaging.ApiClient);
   }
 }(this, function(ApiClient) {
   'use strict';
@@ -34,33 +34,41 @@
 
 
   /**
-   * The ProvisionNumberResponse model module.
-   * @module model/ProvisionNumberResponse
+   * The GetSubscriptionResponse model module.
+   * @module model/GetSubscriptionResponse
    * @version 1.0.1
    */
 
   /**
-   * Constructs a new <code>ProvisionNumberResponse</code>.
-   * @alias module:model/ProvisionNumberResponse
+   * Constructs a new <code>GetSubscriptionResponse</code>.
+   * @alias module:model/GetSubscriptionResponse
    * @class
    */
   var exports = function() {
     var _this = this;
 
 
+
+
   };
 
   /**
-   * Constructs a <code>ProvisionNumberResponse</code> from a plain JavaScript object, optionally creating a new instance.
+   * Constructs a <code>GetSubscriptionResponse</code> from a plain JavaScript object, optionally creating a new instance.
    * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
    * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/ProvisionNumberResponse} obj Optional instance to populate.
-   * @return {module:model/ProvisionNumberResponse} The populated <code>ProvisionNumberResponse</code> instance.
+   * @param {module:model/GetSubscriptionResponse} obj Optional instance to populate.
+   * @return {module:model/GetSubscriptionResponse} The populated <code>GetSubscriptionResponse</code> instance.
    */
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
 
+      if (data.hasOwnProperty('activeDays')) {
+        obj['activeDays'] = ApiClient.convertToType(data['activeDays'], 'String');
+      }
+      if (data.hasOwnProperty('notifyURL')) {
+        obj['notifyURL'] = ApiClient.convertToType(data['notifyURL'], 'String');
+      }
       if (data.hasOwnProperty('destinationAddress')) {
         obj['destinationAddress'] = ApiClient.convertToType(data['destinationAddress'], 'String');
       }
@@ -68,6 +76,16 @@
     return obj;
   }
 
+  /**
+   * Number of active days
+   * @member {String} activeDays
+   */
+  exports.prototype['activeDays'] = undefined;
+  /**
+   * Notify url configured
+   * @member {String} notifyURL
+   */
+  exports.prototype['notifyURL'] = undefined;
   /**
    * The mobile phone number that was allocated
    * @member {String} destinationAddress

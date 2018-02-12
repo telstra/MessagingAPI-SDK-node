@@ -67,58 +67,58 @@
     if (data) {
       obj = obj || new exports();
 
-      if (data.hasOwnProperty('to')) {
-        obj['to'] = ApiClient.convertToType(data['to'], 'String');
+      if (data.hasOwnProperty('status')) {
+        obj['status'] = ApiClient.convertToType(data['status'], 'String');
       }
-      if (data.hasOwnProperty('from')) {
-        obj['from'] = ApiClient.convertToType(data['from'], 'String');
+      if (data.hasOwnProperty('destinationAddress')) {
+        obj['destinationAddress'] = ApiClient.convertToType(data['destinationAddress'], 'String');
       }
-      if (data.hasOwnProperty('body')) {
-        obj['body'] = ApiClient.convertToType(data['body'], 'String');
+      if (data.hasOwnProperty('senderAddress')) {
+        obj['senderAddress'] = ApiClient.convertToType(data['senderAddress'], 'String');
       }
-      if (data.hasOwnProperty('receivedTimestamp')) {
-        obj['receivedTimestamp'] = ApiClient.convertToType(data['receivedTimestamp'], 'String');
-      }
-      if (data.hasOwnProperty('moreMessages')) {
-        obj['moreMessages'] = ApiClient.convertToType(data['moreMessages'], 'Number');
+      if (data.hasOwnProperty('message')) {
+        obj['message'] = ApiClient.convertToType(data['message'], 'String');
       }
       if (data.hasOwnProperty('messageId')) {
         obj['messageId'] = ApiClient.convertToType(data['messageId'], 'String');
+      }
+      if (data.hasOwnProperty('sentTimestamp')) {
+        obj['sentTimestamp'] = ApiClient.convertToType(data['sentTimestamp'], 'String');
       }
     }
     return obj;
   }
 
   /**
-   * The phone number (recipient) that the message was sent to(in E.164 format).
-   * @member {String} to
+   * message status
+   * @member {String} status
    */
-  exports.prototype['to'] = undefined;
+  exports.prototype['status'] = undefined;
+  /**
+   * The phone number (recipient) that the message was sent to(in E.164 format).
+   * @member {String} destinationAddress
+   */
+  exports.prototype['destinationAddress'] = undefined;
   /**
    * The phone number (sender) that the message was sent from (in E.164 format).
-   * @member {String} from
+   * @member {String} senderAddress
    */
-  exports.prototype['from'] = undefined;
+  exports.prototype['senderAddress'] = undefined;
   /**
-   * Text body of the message that was sent
-   * @member {String} body
+   * Text of the message that was sent
+   * @member {String} message
    */
-  exports.prototype['body'] = undefined;
+  exports.prototype['message'] = undefined;
   /**
-   * The date and time when the message was recieved by recipient.
-   * @member {String} receivedTimestamp
-   */
-  exports.prototype['receivedTimestamp'] = undefined;
-  /**
-   * Indicates if there are more messages that can be polled from the server. 0=No more messages available. Anything else indicates there are more messages on the server.
-   * @member {Number} moreMessages
-   */
-  exports.prototype['moreMessages'] = undefined;
-  /**
-   * Optional message ID of the SMS you sent. Use this ID to view the message status or get responses.
+   * Message Id
    * @member {String} messageId
    */
   exports.prototype['messageId'] = undefined;
+  /**
+   * The date and time when the message was sent by recipient.
+   * @member {String} sentTimestamp
+   */
+  exports.prototype['sentTimestamp'] = undefined;
 
 
 

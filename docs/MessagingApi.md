@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 <a name="getMMSStatus"></a>
 # **getMMSStatus**
-> OutboundPollResponse getMMSStatus(messageid)
+> [OutboundPollResponse] getMMSStatus(messageid)
 
 Get MMS Status
 
@@ -51,7 +51,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**OutboundPollResponse**](OutboundPollResponse.md)
+[**[OutboundPollResponse]**](OutboundPollResponse.md)
 
 ### Authorization
 
@@ -64,7 +64,7 @@ Name | Type | Description  | Notes
 
 <a name="getSMSStatus"></a>
 # **getSMSStatus**
-> OutboundPollResponse getSMSStatus(messageId)
+> [OutboundPollResponse] getSMSStatus(messageId)
 
 Get SMS Status
 
@@ -102,7 +102,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**OutboundPollResponse**](OutboundPollResponse.md)
+[**[OutboundPollResponse]**](OutboundPollResponse.md)
 
 ### Authorization
 
@@ -115,7 +115,7 @@ Name | Type | Description  | Notes
 
 <a name="retrieveSMSResponses"></a>
 # **retrieveSMSResponses**
-> [InboundPollResponse] retrieveSMSResponses()
+> InboundPollResponse retrieveSMSResponses()
 
 Retrieve SMS Responses
 
@@ -147,7 +147,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**[InboundPollResponse]**](InboundPollResponse.md)
+[**InboundPollResponse**](InboundPollResponse.md)
 
 ### Authorization
 
@@ -160,7 +160,7 @@ This endpoint does not need any parameter.
 
 <a name="sendMMS"></a>
 # **sendMMS**
-> Object sendMMS(body)
+> MessageSentResponse sendMMS(body)
 
 Send MMS
 
@@ -198,7 +198,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Object**
+[**MessageSentResponse**](MessageSentResponse.md)
 
 ### Authorization
 

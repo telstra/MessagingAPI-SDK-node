@@ -25,7 +25,7 @@
     if (!root.TelstraMessaging) {
       root.TelstraMessaging = {};
     }
-    root.TelstraMessaging.ProvisionNumberResponse = factory(root.TelstraMessaging.ApiClient);
+    root.TelstraMessaging.DeleteNumberRequest = factory(root.TelstraMessaging.ApiClient);
   }
 }(this, function(ApiClient) {
   'use strict';
@@ -34,14 +34,14 @@
 
 
   /**
-   * The ProvisionNumberResponse model module.
-   * @module model/ProvisionNumberResponse
+   * The DeleteNumberRequest model module.
+   * @module model/DeleteNumberRequest
    * @version 1.0.1
    */
 
   /**
-   * Constructs a new <code>ProvisionNumberResponse</code>.
-   * @alias module:model/ProvisionNumberResponse
+   * Constructs a new <code>DeleteNumberRequest</code>.
+   * @alias module:model/DeleteNumberRequest
    * @class
    */
   var exports = function() {
@@ -51,28 +51,29 @@
   };
 
   /**
-   * Constructs a <code>ProvisionNumberResponse</code> from a plain JavaScript object, optionally creating a new instance.
+   * Constructs a <code>DeleteNumberRequest</code> from a plain JavaScript object, optionally creating a new instance.
    * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
    * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/ProvisionNumberResponse} obj Optional instance to populate.
-   * @return {module:model/ProvisionNumberResponse} The populated <code>ProvisionNumberResponse</code> instance.
+   * @param {module:model/DeleteNumberRequest} obj Optional instance to populate.
+   * @return {module:model/DeleteNumberRequest} The populated <code>DeleteNumberRequest</code> instance.
    */
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
 
-      if (data.hasOwnProperty('destinationAddress')) {
-        obj['destinationAddress'] = ApiClient.convertToType(data['destinationAddress'], 'String');
+      if (data.hasOwnProperty('emptyArr')) {
+        obj['emptyArr'] = ApiClient.convertToType(data['emptyArr'], 'Number');
       }
     }
     return obj;
   }
 
   /**
-   * The mobile phone number that was allocated
-   * @member {String} destinationAddress
+   * Empty Arr
+   * @member {Number} emptyArr
+   * @default 0
    */
-  exports.prototype['destinationAddress'] = undefined;
+  exports.prototype['emptyArr'] = 0;
 
 
 

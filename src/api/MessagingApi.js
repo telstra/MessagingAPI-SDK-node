@@ -51,7 +51,7 @@
      * Callback function to receive the result of the getMMSStatus operation.
      * @callback module:api/MessagingApi~getMMSStatusCallback
      * @param {String} error Error message, if any.
-     * @param {module:model/OutboundPollResponse} data The data returned by the service call.
+     * @param {Array.<module:model/OutboundPollResponse>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -60,7 +60,7 @@
      * Get MMS Status
      * @param {String} messageid Unique identifier of a message - it is the value returned from a previous POST call to https://api.telstra.com/v2/messages/mms
      * @param {module:api/MessagingApi~getMMSStatusCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/OutboundPollResponse}
+     * data is of type: {@link Array.<module:model/OutboundPollResponse>}
      */
     this.getMMSStatus = function(messageid, callback) {
       var postBody = null;
@@ -86,7 +86,7 @@
       var authNames = ['auth'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = OutboundPollResponse;
+      var returnType = [OutboundPollResponse];
 
       return this.apiClient.callApi(
         '/messages/mms/{messageid}/status', 'GET',
@@ -99,7 +99,7 @@
      * Callback function to receive the result of the getSMSStatus operation.
      * @callback module:api/MessagingApi~getSMSStatusCallback
      * @param {String} error Error message, if any.
-     * @param {module:model/OutboundPollResponse} data The data returned by the service call.
+     * @param {Array.<module:model/OutboundPollResponse>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -108,7 +108,7 @@
      * Get Message Status
      * @param {String} messageId Unique identifier of a message - it is the value returned from a previous POST call to https://api.telstra.com/v2/messages/sms
      * @param {module:api/MessagingApi~getSMSStatusCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/OutboundPollResponse}
+     * data is of type: {@link Array.<module:model/OutboundPollResponse>}
      */
     this.getSMSStatus = function(messageId, callback) {
       var postBody = null;
@@ -134,7 +134,7 @@
       var authNames = ['auth'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = OutboundPollResponse;
+      var returnType = [OutboundPollResponse];
 
       return this.apiClient.callApi(
         '/messages/sms/{messageId}/status', 'GET',
@@ -147,7 +147,7 @@
      * Callback function to receive the result of the retrieveSMSResponses operation.
      * @callback module:api/MessagingApi~retrieveSMSResponsesCallback
      * @param {String} error Error message, if any.
-     * @param {Array.<module:model/InboundPollResponse>} data The data returned by the service call.
+     * @param {module:model/InboundPollResponse} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -155,7 +155,7 @@
      * Retrieve SMS Responses
      * Retrieve Messages
      * @param {module:api/MessagingApi~retrieveSMSResponsesCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/InboundPollResponse>}
+     * data is of type: {@link module:model/InboundPollResponse}
      */
     this.retrieveSMSResponses = function(callback) {
       var postBody = null;
@@ -175,7 +175,7 @@
       var authNames = ['auth'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = [InboundPollResponse];
+      var returnType = InboundPollResponse;
 
       return this.apiClient.callApi(
         '/messages/sms', 'GET',
@@ -188,7 +188,7 @@
      * Callback function to receive the result of the sendMMS operation.
      * @callback module:api/MessagingApi~sendMMSCallback
      * @param {String} error Error message, if any.
-     * @param {Object} data The data returned by the service call.
+     * @param {module:model/MessageSentResponse} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -197,7 +197,7 @@
      * Send MMS
      * @param {module:model/SendMmsRequest} body A JSON or XML payload containing the recipient&#39;s phone number and MMS message.The recipient number should be in the format &#39;04xxxxxxxx&#39; where x is a digit
      * @param {module:api/MessagingApi~sendMMSCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Object}
+     * data is of type: {@link module:model/MessageSentResponse}
      */
     this.sendMMS = function(body, callback) {
       var postBody = body;
@@ -222,7 +222,7 @@
       var authNames = ['auth'];
       var contentTypes = ['application/json'];
       var accepts = ['application/json'];
-      var returnType = Object;
+      var returnType = MessageSentResponse;
 
       return this.apiClient.callApi(
         '/messages/mms', 'POST',

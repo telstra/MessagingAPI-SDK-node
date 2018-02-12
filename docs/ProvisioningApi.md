@@ -11,7 +11,7 @@ Method | HTTP request | Description
 
 <a name="createSubscription"></a>
 # **createSubscription**
-> ProvisionNumberResponse createSubscription(authorization, body)
+> ProvisionNumberResponse createSubscription(body)
 
 Create Subscription
 
@@ -28,8 +28,6 @@ auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.ProvisioningApi();
 
-var authorization = "authorization_example"; // String | An OAUTH bearer token that is entitled to use the 'SUBSCRIPTION' scope.
-
 var body = new TelstraMessaging.ProvisionNumberRequest(); // ProvisionNumberRequest | A JSON payload containing the required attributes
 
 
@@ -40,14 +38,13 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.createSubscription(authorization, body, callback);
+apiInstance.createSubscription(body, callback);
 ```
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **String**| An OAUTH bearer token that is entitled to use the &#39;SUBSCRIPTION&#39; scope. | 
  **body** | [**ProvisionNumberRequest**](ProvisionNumberRequest.md)| A JSON payload containing the required attributes | 
 
 ### Return type
@@ -65,7 +62,7 @@ Name | Type | Description  | Notes
 
 <a name="deleteSubscription"></a>
 # **deleteSubscription**
-> deleteSubscription(authorization)
+> deleteSubscription(body)
 
 Delete Subscription
 
@@ -82,7 +79,7 @@ auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.ProvisioningApi();
 
-var authorization = "authorization_example"; // String | An OAUTH bearer token that is entitled to use the 'SUBSCRIPTION' scope.
+var body = new TelstraMessaging.DeleteNumberRequest(); // DeleteNumberRequest | EmptyArr
 
 
 var callback = function(error, data, response) {
@@ -92,14 +89,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-apiInstance.deleteSubscription(authorization, callback);
+apiInstance.deleteSubscription(body, callback);
 ```
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **String**| An OAUTH bearer token that is entitled to use the &#39;SUBSCRIPTION&#39; scope. | 
+ **body** | [**DeleteNumberRequest**](DeleteNumberRequest.md)| EmptyArr | 
 
 ### Return type
 
@@ -116,7 +113,7 @@ null (empty response body)
 
 <a name="getSubscription"></a>
 # **getSubscription**
-> [ProvisionNumberResponse] getSubscription(authorization)
+> GetSubscriptionResponse getSubscription()
 
 Get Subscription
 
@@ -133,9 +130,6 @@ auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.ProvisioningApi();
 
-var authorization = "authorization_example"; // String | An OAUTH bearer token that is entitled to use the 'SUBSCRIPTION' scope.
-
-
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -143,18 +137,15 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.getSubscription(authorization, callback);
+apiInstance.getSubscription(callback);
 ```
 
 ### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **authorization** | **String**| An OAUTH bearer token that is entitled to use the &#39;SUBSCRIPTION&#39; scope. | 
+This endpoint does not need any parameter.
 
 ### Return type
 
-[**[ProvisionNumberResponse]**](ProvisionNumberResponse.md)
+[**GetSubscriptionResponse**](GetSubscriptionResponse.md)
 
 ### Authorization
 

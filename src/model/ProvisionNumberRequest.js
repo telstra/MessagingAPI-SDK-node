@@ -73,12 +73,12 @@
   }
 
   /**
-   * 
+   * Number of active days
    * @member {Number} activeDays
    */
   exports.prototype['activeDays'] = undefined;
   /**
-   * 
+   * Notify url
    * @member {String} notifyURL
    */
   exports.prototype['notifyURL'] = undefined;

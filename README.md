@@ -4,7 +4,7 @@ TelstraMessaging - JavaScript client for Telstra_Messaging
  The Telstra SMS Messaging API allows your applications to send and receive SMS text messages from Australia's leading network operator.  It also allows your application to track the delivery status of both sent and received SMS messages. 
 
 - API version: 2.2.4
-- Package version: 1.0.1
+- Package version: 1.0.2
 
 ## Installation
 
@@ -47,11 +47,11 @@ command above from.
 #### git
 #
 If the library is hosted at a git repository, e.g.
-https://github.com/Telstra/Messaging-SDK-PHP
+https://github.com/Telstra/MessagingAPI-SDK-node
 then install it via:
 
 ```shell
-    npm install Telstra/Messaging-SDK-PHP --save
+    npm install Telstra/MessagingAPI-SDK-node --save
 ```
 
 ### For browser
@@ -131,8 +131,10 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
+ - [TelstraMessaging.DeleteNumberRequest](docs/DeleteNumberRequest.md)
  - [TelstraMessaging.ErrorError](docs/ErrorError.md)
  - [TelstraMessaging.ErrorErrorError](docs/ErrorErrorError.md)
+ - [TelstraMessaging.GetSubscriptionResponse](docs/GetSubscriptionResponse.md)
  - [TelstraMessaging.InboundPollResponse](docs/InboundPollResponse.md)
  - [TelstraMessaging.MMSContent](docs/MMSContent.md)
  - [TelstraMessaging.Message](docs/Message.md)
@@ -148,14 +150,14 @@ Class | Method | HTTP request | Description
  - [TelstraMessaging.Status](docs/Status.md)
 
 
-## Documentation for Authorization
+## Documentation for Authorisation
 
 
 ### auth
 
 - **Type**: OAuth
 - **Flow**: application
-- **Authorization URL**: 
+- **Authorisation URL**: 
 - **Scopes**: 
   - NSMS: NSMS
 

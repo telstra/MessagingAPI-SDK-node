@@ -25,7 +25,7 @@
     if (!root.TelstraMessaging) {
       root.TelstraMessaging = {};
     }
-    root.TelstraMessaging.Message = factory(root.TelstraMessaging.ApiClient);
+    root.TelstraMessaging.AuthgeneratetokenpostResponse = factory(root.TelstraMessaging.ApiClient);
   }
 }(this, function(ApiClient) {
   'use strict';
@@ -34,50 +34,47 @@
 
 
   /**
-   * The Message model module.
-   * @module model/Message
+   * The AuthgeneratetokenpostResponse model module.
+   * @module model/AuthgeneratetokenpostResponse
    * @version 1.0.1
    */
 
   /**
-   * Constructs a new <code>Message</code>.
-   * @alias module:model/Message
+   * Constructs a new <code>AuthgeneratetokenpostResponse</code>.
+   * @alias module:model/AuthgeneratetokenpostResponse
    * @class
-   * @param to {String} 
-   * @param deliveryStatus {String} 
-   * @param messageId {String} 
    */
-  var exports = function(to, deliveryStatus, messageId) {
+  var exports = function() {
     var _this = this;
 
-    _this['to'] = to;
-    _this['deliveryStatus'] = deliveryStatus;
-    _this['messageId'] = messageId;
+
+
+
 
   };
 
   /**
-   * Constructs a <code>Message</code> from a plain JavaScript object, optionally creating a new instance.
+   * Constructs a <code>AuthgeneratetokenpostResponse</code> from a plain JavaScript object, optionally creating a new instance.
    * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
    * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/Message} obj Optional instance to populate.
-   * @return {module:model/Message} The populated <code>Message</code> instance.
+   * @param {module:model/AuthgeneratetokenpostResponse} obj Optional instance to populate.
+   * @return {module:model/AuthgeneratetokenpostResponse} The populated <code>AuthgeneratetokenpostResponse</code> instance.
    */
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
 
-      if (data.hasOwnProperty('to')) {
-        obj['to'] = ApiClient.convertToType(data['to'], 'String');
+      if (data.hasOwnProperty('access_token')) {
+        obj['access_token'] = ApiClient.convertToType(data['access_token'], 'String');
       }
-      if (data.hasOwnProperty('deliveryStatus')) {
-        obj['deliveryStatus'] = ApiClient.convertToType(data['deliveryStatus'], 'String');
+      if (data.hasOwnProperty('expires_in')) {
+        obj['expires_in'] = ApiClient.convertToType(data['expires_in'], 'Number');
       }
-      if (data.hasOwnProperty('messageId')) {
-        obj['messageId'] = ApiClient.convertToType(data['messageId'], 'String');
+      if (data.hasOwnProperty('refresh_token')) {
+        obj['refresh_token'] = ApiClient.convertToType(data['refresh_token'], 'String');
       }
-      if (data.hasOwnProperty('messageStatusURL')) {
-        obj['messageStatusURL'] = ApiClient.convertToType(data['messageStatusURL'], 'String');
+      if (data.hasOwnProperty('token_type')) {
+        obj['token_type'] = ApiClient.convertToType(data['token_type'], 'String');
       }
     }
     return obj;
@@ -85,24 +82,24 @@
 
   /**
    * 
-   * @member {String} to
+   * @member {String} access_token
    */
-  exports.prototype['to'] = undefined;
+  exports.prototype['access_token'] = undefined;
   /**
    * 
-   * @member {String} deliveryStatus
+   * @member {Number} expires_in
    */
-  exports.prototype['deliveryStatus'] = undefined;
+  exports.prototype['expires_in'] = undefined;
   /**
    * 
-   * @member {String} messageId
+   * @member {String} refresh_token
    */
-  exports.prototype['messageId'] = undefined;
+  exports.prototype['refresh_token'] = undefined;
   /**
    * 
-   * @member {String} messageStatusURL
+   * @member {String} token_type
    */
-  exports.prototype['messageStatusURL'] = undefined;
+  exports.prototype['token_type'] = undefined;
 
 
 

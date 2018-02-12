@@ -25,7 +25,7 @@
     if (!root.TelstraMessaging) {
       root.TelstraMessaging = {};
     }
-    root.TelstraMessaging.ProvisionNumberResponse = factory(root.TelstraMessaging.ApiClient);
+    root.TelstraMessaging.ErrorErrorError62 = factory(root.TelstraMessaging.ApiClient);
   }
 }(this, function(ApiClient) {
   'use strict';
@@ -34,45 +34,55 @@
 
 
   /**
-   * The ProvisionNumberResponse model module.
-   * @module model/ProvisionNumberResponse
+   * The ErrorErrorError62 model module.
+   * @module model/ErrorErrorError62
    * @version 1.0.1
    */
 
   /**
-   * Constructs a new <code>ProvisionNumberResponse</code>.
-   * @alias module:model/ProvisionNumberResponse
+   * Constructs a new <code>ErrorErrorError62</code>.
+   * @alias module:model/ErrorErrorError62
    * @class
+   * @param status {String} A short error code
    */
-  var exports = function() {
+  var exports = function(status) {
     var _this = this;
 
+    _this['status'] = status;
 
   };
 
   /**
-   * Constructs a <code>ProvisionNumberResponse</code> from a plain JavaScript object, optionally creating a new instance.
+   * Constructs a <code>ErrorErrorError62</code> from a plain JavaScript object, optionally creating a new instance.
    * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
    * @param {Object} data The plain JavaScript object bearing properties of interest.
-   * @param {module:model/ProvisionNumberResponse} obj Optional instance to populate.
-   * @return {module:model/ProvisionNumberResponse} The populated <code>ProvisionNumberResponse</code> instance.
+   * @param {module:model/ErrorErrorError62} obj Optional instance to populate.
+   * @return {module:model/ErrorErrorError62} The populated <code>ErrorErrorError62</code> instance.
    */
   exports.constructFromObject = function(data, obj) {
     if (data) {
       obj = obj || new exports();
 
-      if (data.hasOwnProperty('destinationAddress')) {
-        obj['destinationAddress'] = ApiClient.convertToType(data['destinationAddress'], 'String');
+      if (data.hasOwnProperty('status')) {
+        obj['status'] = ApiClient.convertToType(data['status'], 'String');
+      }
+      if (data.hasOwnProperty('message')) {
+        obj['message'] = ApiClient.convertToType(data['message'], 'String');
       }
     }
     return obj;
   }
 
   /**
-   * The mobile phone number that was allocated
-   * @member {String} destinationAddress
+   * A short error code
+   * @member {String} status
    */
-  exports.prototype['destinationAddress'] = undefined;
+  exports.prototype['status'] = undefined;
+  /**
+   * Message describing the error.
+   * @member {String} message
+   */
+  exports.prototype['message'] = undefined;
 
 
 
