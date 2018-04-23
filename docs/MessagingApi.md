@@ -68,7 +68,7 @@ Name | Type | Description  | Notes
 
 Get SMS Status
 
-Get Message Status
+If no notification URL has been specified, it is possible to poll for the message status. &lt;pre&gt;&lt;code class&#x3D;\&quot;language-sh\&quot;&gt;  #!/bin/bash   #!/bin/bash   # Example of how to poll for a message status   AccessToken&#x3D;\&quot;Consumer Access Token\&quot;   MessageId&#x3D;\&quot;Previous supplied Message Id, URL encoded\&quot;   curl -X get -H \&quot;Authorization: Bearer $AccessToken\&quot; \\     -H \&quot;Content-Type: application/json\&quot; \\     \&quot;https://tapi.telstra.com/v2/messages/sms/$MessageId\&quot; &lt;/code&gt;&lt;/pre&gt;  Note that the &#x60;MessageId&#x60; that appears in the URL must be URL encoded, just copying the &#x60;MessageId&#x60; as it was supplied when submitting the message may not work.
 
 ### Example
 ```javascript
@@ -81,7 +81,7 @@ auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.MessagingApi();
 
-var messageId = "messageId_example"; // String | Unique identifier of a message - it is the value returned from a previous POST call to https://api.telstra.com/v2/messages/sms
+var messageId = "messageId_example"; // String | Unique identifier of a message - it is the value returned from a previous POST call to https://api.telstra.com/v2/messages/sms.
 
 
 var callback = function(error, data, response) {
@@ -98,7 +98,7 @@ apiInstance.getSMSStatus(messageId, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **messageId** | **String**| Unique identifier of a message - it is the value returned from a previous POST call to https://api.telstra.com/v2/messages/sms | 
+ **messageId** | **String**| Unique identifier of a message - it is the value returned from a previous POST call to https://api.telstra.com/v2/messages/sms. | 
 
 ### Return type
 
@@ -119,7 +119,7 @@ Name | Type | Description  | Notes
 
 Retrieve SMS Responses
 
-Retrieve Messages
+Messages are retrieved one at a time, starting with the earliest response. The API supports the encoding of the full range of emojis in the reply message. The emojis will be in their UTF-8 format. If the subscription has a &#x60;notifyURL&#x60;, response messages will be logged there instead.
 
 ### Example
 ```javascript
@@ -215,7 +215,7 @@ Name | Type | Description  | Notes
 
 Send SMS
 
-Send Message
+Send an SMS Message to a single or multiple mobile number/s.  &lt;h3&gt;Send message to a single number: &lt;/h3&gt; &lt;pre&gt;&lt;code class&#x3D;\&quot;language-sh\&quot;&gt;  #!/bin/bash   # Use the Messaging API-v2 to send an SMS   # Note: only to: and body: are required   AccessToken&#x3D;\&quot;Access Token\&quot;   Dest&#x3D;\&quot;Destination number\&quot;   curl -X POST -H \&quot;Authorization: Bearer $AccessToken\&quot; -H \&quot;Content-Type: application/json\&quot; -d \&quot;{     \\\&quot;to\\\&quot;:\\\&quot;$Dest\\\&quot;,     \\\&quot;body\\\&quot;:\\\&quot;Test Message\\\&quot;,     \\\&quot;from\\\&quot;: \\\&quot;+61412345678\\\&quot;,     \\\&quot;validity\\\&quot;: 5,     \\\&quot;scheduledDelivery\\\&quot;: 1,     \\\&quot;notifyURL\\\&quot;: \\\&quot;\\\&quot;,     \\\&quot;replyRequest\\\&quot;: false     \\\&quot;priority\\\&quot;: true   }\&quot; \&quot;https://tapi.telstra.com/v2/messages/sms\&quot; &lt;/code&gt;&lt;/pre&gt;  \\ &lt;h3&gt;Send message to multiple numbers: &lt;/h3&gt; &lt;pre&gt;&lt;code class&#x3D;\&quot;language-sh\&quot;&gt; #!/bin/bash   # Use the Messaging API to send an SMS   AccessToken&#x3D;\&quot;Access Token\&quot;   Dest&#x3D;\&quot;Destination number\&quot;   curl -X post -H \&quot;Authorization: Bearer $AccessToken\&quot; \\     -H \&quot;Content-Type: application/json\&quot; \\     -d &#39;{ \&quot;to\&quot;:\&quot;$dest1, $dest2, $dest3\&quot;, \&quot;body\&quot;:\&quot;Test Message\&quot; }&#39; \\     https://tapi.telstra.com/v2/messages/sms   &lt;pre&gt;&lt;code class&#x3D;\&quot;language-sh\&quot;&gt;
 
 ### Example
 ```javascript
@@ -228,7 +228,7 @@ auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.MessagingApi();
 
-var payload = new TelstraMessaging.SendSMSRequest(); // SendSMSRequest | A JSON or XML payload containing the recipient's phone number and text message. The recipient number should be in the format '04xxxxxxxx' where x is a digit
+var payload = new TelstraMessaging.SendSMSRequest(); // SendSMSRequest | A JSON or XML payload containing the recipient's phone number and text message.  This number can be in international format if preceeded by a â€˜+â€™ or in national format ('04xxxxxxxx') where x is a digit.
 
 
 var callback = function(error, data, response) {
@@ -245,7 +245,7 @@ apiInstance.sendSMS(payload, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **payload** | [**SendSMSRequest**](SendSMSRequest.md)| A JSON or XML payload containing the recipient&#39;s phone number and text message. The recipient number should be in the format &#39;04xxxxxxxx&#39; where x is a digit | 
+ **payload** | [**SendSMSRequest**](SendSMSRequest.md)| A JSON or XML payload containing the recipient&#39;s phone number and text message.  This number can be in international format if preceeded by a â€˜+â€™ or in national format (&#39;04xxxxxxxx&#39;) where x is a digit. | 
 
 ### Return type
 

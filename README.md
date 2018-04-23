@@ -1,10 +1,9 @@
 # Telstra_Messaging
 
 TelstraMessaging - JavaScript client for Telstra_Messaging
- The Telstra SMS Messaging API allows your applications to send and receive SMS text messages from Australia's leading network operator.  It also allows your application to track the delivery status of both sent and received SMS messages. 
 
-- API version: 2.2.4
-- Package version: 1.0.2
+- API version: 2.2.6
+- Package version: 1.0.4
 
 ## Installation
 
@@ -118,7 +117,7 @@ All URIs are relative to *https://tapi.telstra.com/v2*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*TelstraMessaging.AuthenticationApi* | [**authToken**](docs/AuthenticationApi.md#authToken) | **POST** /oauth/token | Generate authentication token
+*TelstraMessaging.AuthenticationApi* | [**authToken**](docs/AuthenticationApi.md#authToken) | **POST** /oauth/token | Generate OAuth2 token
 *TelstraMessaging.MessagingApi* | [**getMMSStatus**](docs/MessagingApi.md#getMMSStatus) | **GET** /messages/mms/{messageid}/status | Get MMS Status
 *TelstraMessaging.MessagingApi* | [**getSMSStatus**](docs/MessagingApi.md#getSMSStatus) | **GET** /messages/sms/{messageId}/status | Get SMS Status
 *TelstraMessaging.MessagingApi* | [**retrieveSMSResponses**](docs/MessagingApi.md#retrieveSMSResponses) | **GET** /messages/sms | Retrieve SMS Responses
@@ -132,15 +131,11 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [TelstraMessaging.DeleteNumberRequest](docs/DeleteNumberRequest.md)
- - [TelstraMessaging.ErrorError](docs/ErrorError.md)
- - [TelstraMessaging.ErrorErrorError](docs/ErrorErrorError.md)
  - [TelstraMessaging.GetSubscriptionResponse](docs/GetSubscriptionResponse.md)
  - [TelstraMessaging.InboundPollResponse](docs/InboundPollResponse.md)
  - [TelstraMessaging.MMSContent](docs/MMSContent.md)
  - [TelstraMessaging.Message](docs/Message.md)
  - [TelstraMessaging.MessageSentResponse](docs/MessageSentResponse.md)
- - [TelstraMessaging.MessageType](docs/MessageType.md)
- - [TelstraMessaging.OAuthRequest](docs/OAuthRequest.md)
  - [TelstraMessaging.OAuthResponse](docs/OAuthResponse.md)
  - [TelstraMessaging.OutboundPollResponse](docs/OutboundPollResponse.md)
  - [TelstraMessaging.ProvisionNumberRequest](docs/ProvisionNumberRequest.md)
