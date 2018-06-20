@@ -3,7 +3,7 @@
 TelstraMessaging - JavaScript client for Telstra_Messaging
 
 - API version: 2.2.6
-- Package version: 1.0.4
+- Package version: 1.0.4.1
 
 ## Installation
 
@@ -92,13 +92,9 @@ Please follow the [installation](#installation) instruction and execute the foll
 var TelstraMessaging = require('Telstra_Messaging');
 
 var api = new TelstraMessaging.AuthenticationApi()
-
 var clientId = "clientId_example"; // {String} 
-
 var clientSecret = "clientSecret_example"; // {String} 
-
-var grantType = "client_credentials"; // {String} 
-
+var grantType = "'client_credentials'"; // {String} 
 
 var callback = function(error, data, response) {
   if (error) {
@@ -120,6 +116,7 @@ Class | Method | HTTP request | Description
 *TelstraMessaging.AuthenticationApi* | [**authToken**](docs/AuthenticationApi.md#authToken) | **POST** /oauth/token | Generate OAuth2 token
 *TelstraMessaging.MessagingApi* | [**getMMSStatus**](docs/MessagingApi.md#getMMSStatus) | **GET** /messages/mms/{messageid}/status | Get MMS Status
 *TelstraMessaging.MessagingApi* | [**getSMSStatus**](docs/MessagingApi.md#getSMSStatus) | **GET** /messages/sms/{messageId}/status | Get SMS Status
+*TelstraMessaging.MessagingApi* | [**retrieveMMSResponses**](docs/MessagingApi.md#retrieveMMSResponses) | **GET** /messages/mms | Retrieve MMS Responses
 *TelstraMessaging.MessagingApi* | [**retrieveSMSResponses**](docs/MessagingApi.md#retrieveSMSResponses) | **GET** /messages/sms | Retrieve SMS Responses
 *TelstraMessaging.MessagingApi* | [**sendMMS**](docs/MessagingApi.md#sendMMS) | **POST** /messages/mms | Send MMS
 *TelstraMessaging.MessagingApi* | [**sendSMS**](docs/MessagingApi.md#sendSMS) | **POST** /messages/sms | Send SMS

@@ -11,26 +11,22 @@ Method | HTTP request | Description
 
 <a name="createSubscription"></a>
 # **createSubscription**
-> ProvisionNumberResponse createSubscription(body)
+> ProvisionNumberResponse createSubscription(provisionNumberRequest)
 
 Create Subscription
 
-Invoke the provisioning API to get a dedicated mobile number for an account or application.  &lt;pre&gt;&lt;code class&#x3D;\&quot;language-sh\&quot;&gt;   #!/bin/bash   curl -X POST \\   https://tapi.telstra.com/v2/messages/provisioning/subscriptions \\   -H &#39;authorization: Bearer $ACCESS_TOKEN&#39; \\   -H &#39;cache-control: no-cache&#39; \\   -H &#39;content-type: application/json&#39; \\   -d &#39;{   \&quot;activeDays\&quot;:30,   \&quot;notifyURL\&quot;:\&quot;http://example.com/callback\&quot;,   \&quot;callbackData\&quot;:     {       \&quot;anything\&quot;:\&quot;some data\&quot;     }   }&#39; &lt;/code&gt;&lt;/pre&gt;
+Invoke the provisioning API to get a dedicated mobile number for an account or application. 
 
 ### Example
 ```javascript
 var TelstraMessaging = require('Telstra_Messaging');
 var defaultClient = TelstraMessaging.ApiClient.instance;
-
 // Configure OAuth2 access token for authorization: auth
 var auth = defaultClient.authentications['auth'];
 auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.ProvisioningApi();
-
-var body = new TelstraMessaging.ProvisionNumberRequest(); // ProvisionNumberRequest | A JSON payload containing the required attributes
-
-
+var provisionNumberRequest = new TelstraMessaging.ProvisionNumberRequest(); // ProvisionNumberRequest | A JSON payload containing the required attributes
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -38,14 +34,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.createSubscription(body, callback);
+apiInstance.createSubscription(provisionNumberRequest, callback);
 ```
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**ProvisionNumberRequest**](ProvisionNumberRequest.md)| A JSON payload containing the required attributes | 
+ **provisionNumberRequest** | [**ProvisionNumberRequest**](ProvisionNumberRequest.md)| A JSON payload containing the required attributes | 
 
 ### Return type
 
@@ -62,26 +58,22 @@ Name | Type | Description  | Notes
 
 <a name="deleteSubscription"></a>
 # **deleteSubscription**
-> deleteSubscription(body)
+> deleteSubscription(deleteNumberRequest)
 
 Delete Subscription
 
-Delete a mobile number subscription from an account
+Delete a mobile number subscription from an account 
 
 ### Example
 ```javascript
 var TelstraMessaging = require('Telstra_Messaging');
 var defaultClient = TelstraMessaging.ApiClient.instance;
-
 // Configure OAuth2 access token for authorization: auth
 var auth = defaultClient.authentications['auth'];
 auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.ProvisioningApi();
-
-var body = new TelstraMessaging.DeleteNumberRequest(); // DeleteNumberRequest | EmptyArr
-
-
+var deleteNumberRequest = new TelstraMessaging.DeleteNumberRequest(); // DeleteNumberRequest | EmptyArr
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -89,14 +81,14 @@ var callback = function(error, data, response) {
     console.log('API called successfully.');
   }
 };
-apiInstance.deleteSubscription(body, callback);
+apiInstance.deleteSubscription(deleteNumberRequest, callback);
 ```
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**DeleteNumberRequest**](DeleteNumberRequest.md)| EmptyArr | 
+ **deleteNumberRequest** | [**DeleteNumberRequest**](DeleteNumberRequest.md)| EmptyArr | 
 
 ### Return type
 
@@ -109,7 +101,7 @@ null (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Accept**: Not defined
 
 <a name="getSubscription"></a>
 # **getSubscription**
@@ -117,19 +109,17 @@ null (empty response body)
 
 Get Subscription
 
-Get mobile number subscription for an account
+Get mobile number subscription for an account 
 
 ### Example
 ```javascript
 var TelstraMessaging = require('Telstra_Messaging');
 var defaultClient = TelstraMessaging.ApiClient.instance;
-
 // Configure OAuth2 access token for authorization: auth
 var auth = defaultClient.authentications['auth'];
 auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.ProvisioningApi();
-
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -153,6 +143,6 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
