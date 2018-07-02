@@ -209,8 +209,7 @@ var auth = defaultClient.authentications['auth'];
 auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.MessagingApi();
-var sendMmsRequest = new TelstraMessaging.SendMmsRequest(); // SendMmsRequest | A JSON or XML payload containing the recipient's phone number and MMS message.
-The recipient number should be in the format '04xxxxxxxx' where x is a digit.
+var sendMmsRequest = new TelstraMessaging.SendMmsRequest(); // SendMmsRequest | A JSON or XML payload containing the recipient's phone number and MMS message. The recipient number should be in the format '04xxxxxxxx' where x is a digit.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -226,8 +225,7 @@ apiInstance.sendMMS(sendMmsRequest, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **sendMmsRequest** | [**SendMmsRequest**](SendMmsRequest.md)| A JSON or XML payload containing the recipient&#39;s phone number and MMS message.
-The recipient number should be in the format &#39;04xxxxxxxx&#39; where x is a digit.
+ **sendMmsRequest** | [**SendMmsRequest**](SendMmsRequest.md)| A JSON or XML payload containing the recipient&#39;s phone number and MMS message. The recipient number should be in the format &#39;04xxxxxxxx&#39; where x is a digit.
  | 
 
 ### Return type
@@ -260,8 +258,7 @@ var auth = defaultClient.authentications['auth'];
 auth.accessToken = 'YOUR ACCESS TOKEN';
 
 var apiInstance = new TelstraMessaging.MessagingApi();
-var sendSMSRequest = new TelstraMessaging.SendSMSRequest(); // SendSMSRequest | A JSON or XML payload containing the recipient's phone number and text message.
-This number can be in international format if preceeded by a â€˜+â€™ or in national format ('04xxxxxxxx') where x is a digit.
+var sendSMSRequest = new TelstraMessaging.SendSMSRequest(); // SendSMSRequest | A JSON or XML payload containing the recipient's phone number and text message. This number can be in international format if preceeded by a '+' or in national format ('04xxxxxxxx') where x is a digit.
 
 var callback = function(error, data, response) {
   if (error) {
@@ -277,8 +274,7 @@ apiInstance.sendSMS(sendSMSRequest, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **sendSMSRequest** | [**SendSMSRequest**](SendSMSRequest.md)| A JSON or XML payload containing the recipient&#39;s phone number and text message.
-This number can be in international format if preceeded by a â€˜+â€™ or in national format (&#39;04xxxxxxxx&#39;) where x is a digit.
+ **sendSMSRequest** | [**SendSMSRequest**](SendSMSRequest.md)| A JSON or XML payload containing the recipient&#39;s phone number and text message. This number can be in international format if preceeded by a &#39;+&#39; or in national format (&#39;04xxxxxxxx&#39;) where x is a digit.
  | 
 
 ### Return type
