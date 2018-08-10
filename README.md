@@ -2,8 +2,8 @@
 
 TelstraMessaging - JavaScript client for Telstra_Messaging
 
-- API version: 2.2.7
-- Package version: 1.0.5
+- API version: 2.2.9
+- Package version: 1.0.6
 
 ## Installation
 
