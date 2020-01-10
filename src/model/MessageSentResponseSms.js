@@ -11,73 +11,96 @@
  *
  */
 
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD.
-    define(['expect.js', process.cwd()+'/src/index'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // CommonJS-like environments that support module.exports, like Node.
-    factory(require('expect.js'), require(process.cwd()+'/src/index'));
-  } else {
-    // Browser globals (root is window)
-    factory(root.expect, root.TelstraMessagingApi);
-  }
-}(this, function(expect, TelstraMessagingApi) {
-  'use strict';
+import ApiClient from '../ApiClient';
+import Message from './Message';
 
-  var instance;
+/**
+ * The MessageSentResponseSms model module.
+ * @module model/MessageSentResponseSms
+ * @version 2.2.9
+ */
+class MessageSentResponseSms {
+    /**
+     * Constructs a new <code>MessageSentResponseSms</code>.
+     * @alias module:model/MessageSentResponseSms
+     * @param messages {Array.<module:model/Message>} An array of messages.
+     * @param messageType {String} This returns whether the message sent was a SMS or MMS.
+     * @param numberSegments {Number} A message which has 160 GSM-7 characters or less will have numberSegments=1. Note that multi-part messages which are over 160 GSM-7 characters will include the User Data Header as part of the numberSegments. The User Data Header is being used for the re-assembly of the messages. 
+     */
+    constructor(messages, messageType, numberSegments) { 
+        
+        MessageSentResponseSms.initialize(this, messages, messageType, numberSegments);
+    }
 
-  beforeEach(function() {
-    instance = new TelstraMessagingApi.ProvisioningApi();
-  });
+    /**
+     * Initializes the fields of this object.
+     * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
+     * Only for internal use.
+     */
+    static initialize(obj, messages, messageType, numberSegments) { 
+        obj['messages'] = messages;
+        obj['messageType'] = messageType;
+        obj['numberSegments'] = numberSegments;
+    }
 
-  var getProperty = function(object, getter, property) {
-    // Use getter method if present; otherwise, get the property directly.
-    if (typeof object[getter] === 'function')
-      return object[getter]();
-    else
-      return object[property];
-  }
+    /**
+     * Constructs a <code>MessageSentResponseSms</code> from a plain JavaScript object, optionally creating a new instance.
+     * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+     * @param {Object} data The plain JavaScript object bearing properties of interest.
+     * @param {module:model/MessageSentResponseSms} obj Optional instance to populate.
+     * @return {module:model/MessageSentResponseSms} The populated <code>MessageSentResponseSms</code> instance.
+     */
+    static constructFromObject(data, obj) {
+        if (data) {
+            obj = obj || new MessageSentResponseSms();
 
-  var setProperty = function(object, setter, property, value) {
-    // Use setter method if present; otherwise, set the property directly.
-    if (typeof object[setter] === 'function')
-      object[setter](value);
-    else
-      object[property] = value;
-  }
+            if (data.hasOwnProperty('messages')) {
+                obj['messages'] = ApiClient.convertToType(data['messages'], [Message]);
+            }
+            if (data.hasOwnProperty('Country')) {
+                obj['Country'] = ApiClient.convertToType(data['Country'], [Object]);
+            }
+            if (data.hasOwnProperty('messageType')) {
+                obj['messageType'] = ApiClient.convertToType(data['messageType'], 'String');
+            }
+            if (data.hasOwnProperty('numberSegments')) {
+                obj['numberSegments'] = ApiClient.convertToType(data['numberSegments'], 'Number');
+            }
+        }
+        return obj;
+    }
 
-  describe('ProvisioningApi', function() {
-    describe('createSubscription', function() {
-      it('should call createSubscription successfully', function(done) {
-        //uncomment below and update the code to test createSubscription
-        //instance.createSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('deleteSubscription', function() {
-      it('should call deleteSubscription successfully', function(done) {
-        //uncomment below and update the code to test deleteSubscription
-        //instance.deleteSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('getSubscription', function() {
-      it('should call getSubscription successfully', function(done) {
-        //uncomment below and update the code to test getSubscription
-        //instance.getSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-  });
 
-}));
+}
+
+/**
+ * An array of messages.
+ * @member {Array.<module:model/Message>} messages
+ */
+MessageSentResponseSms.prototype['messages'] = undefined;
+
+/**
+ * An array of the countries to which the destination MSISDNs belong.
+ * @member {Array.<Object>} Country
+ */
+MessageSentResponseSms.prototype['Country'] = undefined;
+
+/**
+ * This returns whether the message sent was a SMS or MMS.
+ * @member {String} messageType
+ */
+MessageSentResponseSms.prototype['messageType'] = undefined;
+
+/**
+ * A message which has 160 GSM-7 characters or less will have numberSegments=1. Note that multi-part messages which are over 160 GSM-7 characters will include the User Data Header as part of the numberSegments. The User Data Header is being used for the re-assembly of the messages. 
+ * @member {Number} numberSegments
+ */
+MessageSentResponseSms.prototype['numberSegments'] = undefined;
+
+
+
+
+
+
+export default MessageSentResponseSms;
+

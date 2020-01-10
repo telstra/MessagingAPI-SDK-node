@@ -28,7 +28,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new TelstraMessagingApi.ProvisioningApi();
+    instance = new TelstraMessagingApi.GetMmsResponse();
   });
 
   var getProperty = function(object, getter, property) {
@@ -47,37 +47,61 @@
       object[property] = value;
   }
 
-  describe('ProvisioningApi', function() {
-    describe('createSubscription', function() {
-      it('should call createSubscription successfully', function(done) {
-        //uncomment below and update the code to test createSubscription
-        //instance.createSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+  describe('GetMmsResponse', function() {
+    it('should create an instance of GetMmsResponse', function() {
+      // uncomment below and update the code to test GetMmsResponse
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be.a(TelstraMessagingApi.GetMmsResponse);
     });
-    describe('deleteSubscription', function() {
-      it('should call deleteSubscription successfully', function(done) {
-        //uncomment below and update the code to test deleteSubscription
-        //instance.deleteSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+
+    it('should have the property status (base name: "status")', function() {
+      // uncomment below and update the code to test the property status
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be();
     });
-    describe('getSubscription', function() {
-      it('should call getSubscription successfully', function(done) {
-        //uncomment below and update the code to test getSubscription
-        //instance.getSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+
+    it('should have the property destinationAddress (base name: "destinationAddress")', function() {
+      // uncomment below and update the code to test the property destinationAddress
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be();
     });
+
+    it('should have the property senderAddress (base name: "senderAddress")', function() {
+      // uncomment below and update the code to test the property senderAddress
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property subject (base name: "subject")', function() {
+      // uncomment below and update the code to test the property subject
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property messageId (base name: "messageId")', function() {
+      // uncomment below and update the code to test the property messageId
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property apiMsgId (base name: "apiMsgId")', function() {
+      // uncomment below and update the code to test the property apiMsgId
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property sentTimestamp (base name: "sentTimestamp")', function() {
+      // uncomment below and update the code to test the property sentTimestamp
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property mMSContent (base name: "MMSContent")', function() {
+      // uncomment below and update the code to test the property mMSContent
+      //var instane = new TelstraMessagingApi.GetMmsResponse();
+      //expect(instance).to.be();
+    });
+
   });
 
 }));

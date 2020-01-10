@@ -11,73 +11,72 @@
  *
  */
 
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD.
-    define(['expect.js', process.cwd()+'/src/index'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // CommonJS-like environments that support module.exports, like Node.
-    factory(require('expect.js'), require(process.cwd()+'/src/index'));
-  } else {
-    // Browser globals (root is window)
-    factory(root.expect, root.TelstraMessagingApi);
-  }
-}(this, function(expect, TelstraMessagingApi) {
-  'use strict';
+import ApiClient from '../ApiClient';
+import MessageMulti from './MessageMulti';
 
-  var instance;
+/**
+ * The SendSmsMultiRequest model module.
+ * @module model/SendSmsMultiRequest
+ * @version 2.2.9
+ */
+class SendSmsMultiRequest {
+    /**
+     * Constructs a new <code>SendSmsMultiRequest</code>.
+     * @alias module:model/SendSmsMultiRequest
+     */
+    constructor() { 
+        
+        SendSmsMultiRequest.initialize(this);
+    }
 
-  beforeEach(function() {
-    instance = new TelstraMessagingApi.ProvisioningApi();
-  });
+    /**
+     * Initializes the fields of this object.
+     * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
+     * Only for internal use.
+     */
+    static initialize(obj) { 
+    }
 
-  var getProperty = function(object, getter, property) {
-    // Use getter method if present; otherwise, get the property directly.
-    if (typeof object[getter] === 'function')
-      return object[getter]();
-    else
-      return object[property];
-  }
+    /**
+     * Constructs a <code>SendSmsMultiRequest</code> from a plain JavaScript object, optionally creating a new instance.
+     * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+     * @param {Object} data The plain JavaScript object bearing properties of interest.
+     * @param {module:model/SendSmsMultiRequest} obj Optional instance to populate.
+     * @return {module:model/SendSmsMultiRequest} The populated <code>SendSmsMultiRequest</code> instance.
+     */
+    static constructFromObject(data, obj) {
+        if (data) {
+            obj = obj || new SendSmsMultiRequest();
 
-  var setProperty = function(object, setter, property, value) {
-    // Use setter method if present; otherwise, set the property directly.
-    if (typeof object[setter] === 'function')
-      object[setter](value);
-    else
-      object[property] = value;
-  }
+            if (data.hasOwnProperty('smsMulti')) {
+                obj['smsMulti'] = ApiClient.convertToType(data['smsMulti'], [MessageMulti]);
+            }
+            if (data.hasOwnProperty('notiyURL')) {
+                obj['notiyURL'] = ApiClient.convertToType(data['notiyURL'], 'String');
+            }
+        }
+        return obj;
+    }
 
-  describe('ProvisioningApi', function() {
-    describe('createSubscription', function() {
-      it('should call createSubscription successfully', function(done) {
-        //uncomment below and update the code to test createSubscription
-        //instance.createSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('deleteSubscription', function() {
-      it('should call deleteSubscription successfully', function(done) {
-        //uncomment below and update the code to test deleteSubscription
-        //instance.deleteSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('getSubscription', function() {
-      it('should call getSubscription successfully', function(done) {
-        //uncomment below and update the code to test getSubscription
-        //instance.getSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-  });
 
-}));
+}
+
+/**
+ * Multiple SMS. Up to 10 messages can be sent in one API call.
+ * @member {Array.<module:model/MessageMulti>} smsMulti
+ */
+SendSmsMultiRequest.prototype['smsMulti'] = undefined;
+
+/**
+ * Contains a URL that will be called once your message has been processed. The status may be delivered, expired, deleted, etc. Please refer to the Delivery Status section for more information.  If you are using a domain URL you must include the forward slash at the end of the URL (e.g. http://www.example.com/). 
+ * @member {String} notiyURL
+ */
+SendSmsMultiRequest.prototype['notiyURL'] = undefined;
+
+
+
+
+
+
+export default SendSmsMultiRequest;
+

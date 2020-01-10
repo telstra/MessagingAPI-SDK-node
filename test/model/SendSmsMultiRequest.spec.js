@@ -28,7 +28,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new TelstraMessagingApi.ProvisioningApi();
+    instance = new TelstraMessagingApi.SendSmsMultiRequest();
   });
 
   var getProperty = function(object, getter, property) {
@@ -47,37 +47,25 @@
       object[property] = value;
   }
 
-  describe('ProvisioningApi', function() {
-    describe('createSubscription', function() {
-      it('should call createSubscription successfully', function(done) {
-        //uncomment below and update the code to test createSubscription
-        //instance.createSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+  describe('SendSmsMultiRequest', function() {
+    it('should create an instance of SendSmsMultiRequest', function() {
+      // uncomment below and update the code to test SendSmsMultiRequest
+      //var instane = new TelstraMessagingApi.SendSmsMultiRequest();
+      //expect(instance).to.be.a(TelstraMessagingApi.SendSmsMultiRequest);
     });
-    describe('deleteSubscription', function() {
-      it('should call deleteSubscription successfully', function(done) {
-        //uncomment below and update the code to test deleteSubscription
-        //instance.deleteSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+
+    it('should have the property smsMulti (base name: "smsMulti")', function() {
+      // uncomment below and update the code to test the property smsMulti
+      //var instane = new TelstraMessagingApi.SendSmsMultiRequest();
+      //expect(instance).to.be();
     });
-    describe('getSubscription', function() {
-      it('should call getSubscription successfully', function(done) {
-        //uncomment below and update the code to test getSubscription
-        //instance.getSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+
+    it('should have the property notiyURL (base name: "notiyURL")', function() {
+      // uncomment below and update the code to test the property notiyURL
+      //var instane = new TelstraMessagingApi.SendSmsMultiRequest();
+      //expect(instance).to.be();
     });
+
   });
 
 }));

@@ -28,7 +28,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new TelstraMessagingApi.ProvisioningApi();
+    instance = new TelstraMessagingApi.MessageSentResponseMms();
   });
 
   var getProperty = function(object, getter, property) {
@@ -47,37 +47,43 @@
       object[property] = value;
   }
 
-  describe('ProvisioningApi', function() {
-    describe('createSubscription', function() {
-      it('should call createSubscription successfully', function(done) {
-        //uncomment below and update the code to test createSubscription
-        //instance.createSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+  describe('MessageSentResponseMms', function() {
+    it('should create an instance of MessageSentResponseMms', function() {
+      // uncomment below and update the code to test MessageSentResponseMms
+      //var instane = new TelstraMessagingApi.MessageSentResponseMms();
+      //expect(instance).to.be.a(TelstraMessagingApi.MessageSentResponseMms);
     });
-    describe('deleteSubscription', function() {
-      it('should call deleteSubscription successfully', function(done) {
-        //uncomment below and update the code to test deleteSubscription
-        //instance.deleteSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+
+    it('should have the property messages (base name: "messages")', function() {
+      // uncomment below and update the code to test the property messages
+      //var instane = new TelstraMessagingApi.MessageSentResponseMms();
+      //expect(instance).to.be();
     });
-    describe('getSubscription', function() {
-      it('should call getSubscription successfully', function(done) {
-        //uncomment below and update the code to test getSubscription
-        //instance.getSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+
+    it('should have the property mmsMediaKB (base name: "MmsMediaKB")', function() {
+      // uncomment below and update the code to test the property mmsMediaKB
+      //var instane = new TelstraMessagingApi.MessageSentResponseMms();
+      //expect(instance).to.be();
     });
+
+    it('should have the property country (base name: "Country")', function() {
+      // uncomment below and update the code to test the property country
+      //var instane = new TelstraMessagingApi.MessageSentResponseMms();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property messageType (base name: "messageType")', function() {
+      // uncomment below and update the code to test the property messageType
+      //var instane = new TelstraMessagingApi.MessageSentResponseMms();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property numberSegments (base name: "numberSegments")', function() {
+      // uncomment below and update the code to test the property numberSegments
+      //var instane = new TelstraMessagingApi.MessageSentResponseMms();
+      //expect(instance).to.be();
+    });
+
   });
 
 }));

@@ -11,73 +11,80 @@
  *
  */
 
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD.
-    define(['expect.js', process.cwd()+'/src/index'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // CommonJS-like environments that support module.exports, like Node.
-    factory(require('expect.js'), require(process.cwd()+'/src/index'));
-  } else {
-    // Browser globals (root is window)
-    factory(root.expect, root.TelstraMessagingApi);
-  }
-}(this, function(expect, TelstraMessagingApi) {
-  'use strict';
+import ApiClient from '../ApiClient';
 
-  var instance;
+/**
+ * The MessageMulti model module.
+ * @module model/MessageMulti
+ * @version 2.2.9
+ */
+class MessageMulti {
+    /**
+     * Constructs a new <code>MessageMulti</code>.
+     * @alias module:model/MessageMulti
+     */
+    constructor() { 
+        
+        MessageMulti.initialize(this);
+    }
 
-  beforeEach(function() {
-    instance = new TelstraMessagingApi.ProvisioningApi();
-  });
+    /**
+     * Initializes the fields of this object.
+     * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
+     * Only for internal use.
+     */
+    static initialize(obj) { 
+    }
 
-  var getProperty = function(object, getter, property) {
-    // Use getter method if present; otherwise, get the property directly.
-    if (typeof object[getter] === 'function')
-      return object[getter]();
-    else
-      return object[property];
-  }
+    /**
+     * Constructs a <code>MessageMulti</code> from a plain JavaScript object, optionally creating a new instance.
+     * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+     * @param {Object} data The plain JavaScript object bearing properties of interest.
+     * @param {module:model/MessageMulti} obj Optional instance to populate.
+     * @return {module:model/MessageMulti} The populated <code>MessageMulti</code> instance.
+     */
+    static constructFromObject(data, obj) {
+        if (data) {
+            obj = obj || new MessageMulti();
 
-  var setProperty = function(object, setter, property, value) {
-    // Use setter method if present; otherwise, set the property directly.
-    if (typeof object[setter] === 'function')
-      object[setter](value);
-    else
-      object[property] = value;
-  }
+            if (data.hasOwnProperty('to')) {
+                obj['to'] = ApiClient.convertToType(data['to'], 'String');
+            }
+            if (data.hasOwnProperty('body')) {
+                obj['body'] = ApiClient.convertToType(data['body'], 'String');
+            }
+            if (data.hasOwnProperty('receiptOff')) {
+                obj['receiptOff'] = ApiClient.convertToType(data['receiptOff'], 'Boolean');
+            }
+        }
+        return obj;
+    }
 
-  describe('ProvisioningApi', function() {
-    describe('createSubscription', function() {
-      it('should call createSubscription successfully', function(done) {
-        //uncomment below and update the code to test createSubscription
-        //instance.createSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('deleteSubscription', function() {
-      it('should call deleteSubscription successfully', function(done) {
-        //uncomment below and update the code to test deleteSubscription
-        //instance.deleteSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('getSubscription', function() {
-      it('should call getSubscription successfully', function(done) {
-        //uncomment below and update the code to test getSubscription
-        //instance.getSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-  });
 
-}));
+}
+
+/**
+ * Phone number (in E.164 format) to send the SMS to. This number can be in international format `\"to\": \"+61412345678\"` or in national format. 
+ * @member {String} to
+ */
+MessageMulti.prototype['to'] = undefined;
+
+/**
+ * The text body of the message. Messages longer than 160 characters will be counted as multiple messages.  This field contains the message text, this can be up to 1900 (for a single recipient) or 500 (for multiple recipients) UTF-8 characters. As mobile devices rarely support the full range of UTF-8 characters, it is possible that some characters may not be translated correctly by the mobile device 
+ * @member {String} body
+ */
+MessageMulti.prototype['body'] = undefined;
+
+/**
+ * Whether Delivery Receipt will be sent back or not.  Setting this field to `true` will disable Delivery Receipts. The `notifyURL` field will be ignored, if there is one in the payload. An \"OLD-NONEXISTANT-MESSAGE-ID\" 400 error will also be returned upon Polling for the SMS Status. 
+ * @member {Boolean} receiptOff
+ */
+MessageMulti.prototype['receiptOff'] = undefined;
+
+
+
+
+
+
+export default MessageMulti;
+

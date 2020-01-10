@@ -11,73 +11,105 @@
  *
  */
 
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD.
-    define(['expect.js', process.cwd()+'/src/index'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // CommonJS-like environments that support module.exports, like Node.
-    factory(require('expect.js'), require(process.cwd()+'/src/index'));
-  } else {
-    // Browser globals (root is window)
-    factory(root.expect, root.TelstraMessagingApi);
-  }
-}(this, function(expect, TelstraMessagingApi) {
-  'use strict';
+import ApiClient from '../ApiClient';
+import Message from './Message';
 
-  var instance;
+/**
+ * The MessageSentResponseMms model module.
+ * @module model/MessageSentResponseMms
+ * @version 2.2.9
+ */
+class MessageSentResponseMms {
+    /**
+     * Constructs a new <code>MessageSentResponseMms</code>.
+     * @alias module:model/MessageSentResponseMms
+     * @param messages {Array.<module:model/Message>} An array of messages.
+     * @param messageType {String} This returns whether the message sent was a SMS or MMS.
+     * @param numberSegments {Number} MMS with numberSegments below 600 are classed as Small whereas those that are bigger than 600 are classed as Large. They will be charged accordingly. 
+     */
+    constructor(messages, messageType, numberSegments) { 
+        
+        MessageSentResponseMms.initialize(this, messages, messageType, numberSegments);
+    }
 
-  beforeEach(function() {
-    instance = new TelstraMessagingApi.ProvisioningApi();
-  });
+    /**
+     * Initializes the fields of this object.
+     * This method is used by the constructors of any subclasses, in order to implement multiple inheritance (mix-ins).
+     * Only for internal use.
+     */
+    static initialize(obj, messages, messageType, numberSegments) { 
+        obj['messages'] = messages;
+        obj['messageType'] = messageType;
+        obj['numberSegments'] = numberSegments;
+    }
 
-  var getProperty = function(object, getter, property) {
-    // Use getter method if present; otherwise, get the property directly.
-    if (typeof object[getter] === 'function')
-      return object[getter]();
-    else
-      return object[property];
-  }
+    /**
+     * Constructs a <code>MessageSentResponseMms</code> from a plain JavaScript object, optionally creating a new instance.
+     * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
+     * @param {Object} data The plain JavaScript object bearing properties of interest.
+     * @param {module:model/MessageSentResponseMms} obj Optional instance to populate.
+     * @return {module:model/MessageSentResponseMms} The populated <code>MessageSentResponseMms</code> instance.
+     */
+    static constructFromObject(data, obj) {
+        if (data) {
+            obj = obj || new MessageSentResponseMms();
 
-  var setProperty = function(object, setter, property, value) {
-    // Use setter method if present; otherwise, set the property directly.
-    if (typeof object[setter] === 'function')
-      object[setter](value);
-    else
-      object[property] = value;
-  }
+            if (data.hasOwnProperty('messages')) {
+                obj['messages'] = ApiClient.convertToType(data['messages'], [Message]);
+            }
+            if (data.hasOwnProperty('MmsMediaKB')) {
+                obj['MmsMediaKB'] = ApiClient.convertToType(data['MmsMediaKB'], 'Number');
+            }
+            if (data.hasOwnProperty('Country')) {
+                obj['Country'] = ApiClient.convertToType(data['Country'], [Object]);
+            }
+            if (data.hasOwnProperty('messageType')) {
+                obj['messageType'] = ApiClient.convertToType(data['messageType'], 'String');
+            }
+            if (data.hasOwnProperty('numberSegments')) {
+                obj['numberSegments'] = ApiClient.convertToType(data['numberSegments'], 'Number');
+            }
+        }
+        return obj;
+    }
 
-  describe('ProvisioningApi', function() {
-    describe('createSubscription', function() {
-      it('should call createSubscription successfully', function(done) {
-        //uncomment below and update the code to test createSubscription
-        //instance.createSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('deleteSubscription', function() {
-      it('should call deleteSubscription successfully', function(done) {
-        //uncomment below and update the code to test deleteSubscription
-        //instance.deleteSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('getSubscription', function() {
-      it('should call getSubscription successfully', function(done) {
-        //uncomment below and update the code to test getSubscription
-        //instance.getSubscription(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-  });
 
-}));
+}
+
+/**
+ * An array of messages.
+ * @member {Array.<module:model/Message>} messages
+ */
+MessageSentResponseMms.prototype['messages'] = undefined;
+
+/**
+ * Indicates the message size in kB of the MMS sent. 
+ * @member {Number} MmsMediaKB
+ */
+MessageSentResponseMms.prototype['MmsMediaKB'] = undefined;
+
+/**
+ * An array of the countries to which the destination MSISDNs belong.
+ * @member {Array.<Object>} Country
+ */
+MessageSentResponseMms.prototype['Country'] = undefined;
+
+/**
+ * This returns whether the message sent was a SMS or MMS.
+ * @member {String} messageType
+ */
+MessageSentResponseMms.prototype['messageType'] = undefined;
+
+/**
+ * MMS with numberSegments below 600 are classed as Small whereas those that are bigger than 600 are classed as Large. They will be charged accordingly. 
+ * @member {Number} numberSegments
+ */
+MessageSentResponseMms.prototype['numberSegments'] = undefined;
+
+
+
+
+
+
+export default MessageSentResponseMms;
+
