@@ -7,39 +7,44 @@ Method | HTTP request | Description
 [**authToken**](AuthenticationApi.md#authToken) | **POST** /oauth/token | Generate OAuth2 token
 
 
-<a name="authToken"></a>
-# **authToken**
-> OAuthResponse authToken(clientId, clientSecret, grantType)
+
+## authToken
+
+> OAuthResponse authToken(clientId, clientSecret, grantType, opts)
 
 Generate OAuth2 token
 
-To generate an OAuth2 Authentication token, pass through your &#x60;Client key&#x60; and &#x60;Client secret&#x60; that you received when you registered for the **API Free Trial** Product. The grant_type should be left as &#x60;client_credentials&#x60; and the scope as &#x60;NSMS&#x60;. The token will expire in one hour. 
+To generate an OAuth2 Authentication token, pass through your &#x60;Client key&#x60; and &#x60;Client secret&#x60; that you received when you registered for the **API Free Trial** Product.  The grant_type should be left as &#x60;client_credentials&#x60; and the scope as &#x60;NSMS&#x60;.  The token will expire in one hour. 
 
 ### Example
-```javascript
-var TelstraMessaging = require('Telstra_Messaging');
 
-var apiInstance = new TelstraMessaging.AuthenticationApi();
-var clientId = "clientId_example"; // String | 
-var clientSecret = "clientSecret_example"; // String | 
-var grantType = "'client_credentials'"; // String | 
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
+```javascript
+import TelstraMessaging from 'Telstra_Messaging';
+
+let apiInstance = new TelstraMessaging.AuthenticationApi();
+let clientId = "clientId_example"; // String | 
+let clientSecret = "clientSecret_example"; // String | 
+let grantType = "'client_credentials'"; // String | 
+let opts = {
+  'scope': "scope_example" // String | NSMS
 };
-apiInstance.authToken(clientId, clientSecret, grantType, callback);
+apiInstance.authToken(clientId, clientSecret, grantType, opts).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
 ```
 
 ### Parameters
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **clientId** | **String**|  | 
  **clientSecret** | **String**|  | 
  **grantType** | **String**|  | [default to &#39;client_credentials&#39;]
+ **scope** | **String**| NSMS | [optional] 
 
 ### Return type
 
@@ -51,6 +56,6 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/x-www-form-urlencoded
- - **Accept**: application/json
+- **Content-Type**: application/x-www-form-urlencoded
+- **Accept**: application/json
 

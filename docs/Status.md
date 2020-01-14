@@ -15,8 +15,8 @@
 
 * `UNDVBL` (value: `"UNDVBL"`)
 
-* `REJECTED` (value: `"REJECTED"`)
+* `REJECTD` (value: `"REJECTD"`)
 
-* `READ` (value: `"READ"`)
+* `Unknown` (value: `"Unknown"`)
 
 

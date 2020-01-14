@@ -1,9 +1,9 @@
-# TelstraMessaging.DeleteNumberRequest
+# TelstraMessaging.HealthCheckResponse
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**emptyArr** | **Number** | Empty Arr | [optional] [default to 0]
+**status** | **String** | message status | [optional] 
 
 
