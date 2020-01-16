@@ -7,6 +7,12 @@ jobs:
 
     steps:
     - name: "Checkout Project"
+      env: # Or as an environment variable
+        CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        PHONE_NO: ${{ secrets.PHONE_NO }}
+        FROM_ALIAS: ${{ secrets.FROM_ALIAS }}
+
       uses: actions/checkout@v1
       with:
         fetch-depth: 1
