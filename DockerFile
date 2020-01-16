@@ -1,23 +1,14 @@
 FROM node:13.6.0-alpine3.10
 
-# ARG HTTP_PROXY
-
 RUN mkdir -p /usr/src/telstradev
 WORKDIR /urs/src/telstradev
 COPY . .
 
-# ENV HTTP_PROXY $HTTP_PROXY
-# ENV HTTPS_PROXY $HTTP_PROXY
-
 RUN npm install
 RUN npm link
 
-RUN cd backward-compat-test
-
 RUN npm link /urs/src/telstradev
-
-RUN cd ..
 
 RUN npm run build
 
-CMD node backward-compat-test/test.js
+CMD node test.js

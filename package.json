@@ -1,8 +1,12 @@
 {
   "name": "Telstra_Messaging",
   "version": "1.0.8",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/telstra/MessagingAPI-SDK-node.git"
+  },
   "description": "The_API_specification_for_Telstra_Messaging_API",
-  "license": "MIT",
+  "license": "MIT",  
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src -d dist",

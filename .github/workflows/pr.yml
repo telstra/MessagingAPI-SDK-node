@@ -1,0 +1,14 @@
+name: validate-pr
+on: pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: "Checkout Project"
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: "Docker run test"
+      run: docker-compose up -d --build
