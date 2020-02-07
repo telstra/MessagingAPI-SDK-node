@@ -1,6 +1,6 @@
 /**
  * Telstra Messaging API
- * The API specification for Telstra Messaging API
+ * The Telstra Messaging API specification
  *
  * The version of the OpenAPI document: 2.2.9
  * 
@@ -161,7 +161,7 @@ export default class MessagingApi {
       let accepts = ['application/json'];
       let returnType = HealthCheckResponse;
       return this.apiClient.callApi(
-        '/messages/mms/heathcheck', 'GET',
+        '/messages/mms/healthcheck', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, null
       );
@@ -284,7 +284,7 @@ export default class MessagingApi {
       let accepts = ['application/json'];
       let returnType = HealthCheckResponse;
       return this.apiClient.callApi(
-        '/messages/sms/heathcheck', 'GET',
+        '/messages/sms/healthcheck', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, null
       );
@@ -325,7 +325,7 @@ export default class MessagingApi {
       let formParams = {
       };
 
-      let authNames = [];
+      let authNames = ['auth'];
       let contentTypes = ['application/json'];
       let accepts = ['application/json'];
       let returnType = MessageSentResponseSms;

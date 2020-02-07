@@ -1,6 +1,6 @@
 /**
  * Telstra Messaging API
- * The API specification for Telstra Messaging API
+ * The Telstra Messaging API specification
  *
  * The version of the OpenAPI document: 2.2.9
  * 
@@ -60,8 +60,8 @@
       //expect(instance).to.be();
     });
 
-    it('should have the property notiyURL (base name: "notiyURL")', function() {
-      // uncomment below and update the code to test the property notiyURL
+    it('should have the property notifyURL (base name: "notifyURL")', function() {
+      // uncomment below and update the code to test the property notifyURL
       //var instane = new TelstraMessaging.SendSmsMultiRequest();
       //expect(instance).to.be();
     });

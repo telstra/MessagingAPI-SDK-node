@@ -1,6 +1,6 @@
 /**
  * Telstra Messaging API
- * The API specification for Telstra Messaging API
+ * The Telstra Messaging API specification
  *
  * The version of the OpenAPI document: 2.2.9
  * 
@@ -51,8 +51,8 @@ class SendSmsMultiRequest {
             if (data.hasOwnProperty('smsMulti')) {
                 obj['smsMulti'] = ApiClient.convertToType(data['smsMulti'], [MessageMulti]);
             }
-            if (data.hasOwnProperty('notiyURL')) {
-                obj['notiyURL'] = ApiClient.convertToType(data['notiyURL'], 'String');
+            if (data.hasOwnProperty('notifyURL')) {
+                obj['notifyURL'] = ApiClient.convertToType(data['notifyURL'], 'String');
             }
         }
         return obj;
@@ -68,10 +68,10 @@ class SendSmsMultiRequest {
 SendSmsMultiRequest.prototype['smsMulti'] = undefined;
 
 /**
- * Contains a URL that will be called once your message has been processed. The status may be delivered, expired, deleted, etc. Please refer to the Delivery Status section for more information.  If you are using a domain URL you must include the forward slash at the end of the URL (e.g. http://www.example.com/). 
- * @member {String} notiyURL
+ * Contains a URL that will be called once your message has been processed. The status may be delivered, expired, deleted, etc. Please refer to the Delivery Status section for more information.  If you are using a domain URL you must include the forward slash at the end of the URL (e.g. http://www.example.com/).  This is required when `\"receiptOff\"` is missing or `\"receiptOff\":\"false\"`. 
+ * @member {String} notifyURL
  */
-SendSmsMultiRequest.prototype['notiyURL'] = undefined;
+SendSmsMultiRequest.prototype['notifyURL'] = undefined;
 
 
 

@@ -6,10 +6,10 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getMMSStatus**](MessagingApi.md#getMMSStatus) | **GET** /messages/mms/{messageid}/status | Get MMS Status
 [**getSMSStatus**](MessagingApi.md#getSMSStatus) | **GET** /messages/sms/{messageId}/status | Get SMS Status
-[**mMSHealthCheck**](MessagingApi.md#mMSHealthCheck) | **GET** /messages/mms/heathcheck | MMS Health Check
+[**mMSHealthCheck**](MessagingApi.md#mMSHealthCheck) | **GET** /messages/mms/healthcheck | MMS Health Check
 [**retrieveMMSReplies**](MessagingApi.md#retrieveMMSReplies) | **GET** /messages/mms | Retrieve MMS Replies
 [**retrieveSMSReplies**](MessagingApi.md#retrieveSMSReplies) | **GET** /messages/sms | Retrieve SMS Replies
-[**sMSHealthCheck**](MessagingApi.md#sMSHealthCheck) | **GET** /messages/sms/heathcheck | SMS Health Check
+[**sMSHealthCheck**](MessagingApi.md#sMSHealthCheck) | **GET** /messages/sms/healthcheck | SMS Health Check
 [**sMSMulti**](MessagingApi.md#sMSMulti) | **POST** /messages/sms/multi | Send Multiple SMS
 [**sendMMS**](MessagingApi.md#sendMMS) | **POST** /messages/mms | Send MMS
 [**sendSMS**](MessagingApi.md#sendSMS) | **POST** /messages/sms | Send SMS
@@ -292,6 +292,10 @@ Send multiple SMS in one API call.
 
 ```javascript
 import TelstraMessaging from 'Telstra_Messaging';
+let defaultClient = TelstraMessaging.ApiClient.instance;
+// Configure OAuth2 access token for authorization: auth
+let auth = defaultClient.authentications['auth'];
+auth.accessToken = 'YOUR ACCESS TOKEN';
 
 let apiInstance = new TelstraMessaging.MessagingApi();
 let payload = new TelstraMessaging.SendSmsMultiRequest(); // SendSmsMultiRequest | A JSON payload containing the recipient's phone number and text message. This number can be in international format if preceeded by a '+' or in national format ('04xxxxxxxx') where x is a digit. 
@@ -316,7 +320,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[auth](../README.md#auth)
 
 ### HTTP request headers
 

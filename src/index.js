@@ -1,6 +1,6 @@
 /**
  * Telstra Messaging API
- * The API specification for Telstra Messaging API
+ * The Telstra Messaging API specification
  *
  * The version of the OpenAPI document: 2.2.9
  * 
@@ -37,7 +37,7 @@ import ProvisioningApi from './api/ProvisioningApi';
 
 
 /**
-* The_API_specification_for_Telstra_Messaging_API.<br>
+* The_Telstra_Messaging_API_specification.<br>
 * The <code>index</code> module provides access to constructors for all the classes which comprise the public API.
 * <p>
 * An AMD (recommended!) or CommonJS application will generally do something equivalent to the following:

@@ -1,13 +1,13 @@
 {
   "name": "Telstra_Messaging",
   "version": "1.0.8",
+  "description": "The Telstra Messaging API specification",
+  "license": "MIT",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/telstra/MessagingAPI-SDK-node.git"
   },
-  "description": "The_API_specification_for_Telstra_Messaging_API",
-  "license": "MIT",
-  "main": "dist/index.js",
   "scripts": {
     "build": "babel src -d dist",
     "prepack": "npm run build",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@babel/cli": "^7.0.0",
-    "superagent": "5.2.1"
+    "superagent": "3.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -41,8 +41,8 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.0.0",
     "expect.js": "^0.3.1",
-    "mocha": "^7.0.0",
-    "sinon": "^8.1.0"
+    "mocha": "^5.2.0",
+    "sinon": "^7.2.0"
   },
   "files": [
     "dist"

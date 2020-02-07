@@ -5,6 +5,9 @@ WORKDIR /urs/src/telstradev
 COPY . .
 
 RUN npm install
+
+RUN npm run test
+
 RUN npm link
 
 RUN npm link /urs/src/telstradev
