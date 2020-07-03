@@ -1,6 +1,7 @@
 # TelstraMessaging.OAuthResponse
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **accessToken** | **String** | OAuth access token | [optional] 

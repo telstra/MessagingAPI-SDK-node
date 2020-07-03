@@ -14,18 +14,19 @@
 import ApiClient from '../ApiClient';
 
 /**
- * The DeleteNumberRequest model module.
- * @module model/DeleteNumberRequest
+ * The HealthCheckResponse model module.
+ * @module model/HealthCheckResponse
  * @version 2.0.0
  */
-class DeleteNumberRequest {
+class HealthCheckResponse {
     /**
-     * Constructs a new <code>DeleteNumberRequest</code>.
-     * @alias module:model/DeleteNumberRequest
+     * Constructs a new <code>HealthCheckResponse</code>.
+     * Information regarding service being up or down. 
+     * @alias module:model/HealthCheckResponse
      */
     constructor() { 
         
-        DeleteNumberRequest.initialize(this);
+        HealthCheckResponse.initialize(this);
     }
 
     /**
@@ -37,18 +38,18 @@ class DeleteNumberRequest {
     }
 
     /**
-     * Constructs a <code>DeleteNumberRequest</code> from a plain JavaScript object, optionally creating a new instance.
+     * Constructs a <code>HealthCheckResponse</code> from a plain JavaScript object, optionally creating a new instance.
      * Copies all relevant properties from <code>data</code> to <code>obj</code> if supplied or a new instance if not.
      * @param {Object} data The plain JavaScript object bearing properties of interest.
-     * @param {module:model/DeleteNumberRequest} obj Optional instance to populate.
-     * @return {module:model/DeleteNumberRequest} The populated <code>DeleteNumberRequest</code> instance.
+     * @param {module:model/HealthCheckResponse} obj Optional instance to populate.
+     * @return {module:model/HealthCheckResponse} The populated <code>HealthCheckResponse</code> instance.
      */
     static constructFromObject(data, obj) {
         if (data) {
-            obj = obj || new DeleteNumberRequest();
+            obj = obj || new HealthCheckResponse();
 
-            if (data.hasOwnProperty('emptyArr')) {
-                obj['emptyArr'] = ApiClient.convertToType(data['emptyArr'], 'Number');
+            if (data.hasOwnProperty('status')) {
+                obj['status'] = ApiClient.convertToType(data['status'], 'String');
             }
         }
         return obj;
@@ -58,16 +59,15 @@ class DeleteNumberRequest {
 }
 
 /**
- * Empty Arr
- * @member {Number} emptyArr
- * @default 0
+ * message status
+ * @member {String} status
  */
-DeleteNumberRequest.prototype['emptyArr'] = 0;
+HealthCheckResponse.prototype['status'] = undefined;
 
 
 
 
 
 
-export default DeleteNumberRequest;
+export default HealthCheckResponse;
 

@@ -28,7 +28,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new TelstraMessaging.Message();
+    instance = new TelstraMessaging.MessageSentResponseMms();
   });
 
   var getProperty = function(object, getter, property) {
@@ -47,34 +47,40 @@
       object[property] = value;
   }
 
-  describe('Message', function() {
-    it('should create an instance of Message', function() {
-      // uncomment below and update the code to test Message
-      //var instane = new TelstraMessaging.Message();
-      //expect(instance).to.be.a(TelstraMessaging.Message);
+  describe('MessageSentResponseMms', function() {
+    it('should create an instance of MessageSentResponseMms', function() {
+      // uncomment below and update the code to test MessageSentResponseMms
+      //var instane = new TelstraMessaging.MessageSentResponseMms();
+      //expect(instance).to.be.a(TelstraMessaging.MessageSentResponseMms);
     });
 
-    it('should have the property to (base name: "to")', function() {
-      // uncomment below and update the code to test the property to
-      //var instane = new TelstraMessaging.Message();
+    it('should have the property messages (base name: "messages")', function() {
+      // uncomment below and update the code to test the property messages
+      //var instane = new TelstraMessaging.MessageSentResponseMms();
       //expect(instance).to.be();
     });
 
-    it('should have the property deliveryStatus (base name: "deliveryStatus")', function() {
-      // uncomment below and update the code to test the property deliveryStatus
-      //var instane = new TelstraMessaging.Message();
+    it('should have the property mmsMediaKB (base name: "MmsMediaKB")', function() {
+      // uncomment below and update the code to test the property mmsMediaKB
+      //var instane = new TelstraMessaging.MessageSentResponseMms();
       //expect(instance).to.be();
     });
 
-    it('should have the property messageId (base name: "messageId")', function() {
-      // uncomment below and update the code to test the property messageId
-      //var instane = new TelstraMessaging.Message();
+    it('should have the property country (base name: "Country")', function() {
+      // uncomment below and update the code to test the property country
+      //var instane = new TelstraMessaging.MessageSentResponseMms();
       //expect(instance).to.be();
     });
 
-    it('should have the property messageStatusURL (base name: "messageStatusURL")', function() {
-      // uncomment below and update the code to test the property messageStatusURL
-      //var instane = new TelstraMessaging.Message();
+    it('should have the property messageType (base name: "messageType")', function() {
+      // uncomment below and update the code to test the property messageType
+      //var instane = new TelstraMessaging.MessageSentResponseMms();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property numberSegments (base name: "numberSegments")', function() {
+      // uncomment below and update the code to test the property numberSegments
+      //var instane = new TelstraMessaging.MessageSentResponseMms();
       //expect(instance).to.be();
     });
 

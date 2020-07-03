@@ -28,7 +28,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new TelstraMessaging.AuthenticationApi();
+    instance = new TelstraMessaging.MessageMulti();
   });
 
   var getProperty = function(object, getter, property) {
@@ -47,17 +47,31 @@
       object[property] = value;
   }
 
-  describe('AuthenticationApi', function() {
-    describe('authToken', function() {
-      it('should call authToken successfully', function(done) {
-        //uncomment below and update the code to test authToken
-        //instance.authToken(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+  describe('MessageMulti', function() {
+    it('should create an instance of MessageMulti', function() {
+      // uncomment below and update the code to test MessageMulti
+      //var instane = new TelstraMessaging.MessageMulti();
+      //expect(instance).to.be.a(TelstraMessaging.MessageMulti);
     });
+
+    it('should have the property to (base name: "to")', function() {
+      // uncomment below and update the code to test the property to
+      //var instane = new TelstraMessaging.MessageMulti();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property body (base name: "body")', function() {
+      // uncomment below and update the code to test the property body
+      //var instane = new TelstraMessaging.MessageMulti();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property receiptOff (base name: "receiptOff")', function() {
+      // uncomment below and update the code to test the property receiptOff
+      //var instane = new TelstraMessaging.MessageMulti();
+      //expect(instance).to.be();
+    });
+
   });
 
 }));

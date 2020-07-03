@@ -28,7 +28,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new TelstraMessaging.SendMmsRequest();
+    instance = new TelstraMessaging.GetMmsResponse();
   });
 
   var getProperty = function(object, getter, property) {
@@ -47,46 +47,58 @@
       object[property] = value;
   }
 
-  describe('SendMmsRequest', function() {
-    it('should create an instance of SendMmsRequest', function() {
-      // uncomment below and update the code to test SendMmsRequest
-      //var instane = new TelstraMessaging.SendMmsRequest();
-      //expect(instance).to.be.a(TelstraMessaging.SendMmsRequest);
+  describe('GetMmsResponse', function() {
+    it('should create an instance of GetMmsResponse', function() {
+      // uncomment below and update the code to test GetMmsResponse
+      //var instane = new TelstraMessaging.GetMmsResponse();
+      //expect(instance).to.be.a(TelstraMessaging.GetMmsResponse);
     });
 
-    it('should have the property to (base name: "to")', function() {
-      // uncomment below and update the code to test the property to
-      //var instane = new TelstraMessaging.SendMmsRequest();
+    it('should have the property status (base name: "status")', function() {
+      // uncomment below and update the code to test the property status
+      //var instane = new TelstraMessaging.GetMmsResponse();
       //expect(instance).to.be();
     });
 
-    it('should have the property from (base name: "from")', function() {
-      // uncomment below and update the code to test the property from
-      //var instane = new TelstraMessaging.SendMmsRequest();
+    it('should have the property destinationAddress (base name: "destinationAddress")', function() {
+      // uncomment below and update the code to test the property destinationAddress
+      //var instane = new TelstraMessaging.GetMmsResponse();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property senderAddress (base name: "senderAddress")', function() {
+      // uncomment below and update the code to test the property senderAddress
+      //var instane = new TelstraMessaging.GetMmsResponse();
       //expect(instance).to.be();
     });
 
     it('should have the property subject (base name: "subject")', function() {
       // uncomment below and update the code to test the property subject
-      //var instane = new TelstraMessaging.SendMmsRequest();
+      //var instane = new TelstraMessaging.GetMmsResponse();
       //expect(instance).to.be();
     });
 
-    it('should have the property notifyURL (base name: "notifyURL")', function() {
-      // uncomment below and update the code to test the property notifyURL
-      //var instane = new TelstraMessaging.SendMmsRequest();
+    it('should have the property messageId (base name: "messageId")', function() {
+      // uncomment below and update the code to test the property messageId
+      //var instane = new TelstraMessaging.GetMmsResponse();
       //expect(instance).to.be();
     });
 
-    it('should have the property replyRequest (base name: "replyRequest")', function() {
-      // uncomment below and update the code to test the property replyRequest
-      //var instane = new TelstraMessaging.SendMmsRequest();
+    it('should have the property apiMsgId (base name: "apiMsgId")', function() {
+      // uncomment below and update the code to test the property apiMsgId
+      //var instane = new TelstraMessaging.GetMmsResponse();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property sentTimestamp (base name: "sentTimestamp")', function() {
+      // uncomment below and update the code to test the property sentTimestamp
+      //var instane = new TelstraMessaging.GetMmsResponse();
       //expect(instance).to.be();
     });
 
     it('should have the property mMSContent (base name: "MMSContent")', function() {
       // uncomment below and update the code to test the property mMSContent
-      //var instane = new TelstraMessaging.SendMmsRequest();
+      //var instane = new TelstraMessaging.GetMmsResponse();
       //expect(instance).to.be();
     });
 

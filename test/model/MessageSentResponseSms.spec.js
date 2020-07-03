@@ -28,7 +28,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new TelstraMessaging.MMSContent();
+    instance = new TelstraMessaging.MessageSentResponseSms();
   });
 
   var getProperty = function(object, getter, property) {
@@ -47,28 +47,34 @@
       object[property] = value;
   }
 
-  describe('MMSContent', function() {
-    it('should create an instance of MMSContent', function() {
-      // uncomment below and update the code to test MMSContent
-      //var instane = new TelstraMessaging.MMSContent();
-      //expect(instance).to.be.a(TelstraMessaging.MMSContent);
+  describe('MessageSentResponseSms', function() {
+    it('should create an instance of MessageSentResponseSms', function() {
+      // uncomment below and update the code to test MessageSentResponseSms
+      //var instane = new TelstraMessaging.MessageSentResponseSms();
+      //expect(instance).to.be.a(TelstraMessaging.MessageSentResponseSms);
     });
 
-    it('should have the property type (base name: "type")', function() {
-      // uncomment below and update the code to test the property type
-      //var instane = new TelstraMessaging.MMSContent();
+    it('should have the property messages (base name: "messages")', function() {
+      // uncomment below and update the code to test the property messages
+      //var instane = new TelstraMessaging.MessageSentResponseSms();
       //expect(instance).to.be();
     });
 
-    it('should have the property filename (base name: "filename")', function() {
-      // uncomment below and update the code to test the property filename
-      //var instane = new TelstraMessaging.MMSContent();
+    it('should have the property country (base name: "Country")', function() {
+      // uncomment below and update the code to test the property country
+      //var instane = new TelstraMessaging.MessageSentResponseSms();
       //expect(instance).to.be();
     });
 
-    it('should have the property payload (base name: "payload")', function() {
-      // uncomment below and update the code to test the property payload
-      //var instane = new TelstraMessaging.MMSContent();
+    it('should have the property messageType (base name: "messageType")', function() {
+      // uncomment below and update the code to test the property messageType
+      //var instane = new TelstraMessaging.MessageSentResponseSms();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property numberSegments (base name: "numberSegments")', function() {
+      // uncomment below and update the code to test the property numberSegments
+      //var instane = new TelstraMessaging.MessageSentResponseSms();
       //expect(instance).to.be();
     });
 

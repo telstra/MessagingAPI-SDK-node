@@ -28,7 +28,7 @@
   var instance;
 
   beforeEach(function() {
-    instance = new TelstraMessaging.AuthenticationApi();
+    instance = new TelstraMessaging.SendSmsMultiRequest();
   });
 
   var getProperty = function(object, getter, property) {
@@ -47,17 +47,25 @@
       object[property] = value;
   }
 
-  describe('AuthenticationApi', function() {
-    describe('authToken', function() {
-      it('should call authToken successfully', function(done) {
-        //uncomment below and update the code to test authToken
-        //instance.authToken(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
+  describe('SendSmsMultiRequest', function() {
+    it('should create an instance of SendSmsMultiRequest', function() {
+      // uncomment below and update the code to test SendSmsMultiRequest
+      //var instane = new TelstraMessaging.SendSmsMultiRequest();
+      //expect(instance).to.be.a(TelstraMessaging.SendSmsMultiRequest);
     });
+
+    it('should have the property smsMulti (base name: "smsMulti")', function() {
+      // uncomment below and update the code to test the property smsMulti
+      //var instane = new TelstraMessaging.SendSmsMultiRequest();
+      //expect(instance).to.be();
+    });
+
+    it('should have the property notifyURL (base name: "notifyURL")', function() {
+      // uncomment below and update the code to test the property notifyURL
+      //var instane = new TelstraMessaging.SendSmsMultiRequest();
+      //expect(instance).to.be();
+    });
+
   });
 
 }));
