@@ -17,7 +17,7 @@ export class StorageError extends TError {
     }
 }
 
-export class GeneralError extends TError {
+export class APIRequestError extends TError {
     constructor(info: IConst) {
         super(info);
     }

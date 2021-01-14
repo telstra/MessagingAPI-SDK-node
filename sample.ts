@@ -1,5 +1,5 @@
 
-import { CONFIG, SMS, BNUM, Subscription } from './';
+import { CONFIG, SMS, BNUM, Subscription } from './tls';
 
 const authConfig = {
   tls_client_key: 'XXXXX',
@@ -13,8 +13,10 @@ const sms = SMS.getInstance();
 // const bnum = BNUM.getInstance();
 
 sms.send({
-  to: "+61XXXXXXXXX",
+  to: "<mobile number>",
   body: "Hello from Typescript"
+}).then((results) => {
+  console.log(results);
 });
 
 // sms.send({
@@ -25,23 +27,39 @@ sms.send({
 //   notifyURL: "https://XXXXX.m.pipedream.net/",  
 //   receiptOff: false,
 //   replyRequest: true
+// }).then((results) => {
+//   console.log(results);
 // });
 
-// sms.status("XXXXX");
+// sms.status("XXXXX")
+// .then((results) => {
+//   console.log(results);
+// });
 
 // subscription.create({
 //   "activeDays": 1,
 //   "notifyURL": "https://XXXXX.m.pipedream.net"
+// }).then((results) => {
+//   console.log(results);
 // });
 
-// subscription.get();
+// subscription.get()
+// .then((results) => {
+//   console.log(results);
+// });
 
-// subscription.delete();
+// subscription.delete().then((results) => {
+//   console.log(results);
+// });
 
-// bnum.get();
+// bnum.get().then((results) => {
+//   console.log(results);
+// });
 
 // bnum.register({
 //   "bnum":[
 //     "+61XXXXXXXXX"
 //   ]
+// }).then((results) => {
+//   console.log(results);
 // });

@@ -34,8 +34,9 @@
   },
   "compileOnSave": true,
   "include": [
-    "tls/**/*",
-    "tests/**/*",
+    "sample.ts",
+    "tls/**/*.ts",
+    "tests/**/*.ts",
   ],
   "exclude": [
       "node_modules",

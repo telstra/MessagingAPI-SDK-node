@@ -31,6 +31,8 @@ const sms = SMS.getInstance();
 sms.send({
   to: "<mobile number>",
   body: "Hello from Typescript",
+}).then((results) => {
+  console.log(results);
 });
 ```
 
@@ -89,6 +91,8 @@ const subscription = Subscription.getInstance();
 subscription.create({
   "activeDays": 1,
   "notifyURL": "<callback url>"
+}).then((results) => {
+  console.log(results);
 });
 ```
 
@@ -111,7 +115,9 @@ import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
 
-subscription.get();
+subscription.get().then((results) => {
+  console.log(results);
+});
 ```
 
 ### Delete Subscription
@@ -127,7 +133,9 @@ import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
 
-subscription.delete();
+subscription.delete().then((results) => {
+  console.log(results);
+});
 ```
 
 ## SMS
@@ -179,6 +187,8 @@ const sms = SMS.getInstance();
 sms.send({
   to: "<mobile number>",
   body: "Hello from Typescript",
+}).then((results) => {
+  console.log(results);
 });
 ```
 
@@ -235,5 +245,7 @@ For example:
 import { SMS } from '@tls/messaging';
 const sms = SMS.getInstance();
 
-sms.get_next_unread_reply()
+sms.get_next_unread_reply().then((results) => {
+  console.log(results);
+});
 ```

@@ -1,3 +1,4 @@
+
 export type TAuthConfig = {
     tls_client_key: string,
     tls_client_secret: string,
@@ -10,9 +11,9 @@ export type TAuthResponse = {
 };
 
 export type TErrorResponse = {
-    status: string,
-    code: string,
-    message: string,
+    status?: string,
+    code?: string,
+    message?: string,
 };
 
 export type TMessage = {

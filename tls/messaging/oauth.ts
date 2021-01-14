@@ -4,7 +4,7 @@ import { API_URL } from './constants'
 import { URLSearchParams } from 'url';
 import { getStorage } from './storage';
 import { getConfig, setConfig, setAuthToken, getAuthToken } from './config';
-import { GeneralError } from './errors';
+import { APIRequestError } from './errors';
 
 export default class OAUTH extends HttpClient {
     public constructor() {

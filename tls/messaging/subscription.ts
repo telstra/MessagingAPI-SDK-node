@@ -3,6 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
 import { TSubscriptionCreateRequest, TSubscriptionCreateResponse, TSubscriptionRetrieveResponse, TSubscriptionDeleteRequest } from './types';
 import { API_URL } from './constants'
+import { validateError } from './validate';
 
 export class Subscription extends HttpClient {
     private static classInstance?: Subscription;
@@ -35,17 +36,29 @@ export class Subscription extends HttpClient {
     }
    
     public create = async (body: TSubscriptionCreateRequest) => {
+      try {
         const result = await this.instance.post<TSubscriptionCreateResponse>(`/v2/messages/provisioning/subscriptions`, body);
-        console.log(result);
+        return result;
+      } catch (error) {
+        return validateError(error);
+      }
     }
 
     public get = async () => {
-      const result = await this.instance.get<TSubscriptionRetrieveResponse>(`/v2/messages/provisioning/subscriptions`);
-      console.log(result);
+      try {
+        const result = await this.instance.get<TSubscriptionRetrieveResponse>(`/v2/messages/provisioning/subscriptions`);
+        return result;
+      } catch (error) {
+        return validateError(error);
+      }
     };
 
     // public delete = async (body: TSubscriptionDeleteRequest) => {
-    //   const result = await this.instance.delete<TSubscriptionDeleteRequest>(`/v2/messages/provisioning/subscriptions`, body);
-    //   console.log(result);
+    //   try {
+    //     const result = await this.instance.delete<TSubscriptionDeleteRequest>(`/v2/messages/provisioning/subscriptions`, body);
+    //     return result;
+    //   } catch (error) {
+    //     return validateError(error);
+    //   }
     // }
 }

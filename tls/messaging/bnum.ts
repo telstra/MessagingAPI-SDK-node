@@ -3,6 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
 import { TBnumRetrieveResponse, TBnumRegisterRequest, TBnumRegisterResponse } from './types';
 import { API_URL } from './constants'
+import { validateError } from './validate';
 
 export class BNUM extends HttpClient {
     private static classInstance?: BNUM;
@@ -35,12 +36,20 @@ export class BNUM extends HttpClient {
     }
    
     public register = async (body: TBnumRegisterRequest) => {
+      try {
         const result = await this.instance.post<TBnumRegisterResponse>(`/v2/messages/freetrial/bnum`, body);
-        console.log(result);
+        return result;
+      } catch (error) {
+        return validateError(error);
+      }
     }
 
     public get = async () => {
-        const result = await this.instance.get<TBnumRetrieveResponse>(`/v2/messages/freetrial/bnum`)
-        console.log(result);
+        try {
+          const result = await this.instance.get<TBnumRetrieveResponse>(`/v2/messages/freetrial/bnum`)
+          return result;
+        } catch (error) {
+          return validateError(error);
+        }
     };    
   }
