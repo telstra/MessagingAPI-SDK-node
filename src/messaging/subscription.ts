@@ -1,12 +1,13 @@
 import HttpClient from './http-client';
 import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
-import { TMessageSendRequest, TMessageSendResponse } from './types';
+import { TSubscriptionCreateRequest, TSubscriptionCreateResponse, TSubscriptionRetrieveResponse } from './types';
 import { API_URL } from './constants'
 import { validateError } from './validate';
-export class SMS extends HttpClient {
-    private static classInstance?: SMS;
-    
+
+export class Subscription extends HttpClient {
+    private static classInstance?: Subscription;
+
     private constructor() {
       super(API_URL);
       this._initializeRequestInterceptor();
@@ -26,38 +27,38 @@ export class SMS extends HttpClient {
         config.headers['Authorization'] = `Bearer ${authToken}`;
         return config;
     };
-  
+
     public static getInstance() {
       if (!this.classInstance) {
-        this.classInstance = new SMS();
+        this.classInstance = new Subscription();
       }
       return this.classInstance;
     }
-   
-    public send = async (body: TMessageSendRequest) => {
+
+    public create = async (body: TSubscriptionCreateRequest) => {
       try {
-        const result = await this.instance.post<TMessageSendResponse>(`/v2/messages/sms`, body);
+        const result = await this.instance.post<TSubscriptionCreateResponse>(`/v2/messages/provisioning/subscriptions`, body);
         return result;
       } catch (error) {
         return validateError(error);
       }
     }
 
-    public get_next_unread_reply = async (messageId: string) => {
-        try {
-          const result = await this.instance.get<TMessageSendRequest>(`/v2/messages/sms`)
-          return result;
-        } catch (error) {
-          return validateError(error);
-        }
-    };
-
-    public status = async (messageId: string) => {
+    public get = async () => {
       try {
-        const result = await this.instance.get<TMessageSendRequest>(`/v2/messages/sms/${messageId}/status`)
+        const result = await this.instance.get<TSubscriptionRetrieveResponse>(`/v2/messages/provisioning/subscriptions`);
         return result;
       } catch (error) {
         return validateError(error);
       }
-    };    
+    };
+
+    // public delete = async (body: TSubscriptionDeleteRequest) => {
+    //   try {
+    //     const result = await this.instance.delete<TSubscriptionDeleteRequest>(`/v2/messages/provisioning/subscriptions`, body);
+    //     return result;
+    //   } catch (error) {
+    //     return validateError(error);
+    //   }
+    // }
 }

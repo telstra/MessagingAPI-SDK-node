@@ -21,19 +21,21 @@ To send your first SMS:
 import { CONFIG, SMS } from '@tls/messaging';
 
 const authConfig = {
-  tls_client_key: '<client key>', 
-  tls_client_secret: '<client secret>'
-}
+  tls_client_key: '<client key>',
+  tls_client_secret: '<client secret>',
+};
 
 CONFIG.setConfig(authConfig);
 const sms = SMS.getInstance();
 
-sms.send({
-  to: "<mobile number>",
-  body: "Hello from Typescript",
-}).then((results) => {
-  console.log(results);
-});
+sms
+  .send({
+    to: '<mobile number>',
+    body: 'Hello from Typescript',
+  })
+  .then(results => {
+    console.log(results);
+  });
 ```
 
 ## Authentication
@@ -47,8 +49,8 @@ import { CONFIG, SMS } from '@tls/messaging';
 
 const authConfig = {
   tls_client_key: '<client key>',
-  tls_client_secret: '<client secret>'
-}
+  tls_client_secret: '<client secret>',
+};
 
 CONFIG.setConfig(authConfig);
 ```
@@ -67,19 +69,19 @@ more information, please see here:
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/createSubscription>.
 
-The function `tls.messaging.subscription.create` can be used to create a
+The function `subscription.create` can be used to create a
 subscription. It takes the following arguments:
 
-- `active_days` (optional): The number of days the subscription will be active,
+- `activeDays` (optional): The number of days the subscription will be active,
   defaults to 30.
-- `notify_url` (optional): A notification URL that will be POSTed to whenever a
+- `notifyUrl` (optional): A notification URL that will be POSTed to whenever a
   new message (i.e. a reply to a message sent) arrives at this destination
   address.
 
 It returns an object with the following properties:
 
-- `destination_address`: The phone number that a message can be sent to.
-- `active_days`: The number of days left on the subscription.
+- `destinationAddress`: The phone number that a message can be sent to.
+- `activeDays`: The number of days left on the subscription.
 
 For example:
 
@@ -88,12 +90,14 @@ import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
 
-subscription.create({
-  "activeDays": 1,
-  "notifyURL": "<callback url>"
-}).then((results) => {
-  console.log(results);
-});
+subscription
+  .create({
+    activeDays: 1,
+    notifyURL: '<callback url>',
+  })
+  .then(results => {
+    console.log(results);
+  });
 ```
 
 ### Get Subscription
@@ -101,12 +105,12 @@ subscription.create({
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSubscription>.
 
-The function `tls.messaging.subscription.get` can be used to get the current
+The function `ubscription.get` can be used to get the current
 subscription. It takes no arguments. It returns an object with the following
 properties:
 
-- `destination_address`: The phone number that a message can be sent to.
-- `active_days`: The number of days left on the subscription.
+- `destinationAddress`: The phone number that a message can be sent to.
+- `activeDays`: The number of days left on the subscription.
 
 For example:
 
@@ -115,7 +119,7 @@ import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
 
-subscription.get().then((results) => {
+subscription.get().then(results => {
   console.log(results);
 });
 ```
@@ -125,7 +129,7 @@ subscription.get().then((results) => {
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/deleteSubscription>.
 
-The function `tls.messaging.subscription.delete` can be used to delete the current
+The function `subscription.delete` can be used to delete the current
 subscription. It takes no arguments.
 
 ```javascript
@@ -133,7 +137,7 @@ import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
 
-subscription.delete().then((results) => {
+subscription.delete().then(results => {
   console.log(results);
 });
 ```
@@ -148,7 +152,7 @@ For more information, please see here:
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/sendSms>.
 
-The function `tls.messaging.sms.send` can be used to send SMS. It takes the
+The function `sms.send` can be used to send SMS. It takes the
 following arguments:
 
 - `to`: The destination address, expected to be a phone number of the form
@@ -159,24 +163,24 @@ following arguments:
   characters. Certain well know senders will be blocked.
 - `validity` (optional): How long the platform should attempt to deliver the
   message for (in minutes).
-- `scheduled_delivery` (optional): How long the platform should wait before
+- `scheduledDelivery` (optional): How long the platform should wait before
   attempting to send the message (in minutes).
-- `notify_url` (optional): Contains a URL that will be called once your message
+- `notifyUrl` (optional): Contains a URL that will be called once your message
   has been processed.
 - `priority` (optional): Message will be placed ahead of all messages with a
   normal priority.
-- `reply_request` (optional): If set to true, the reply message functionality
+- `replyRequest` (optional): If set to true, the reply message functionality
   will be implemented.
-- `receipt_off` (optional): Whether Delivery Receipt will be sent back or not.
-- `user_msg_ref` (optional): Optional field used by some clients for custom
+- `receiptOff` (optional): Whether Delivery Receipt will be sent back or not.
+- `userMsgRef` (optional): Optional field used by some clients for custom
   reporting.
 
 It returns an object with the following properties:
 
 - `to`: The destination mobile number.
-- `delivery_status`: Whether the delivery has been completed.
-- `message_id`: Unique identifier for the message.
-- `message_status_url`: URL to retrieve the current delivery status.
+- `deliveryStatus`: Whether the delivery has been completed.
+- `messageId`: Unique identifier for the message.
+- `messageStatusUrl`: URL to retrieve the current delivery status.
 
 For example:
 
@@ -184,12 +188,14 @@ For example:
 import { SMS } from '@tls/messaging';
 const sms = SMS.getInstance();
 
-sms.send({
-  to: "<mobile number>",
-  body: "Hello from Typescript",
-}).then((results) => {
-  console.log(results);
-});
+sms
+  .send({
+    to: '<mobile number>',
+    body: 'Hello from Typescript',
+  })
+  .then(results => {
+    console.log(results);
+  });
 ```
 
 ### Get SMS Status
@@ -197,17 +203,17 @@ sms.send({
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSmsStatus>.
 
-The function `tls.messaging.sms.status` can be used to retrieve
+The function `sms.status` can be used to retrieve
 the status of a SMS. It takes the following arguments:
 
-- `message_id`:Unique identifier for the message.
+- `messageId`:Unique identifier for the message.
 
 It returns an object with the following properties:
 
 - `to`: Where the message is delivered to.
-- `delivery_status`: Whether the delivery has been completed.
-- `received_timestamp`: When the message was received.
-- `sent_timestamp`: When the message was sent.
+- `deliveryStatus`: Whether the delivery has been completed.
+- `receivedTimestamp`: When the message was received.
+- `sentTimestamp`: When the message was sent.
 
 For example:
 
@@ -215,12 +221,14 @@ For example:
 import { SMS } from '@tls/messaging';
 const sms = SMS.getInstance();
 
-sms.send({
-  to: "<mobile number>",
-  body: "Hello from Typescript",
-}).then((sentSMS) => {
-  sms.status(sentSMS.messageId);
-});
+sms
+  .send({
+    to: '<mobile number>',
+    body: 'Hello from Typescript',
+  })
+  .then(sentSMS => {
+    sms.status(sentSMS.messageId);
+  });
 ```
 
 ### Retrieve Replies
@@ -228,16 +236,16 @@ sms.send({
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/retrieveSmsReplies>.
 
-The function `tls.messaging.sms.get_next_unread_reply` can be used to retrieve
+The function `sms.get_next_unread_reply` can be used to retrieve
 the next unread reply for your phone number subscription. It takes no
 arguments. It returns an object with the following properties:
 
-- `destination_address`: Where the message is delivered to.
-- `sender_address`: Who the message is from.
+- `destinationAddress`: Where the message is delivered to.
+- `senderAddress`: Who the message is from.
 - `status`: Whether the delivery has been completed.
 - `message`: The body of the message.
-- `message_id`: Unique identifier for the message.
-- `sent_timestamp`: When the message was sent.
+- `messageId`: Unique identifier for the message.
+- `sentTimestamp`: When the message was sent.
 
 For example:
 
@@ -245,7 +253,7 @@ For example:
 import { SMS } from '@tls/messaging';
 const sms = SMS.getInstance();
 
-sms.get_next_unread_reply().then((results) => {
+sms.get_next_unread_reply().then(results => {
   console.log(results);
 });
 ```

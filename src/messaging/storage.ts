@@ -50,7 +50,7 @@ export class Memory implements IStorage {
     }
 
     get(params: IGetParams): Promise<TData> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             // Check for presence of data
             if (
                 !this.memoryStorage[params.bucket] ||

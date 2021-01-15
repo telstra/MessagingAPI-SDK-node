@@ -2,9 +2,7 @@ import HttpClient from './http-client';
 import { AxiosRequestConfig } from 'axios';
 import { API_URL } from './constants'
 import { URLSearchParams } from 'url';
-import { getStorage } from './storage';
-import { getConfig, setConfig, setAuthToken, getAuthToken } from './config';
-import { APIRequestError } from './errors';
+import { getConfig, setAuthToken } from './config';
 
 export default class OAUTH extends HttpClient {
     public constructor() {
@@ -23,7 +21,7 @@ export default class OAUTH extends HttpClient {
       config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
       return config;
     };
-  
+
     public getToken = async () => {
       // const existingAuth = await getAuthToken();
       // if (!existingAuth) console.log('session found', existingAuth);
@@ -36,7 +34,7 @@ export default class OAUTH extends HttpClient {
       params.append('scope', 'NSMS');
       const auth = await this.instance.post(`/v2/oauth/token`, params);
       if (!auth) return false;
-      const { access_token, token_type, expires_in } = auth;
+      const { access_token } = auth;
       setAuthToken(auth);
       return access_token;
     }
