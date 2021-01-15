@@ -1,0 +1,90 @@
+name: SDK CI-CD
+
+on:
+  push:
+    branches:
+      - refactor/modernize-sdk
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up node
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.x
+      - name: cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
+      - name: install dependencies
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: |
+          npm install
+      - name: run tests
+        run: |
+          npm run test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up node
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.x
+      - name: cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
+      - name: install dependencies
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: |
+          npm install
+      - name: run linting
+        run: |
+          npm run lint
+
+  publish:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+      - lint
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.x
+          registry-url: "https://registry.npmjs.org"
+      - name: cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
+      - name: install dependencies
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: |
+          npm install
+      - name: create .npmrc
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}
+          registry=https://registry.npmjs.org/
+          always-auth=true' > .npmrc
+      - name: publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          PUBLISHED_VERSION=$(npm view "@tls/messaging" dist-tags.latest)
+          PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+          [[ "$PUBLISHED_VERSION" == "$PACKAGE_VERSION" ]] || npm publish --access public
+      - name: upload artifacts that were released
+        uses: actions/upload-artifact@v2
+        with:
+          name: sdk
+          path: dist/
