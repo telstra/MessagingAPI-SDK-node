@@ -72,7 +72,6 @@ jobs:
               run: |
                   npm install
             - name: build src
-              if: steps.cache-node_modules.outputs.cache-hit != 'true'
               run: |
                   npm run build
             - name: create .npmrc
