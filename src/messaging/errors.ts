@@ -11,14 +11,6 @@ export abstract class TError extends Error {
     }
 }
 
-export class StorageError extends TError {
-    constructor(info: IConst) {
-        super(info);
-    }
-}
+export class StorageError extends TError {}
 
-export class APIRequestError extends TError {
-    constructor(info: IConst) {
-        super(info);
-    }
-}
+export class APIRequestError extends TError {}

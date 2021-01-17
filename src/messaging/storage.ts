@@ -36,21 +36,21 @@ export class Memory implements IStorage {
             if (!this.memoryStorage[params.bucket]) {
                 reject(
                     new StorageError({
-                        message: `${params} could not be retrieved.`
-                    }),
+                        message: `${params} could not be retrieved.`,
+                    })
                 );
             }
 
             // Get keys
             const keys = Object.keys(
                 this.memoryStorage[params.bucket]
-            ).filter((key) => key.startsWith(params.prefix));
+            ).filter(key => key.startsWith(params.prefix));
             resolve(keys);
         });
     }
 
     get(params: IGetParams): Promise<TData> {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             // Check for presence of data
             if (
                 !this.memoryStorage[params.bucket] ||
@@ -67,7 +67,7 @@ export class Memory implements IStorage {
     }
 
     set(params: ISetParams): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             if (!this.memoryStorage[params.bucket]) {
                 this.memoryStorage[params.bucket] = {};
             }
@@ -77,7 +77,7 @@ export class Memory implements IStorage {
     }
 
     clear(params: IClearParams): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             delete this.memoryStorage[params.bucket];
             resolve();
         });

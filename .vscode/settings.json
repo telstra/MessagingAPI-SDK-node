@@ -1,0 +1,6 @@
+{
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.preferences.quoteStyle": "single"
+}
