@@ -155,7 +155,7 @@ following arguments:
 -   `to`: The destination address, expected to be a phone number of the form
     `+614XXXXXXXX` or `04XXXXXXXX`.
 -   `body`: The SMS to send.
--   `from_` (optional): An alphanumeric value which will appear as the sender.
+-   `from` (optional): An alphanumeric value which will appear as the sender.
     Note that phone numbers are not supported amd the maximum length is 11
     characters. Certain well know senders will be blocked.
 -   `validity` (optional): How long the platform should attempt to deliver the
