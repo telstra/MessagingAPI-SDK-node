@@ -1,8 +1,9 @@
 {
-  "version": "0.2.12",
+  "version": "0.2.13",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "type": "module",
   "files": [
     "dist",
     "src"

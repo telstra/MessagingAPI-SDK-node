@@ -1,7 +1,10 @@
 import HttpClient from './http-client';
 import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
-import { TSubscriptionCreateRequest } from './types';
+import {
+    TSubscriptionCreateRequest,
+    TSubscriptionDeleteRequest,
+} from './types';
 import { API_URL } from './constants';
 import { validateError } from './validate';
 
@@ -58,12 +61,15 @@ export class Subscription extends HttpClient {
         }
     };
 
-    // public delete = async (body: TSubscriptionDeleteRequest) => {
-    //   try {
-    //     const result = await this.instance.delete(`/v2/messages/provisioning/subscriptions`, body);
-    //     return result;
-    //   } catch (error) {
-    //     return validateError(error);
-    //   }
-    // }
+    public delete = async (body: TSubscriptionDeleteRequest) => {
+        try {
+            const result = await this.instance.delete(
+                `/v2/messages/provisioning/subscriptions`,
+                { data: body }
+            );
+            return result;
+        } catch (error) {
+            return validateError(error);
+        }
+    };
 }
