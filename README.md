@@ -48,7 +48,6 @@ const authConfig = {
     tls_client_key: '<client key>',
     tls_client_secret: '<client secret>',
 };
-
 CONFIG.setConfig(authConfig);
 ```
 
@@ -66,14 +65,16 @@ more information, please see here:
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/createSubscription>.
 
-The function `subscription.create` can be used to create a
-subscription. It takes the following arguments:
+The function `subscription.create` can be used to create a subscription.
+
+It takes the following arguments:
 
 -   `activeDays` (optional): The number of days the subscription will be active,
     defaults to 30.
 -   `notifyUrl` (optional): A notification URL that will be POSTed to whenever a
     new message (i.e. a reply to a message sent) arrives at this destination
-    address.
+    address. \*\*If you are using a domain URL you must include the forward slash at
+    the end of the URL (e.g. http://www.example.com/).\*\*
 
 It returns an object with the following properties:
 
@@ -86,7 +87,6 @@ For example:
 import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
-
 subscription
     .create({
         activeDays: 1,
@@ -102,7 +102,7 @@ subscription
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSubscription>.
 
-The function `ubscription.get` can be used to get the current
+The function `subscription.get` can be used to get the current
 subscription. It takes no arguments. It returns an object with the following
 properties:
 
@@ -115,7 +115,6 @@ For example:
 import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
-
 subscription.get().then(results => {
     console.log(results);
 });
@@ -133,7 +132,6 @@ subscription. It takes no arguments.
 import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
-
 subscription.delete().then(results => {
     console.log(results);
 });
@@ -183,8 +181,8 @@ For example:
 
 ```javascript
 import { SMS } from '@tls/messaging';
-const sms = SMS.getInstance();
 
+const sms = SMS.getInstance();
 sms.send({
     to: '<mobile number>',
     body: 'Hello from Typescript',
@@ -201,7 +199,7 @@ For more information, please see here:
 The function `sms.status` can be used to retrieve
 the status of a SMS. It takes the following arguments:
 
--   `messageId`:Unique identifier for the message.
+-   `messageId`: Unique identifier for the message.
 
 It returns an object with the following properties:
 
@@ -214,14 +212,10 @@ For example:
 
 ```javascript
 import { SMS } from '@tls/messaging';
-const sms = SMS.getInstance();
 
-sms.send({
-    to: '<mobile number>',
-    body: 'Hello from Typescript',
-}).then(sentSMS => {
-    sms.status(sentSMS.messageId);
-});
+const { messageId } = '<messageID from sms.send() response>';
+const sms = SMS.getInstance();
+sms.status(messageId);
 ```
 
 ### Retrieve Replies
@@ -244,8 +238,8 @@ For example:
 
 ```javascript
 import { SMS } from '@tls/messaging';
-const sms = SMS.getInstance();
 
+const sms = SMS.getInstance();
 sms.get_next_unread_reply().then(results => {
     console.log(results);
 });
