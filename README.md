@@ -73,8 +73,7 @@ It takes the following arguments:
     defaults to 30.
 -   `notifyUrl` (optional): A notification URL that will be POSTed to whenever a
     new message (i.e. a reply to a message sent) arrives at this destination
-    address. \*\*If you are using a domain URL you must include the forward slash at
-    the end of the URL (e.g. http://www.example.com/).\*\*
+    address. **If you are using a domain URL you must include the forward slash at the end of the URL (e.g. http://www.example.com/)**.
 
 It returns an object with the following properties:
 
