@@ -15,10 +15,16 @@ npm i -s @tls/messaging
 These are the `Client key` and `Client secret` you can find here:
 <https://dev.telstra.com/user/me/apps>.
 
+> :warning: To load an ES module, set **"type": "module"** in the **package.json** or use the **.mjs** extension.
+
 To send your first SMS:
 
 ```javascript
+/** Using ES Modules (ECMAScript) */
 import { CONFIG, SMS } from '@tls/messaging';
+
+/** Using CommonJS */
+// var { CONFIG, Subscription } = require('@tls/messaging');
 
 const authConfig = {
     tls_client_key: '<client key>',
@@ -54,6 +60,63 @@ CONFIG.setConfig(authConfig);
 This should be done before any interactions requiring authentication, such as
 sending a SMS.
 
+## Free Trial
+
+Telstra offers a free trial for the messaging API to help you evaluate whether
+it meets your needs. There are some restrictions that apply compared to the
+full API, including a maximum number of SMS that can be sent and requiring the
+registration of a limited number of destinations before SMS can be sent to that
+destination. For more information, please see here:
+<https://dev.telstra.com/content/messaging-api#tag/Free-Trial>.
+
+### Registering Destinations
+
+> :information_source: **Only required for the free trial**
+
+Register destinations for the free trial. For more information, please see
+here:
+<https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumRegister>.
+
+The function `bnum.register` can be used to register destinations.
+It takes the following arguments:
+
+-   `bnum`: A list of destinations, expected to be phone numbers of the
+    form `+614XXXXXXXX` or `04XXXXXXXX`.
+
+It returns the list of phone numbers that have been registered.
+
+For example:
+
+```javascript
+import { BNUM } from '@tls/messaging';
+
+const bnum = BNUM.getInstance();
+bnum.register(('bnum': ['mobile number'])).then(results => {
+    console.log(results);
+});
+```
+
+### Retrieve Destinations
+
+> :information_source: **Only required for the free trial**
+
+Retrieve destinations for the free trial. For more information, please see here:
+<https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumList>.
+
+The function `bnum.get` can be used to retrieve registered destinations.
+It takes no arguments. It returns the list of phone numbers that have been registered.
+
+For example:
+
+```javascript
+import { BNUM } from '@tls/messaging';
+
+const bnum = BNUM.getInstance();
+bnum.get().then(results => {
+    console.log(results);
+});
+```
+
 ## Subscription
 
 A subscription gives you a dedicated mobile number tied to an application. For
@@ -69,7 +132,7 @@ The function `subscription.create` can be used to create a subscription.
 
 It takes the following arguments:
 
--   `activeDays` (optional): The number of days the subscription will be active,
+-   `activeDays`: The number of days the subscription will be active,
     defaults to 30.
 -   `notifyUrl` (optional): A notification URL that will be POSTed to whenever a
     new message (i.e. a reply to a message sent) arrives at this destination
@@ -89,7 +152,6 @@ const subscription = Subscription.getInstance();
 subscription
     .create({
         activeDays: 1,
-        notifyURL: '<callback url>',
     })
     .then(results => {
         console.log(results);
