@@ -24,7 +24,7 @@ To send your first SMS:
 import { CONFIG, SMS } from '@tls/messaging';
 
 /** Using CommonJS */
-// var { CONFIG, Subscription } = require('@tls/messaging');
+// var { CONFIG, SMS } = require('@tls/messaging');
 
 const authConfig = {
     tls_client_key: '<client key>',
