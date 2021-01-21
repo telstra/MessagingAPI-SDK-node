@@ -12,7 +12,7 @@ npm i -s @tls/messaging
 
 ## Getting Started
 
-These are the `Client key` and `Client secret` you can find here:
+You can find the `Client key` and `Client secret` here:
 <https://dev.telstra.com/user/me/apps>.
 
 > :warning: To load an ES module, set **"type": "module"** in the **package.json** or use the **.mjs** extension.
