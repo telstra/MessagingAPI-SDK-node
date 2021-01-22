@@ -138,9 +138,9 @@ It takes the following arguments:
     defaults to 30.
 -   `notifyUrl` (optional): A notification URL that will be POSTed to whenever a
     new message (i.e. a reply to a message sent) arrives at this destination
-    address. **If you are using a domain URL for the `notifyUrl` attribute you must include a forward slash at the end of the URL, for example `notifyUrl: "http://www.example.com/"`**.
+    address. **If you are using a domain URL (e.g. http://www.example.com) for the `notifyUrl` attribute, you must include a forward slash at the end to receive notifications, for example, `notifyURL: "http://www.example.com/"`.**
 
-> :warning: If you are using a domain URL for the `notifyUrl` attribute you must include a forward slash at the end of the URL, for example `notifyUrl: "http://www.example.com/"`
+> :warning: If you are using a domain URL (e.g. http://www.example.com) for the `notifyUrl` attribute, you must include a forward slash at the end to receive notifications, for example, `notifyURL: "http://www.example.com/"`.
 
 It returns an object with the following properties:
 
@@ -229,7 +229,7 @@ following arguments:
 -   `scheduledDelivery` (optional): How long the platform should wait before
     attempting to send the message (in minutes).
 -   `notifyUrl` (optional): Contains a URL that will be called once your message
-    has been processed. **If you are using a domain URL for the `notifyUrl` attribute you must include a forward slash at the end of the URL, for example `notifyUrl: "http://www.example.com/"`**
+    has been processed. **If you are using a domain URL (e.g. http://www.example.com) for the `notifyUrl` attribute, you must include a forward slash at the end to receive notifications, for example, `notifyURL: "http://www.example.com/"`.**
 -   `priority` (optional): Message will be placed ahead of all messages with a
     normal priority.
 -   `replyRequest` (optional): If set to true, the reply message functionality
@@ -238,7 +238,7 @@ following arguments:
 -   `userMsgRef` (optional): Optional field used by some clients for custom
     reporting.
 
-> :warning: If you are using a domain URL for the `notifyUrl` attribute you must include a forward slash at the end of the URL, for example `notifyUrl: "http://www.example.com/"`
+> :warning: If you are using a domain URL (e.g. http://www.example.com) for the `notifyUrl` attribute, you must include a forward slash at the end to receive notifications, for example, `notifyURL: "http://www.example.com/"`.
 
 It returns an object with the following properties:
 
