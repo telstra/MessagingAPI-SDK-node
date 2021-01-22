@@ -4,8 +4,8 @@ import '../config.js'
 const sms = SMS.getInstance();
 
 sms.send({
-  to: "<mobile number>",
-  body: "Hello from Typescript",
+  to: process.env.TLS_MOBILE_NUMBER ? process.env.TLS_MOBILE_NUMBER : '<mobile number>',
+  body: "Hello from Messaging SDK",
 }).then((result) => {
   console.log(result);
 });

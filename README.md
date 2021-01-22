@@ -35,7 +35,7 @@ CONFIG.setConfig(authConfig);
 const sms = SMS.getInstance();
 sms.send({
     to: '<mobile number>',
-    body: 'Hello from Typescript',
+    body: 'Hello from Messaging SDK',
 }).then(results => {
     console.log(results);
 });
@@ -91,7 +91,9 @@ For example:
 import { BNUM } from '@tls/messaging';
 
 const bnum = BNUM.getInstance();
-bnum.register(('bnum': ['mobile number'])).then(results => {
+bnum.register({
+    bnum: ['<mobile number>'],
+}).then(results => {
     console.log(results);
 });
 ```
@@ -189,15 +191,19 @@ For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/deleteSubscription>.
 
 The function `subscription.delete` can be used to delete the current
-subscription. It takes no arguments.
+subscription.
 
 ```javascript
 import { Subscription } from '@tls/messaging';
 
 const subscription = Subscription.getInstance();
-subscription.delete().then(results => {
-    console.log(results);
-});
+subscription
+    .delete({
+        emptyArr: 0,
+    })
+    .then(results => {
+        console.log(results);
+    });
 ```
 
 ## SMS
@@ -213,8 +219,7 @@ For more information, please see here:
 The function `sms.send` can be used to send SMS. It takes the
 following arguments:
 
--   `to`: The destination address, expected to be a phone number of the form
-    `+614XXXXXXXX` or `04XXXXXXXX`.
+-   `to`: The destination address, expected to be a phone number of the form `+614XXXXXXXX` or `04XXXXXXXX`.
 -   `body`: The SMS to send.
 -   `from` (optional): An alphanumeric value which will appear as the sender.
     Note that phone numbers are not supported amd the maximum length is 11
@@ -250,7 +255,7 @@ import { SMS } from '@tls/messaging';
 const sms = SMS.getInstance();
 sms.send({
     to: '<mobile number>',
-    body: 'Hello from Typescript',
+    body: 'Hello from Messaging SDK',
 }).then(results => {
     console.log(results);
 });

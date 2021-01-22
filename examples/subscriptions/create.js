@@ -5,8 +5,7 @@ const subscription = Subscription.getInstance();
 
 subscription
 .create({
-  activeDays: 1,
-  notifyURL: '<callback url>',
+  activeDays: 0
 })
 .then(results => {
   console.log(results);

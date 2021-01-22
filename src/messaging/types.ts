@@ -19,7 +19,7 @@ export type TMessage = {
     to: string;
     deliveryStatus: string;
     messageId: string;
-    messageStatusURL: string;
+    messageStatusURL?: string;
 };
 
 export type TCountry = {
@@ -28,41 +28,64 @@ export type TCountry = {
 
 export type TMessageSendRequest = {
     to: string;
-    validity?: string;
-    priority?: boolean;
     body: string;
+    from?: string;
+    validity?: string;
+    scheduledDelivery?: string;
     notifyURL?: string;
-    receiptOff?: boolean;
+    priority?: boolean;
     replyRequest?: boolean;
+    receiptOff?: boolean;
+    userMsgRef?: string;
 };
 
 export type TMessageSendResponse = {
     messages: Array<TMessage>;
-    Country: Array<TCountry>;
-    ReplyAddress: string;
+    Country?: Array<TCountry>;
+    ReplyAddress?: string;
     messageType: string;
     numberSegments: number;
 };
 
+export type TMessageRepliesResponse = {
+    status: string;
+    destinationAddress: string;
+    senderAddress: string;
+    message: string;
+    messageId: string;
+    sentTimestamp: string;
+};
+
+export type TMessageStatusRequest = {
+    messageId: string;
+};
+
+export type TMessageStatusResponse = {
+    to: string;
+    sentTimestamp: string;
+    receivedTimestamp: string;
+    deliveryStatus: string;
+};
+
 export type TSubscriptionCreateRequest = {
     activeDays: number;
-    notifyURL: string;
+    notifyURL?: string;
 };
 
 export type TSubscriptionCreateResponse = {
-    destinationAddress: string;
-    expiryDate: number;
-    activeDays: string;
+    destinationAddress?: string;
+    expiryDate?: number;
+    activeDays?: string;
 };
 
 export type TSubscriptionRetrieveResponse = {
-    destinationAddress: string;
-    activeDays: string;
-    notifyURL: string;
+    activeDays?: string;
+    notifyURL?: string;
+    destinationAddress?: string;
 };
 
 export type TSubscriptionDeleteRequest = {
-    emptyArr: number;
+    emptyArr?: number;
 };
 
 export type TBnumRetrieveResponse = {

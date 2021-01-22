@@ -1,7 +1,12 @@
 import HttpClient from './http-client';
 import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
-import { TMessageSendRequest, TMessageSendResponse } from './types';
+import {
+    TMessageSendRequest,
+    TMessageSendResponse,
+    TMessageRepliesResponse,
+    TMessageStatusResponse,
+} from './types';
 import { API_URL } from './constants';
 import { validateError } from './validate';
 export class SMS extends HttpClient {
@@ -48,7 +53,7 @@ export class SMS extends HttpClient {
 
     public get_next_unread_reply = async () => {
         try {
-            const result = await this.instance.get<TMessageSendRequest>(
+            const result = await this.instance.get<TMessageRepliesResponse>(
                 `/v2/messages/sms`
             );
             return result;
@@ -59,7 +64,7 @@ export class SMS extends HttpClient {
 
     public status = async (messageId: string) => {
         try {
-            const result = await this.instance.get<TMessageSendRequest>(
+            const result = await this.instance.get<TMessageStatusResponse>(
                 `/v2/messages/sms/${messageId}/status`
             );
             return result;
