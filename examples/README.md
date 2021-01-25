@@ -10,6 +10,12 @@ export TLS_CLIENT_SECRET="<client secret>"
 export TLS_MOBILE_NUMBER="<mobile number>"
 ```
 
+## Using CJS
+
+```SHELL
+node examples/index.cjs.js
+```
+
 ## Subscriptions
 
 ```SHELL

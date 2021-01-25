@@ -7,7 +7,6 @@ import {
 } from './types';
 import { API_URL } from './constants';
 import { validateError } from './validate';
-
 export class Subscription extends HttpClient {
     private static classInstance?: Subscription;
 

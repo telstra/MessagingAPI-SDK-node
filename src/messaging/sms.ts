@@ -51,7 +51,7 @@ export class SMS extends HttpClient {
         }
     };
 
-    public get_next_unread_reply = async () => {
+    public replies = async () => {
         try {
             const result = await this.instance.get<TMessageRepliesResponse>(
                 `/v2/messages/sms`

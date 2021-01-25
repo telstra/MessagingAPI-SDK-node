@@ -293,7 +293,7 @@ sms.status(messageId);
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/retrieveSmsReplies>.
 
-The function `sms.get_next_unread_reply` can be used to retrieve
+The function `sms.replies` can be used to retrieve
 the next unread reply for your phone number subscription. It takes no
 arguments. It returns an object with the following properties:
 
@@ -310,7 +310,7 @@ For example:
 import { SMS } from '@tls/messaging';
 
 const sms = SMS.getInstance();
-sms.get_next_unread_reply().then(results => {
+sms.replies().then(results => {
     console.log(results);
 });
 ```
