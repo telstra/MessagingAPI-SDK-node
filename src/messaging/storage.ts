@@ -36,7 +36,9 @@ export class Memory implements IStorage {
             if (!this.memoryStorage[params.bucket]) {
                 reject(
                     new StorageError({
-                        message: `${params} could not be retrieved.`,
+                        errorStatus: 500,
+                        errorCode: `STORAGE_ERROR`,
+                        errorMessage: `${params} could not be retrieved.`,
                     })
                 );
             }
@@ -57,9 +59,11 @@ export class Memory implements IStorage {
                 !this.memoryStorage[params.bucket][params.key]
             ) {
                 // reject(
-                //     new StorageError({
-                //         message: `${params} could not be retrieved.`
-                //     })
+                // new StorageError({
+                //     errorStatus: 500,
+                //     errorCode: `STORAGE_ERROR`,
+                //     errorMessage: `${params} could not be retrieved.`,
+                // })
                 // );
             }
             resolve(this.memoryStorage[params.bucket][params.key]);
