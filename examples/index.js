@@ -43,7 +43,7 @@ subscription.get()
 /**
  * SMS
  */
-const sms = SMS.getInstance();
+// const sms = SMS.getInstance();
 
 /** send message */
 // sms.send({
@@ -54,9 +54,9 @@ const sms = SMS.getInstance();
 // });
 
 /** retrieve replies */
-sms.replies().then(results => {
-    console.log(results);
-});
+// sms.get_next_unread_reply().then(results => {
+//     console.log(results);
+// });
 
 /**
  * Free Trial
