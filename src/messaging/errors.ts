@@ -1,19 +1,20 @@
 export interface IConst {
-    status: number;
-    code: string;
-    message: string;
+    errorStatus: number;
+    errorCode: string;
+    errorMessage: string;
 }
 
 export abstract class TError extends Error {
     name: string;
-    message: string;
-    code: string;
-    status: number;
+    errorMessage: string;
+    errorCode: string;
+    errorStatus: number;
     constructor(info: IConst) {
         super();
-        this.status = info.status;
-        this.code = info.code;
-        this.message = info.message;
+        this.errorStatus = info.errorStatus;
+        this.errorCode = info.errorCode;
+        this.errorMessage = info.errorMessage;
+        this.message = info.errorMessage;
         this.name = this.constructor.name;
     }
 }
@@ -23,9 +24,3 @@ export class StorageError extends TError {}
 export class RequestError extends TError {}
 
 export class AuthError extends TError {}
-
-export class SubscriptionError extends TError {}
-
-export class MessageError extends TError {}
-
-export class FreetrialError extends TError {}
