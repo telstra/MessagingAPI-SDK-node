@@ -16,24 +16,20 @@ export TLS_MOBILE_NUMBER="<mobile number>"
 node examples/index.cjs.js
 ```
 
-## Subscriptions
+## Using MJS
 
 ```SHELL
-node examples/subscriptions/retrieve.js
-node examples/subscriptions/create.js
-node examples/subscriptions/delete.js
+node examples/index.mjs
 ```
 
-## Messages
+## Using Docker Node
 
 ```SHELL
-node examples/messages/send.js
-node examples/messages/retrieve-unread-reply.js
-```
-
-## Free Trial
-
-```SHELL
-node examples/freetrial/retrieve.js
-node examples/freetrial/create.js
+# Common JS
+docker run -it --rm --name tls-messaging-node -v "$PWD":/usr/src/app -w /usr/src/app node:10 node examples/index.js
+docker run -it --rm --name tls-messaging-node -v "$PWD":/usr/src/app -w /usr/src/app node:11 node examples/index.js
+# ES Module
+docker run -it --rm --name tls-messaging-node -v "$PWD":/usr/src/app -w /usr/src/app node:12 node examples/index.mjs
+docker run -it --rm --name tls-messaging-node -v "$PWD":/usr/src/app -w /usr/src/app node:14 node examples/index.mjs
+docker run -it --rm --name tls-messaging-node -v "$PWD":/usr/src/app -w /usr/src/app node:15 node examples/index.mjs
 ```

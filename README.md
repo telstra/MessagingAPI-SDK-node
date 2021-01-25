@@ -12,25 +12,42 @@ npm i -s @tls/messaging
 
 ## Getting Started
 
-You can find the `Client key` and `Client secret` here:
-<https://dev.telstra.com/user/me/apps>.
+You can find the `Client key` and `Client secret` here: <https://dev.telstra.com/user/me/apps>.
 
-> :warning: To load an ES module, set **"type": "module"** in the **package.json** or use the **.mjs** extension.
+### Getting started using CJS (CommonJS)
 
-To send your first SMS:
+```javascript
+/** Using CommonJS */
+var { CONFIG, SMS } = require('@tls/messaging');
+
+const config = {
+    tls_client_key: '<client key>',
+    tls_client_secret: '<client secret>',
+};
+CONFIG.setConfig(config);
+
+const sms = SMS.getInstance();
+sms.send({
+    to: '<mobile number>',
+    body: 'Hello from Messaging SDK',
+}).then(results => {
+    console.log(results);
+});
+```
+
+### Getting started using ESM (ES Modules)
+
+> :warning: To load an ES module, set **"type": "module"** in your **package.json** or use the **.mjs** extension.
 
 ```javascript
 /** Using ES Modules (ECMAScript) */
 import { CONFIG, SMS } from '@tls/messaging';
 
-/** Using CommonJS */
-// var { CONFIG, SMS } = require('@tls/messaging');
-
-const authConfig = {
+const config = {
     tls_client_key: '<client key>',
     tls_client_secret: '<client secret>',
 };
-CONFIG.setConfig(authConfig);
+CONFIG.setConfig(config);
 
 const sms = SMS.getInstance();
 sms.send({
