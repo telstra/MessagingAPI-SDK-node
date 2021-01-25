@@ -50,7 +50,7 @@ subscription.get()
 // });
 
 /** retrieve replies */
-// sms.get_next_unread_reply().then(results => {
+// sms.replies().then(results => {
 //     console.log(results);
 // });
 

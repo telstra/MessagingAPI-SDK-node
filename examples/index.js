@@ -2,7 +2,7 @@
 var {
     CONFIG,
     Subscription,
-    // SMS,
+    SMS,
     // BNUM
 } = require('../dist/messaging.cjs.development.js');
 
@@ -43,7 +43,7 @@ subscription.get()
 /**
  * SMS
  */
-// const sms = SMS.getInstance();
+const sms = SMS.getInstance();
 
 /** send message */
 // sms.send({
@@ -54,9 +54,9 @@ subscription.get()
 // });
 
 /** retrieve replies */
-// sms.get_next_unread_reply().then(results => {
-//     console.log(results);
-// });
+sms.replies().then(results => {
+    console.log(results);
+});
 
 /**
  * Free Trial
