@@ -18,19 +18,24 @@ CONFIG.setConfig(config);
 const subscription = Subscription.getInstance();
 
 /** create subscription */
-// subscription
-// .create({
-//   activeDays: 0
-// })
-// .then(results => {
-//   console.log(results);
-// });
+subscription
+.create({
+  activeDays: 1,
+  notifyURL: "https://enh9mjeq0jhmc.x.pipedream.net/"
+})
+.then(results => {
+    console.log('subscription.create:', results);
+    subscription.get()
+    .then(results => {
+        console.log('subscription.get:', results);
+    });
+});
 
 /** retrieve subscription */
-subscription.get()
-.then(results => {
-    console.log(results);
-});
+// subscription.get()
+// .then(results => {
+//     console.log(results);
+// });
 
 /** delete subscription */
 // subscription.delete({
