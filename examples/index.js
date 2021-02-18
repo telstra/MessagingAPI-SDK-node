@@ -18,32 +18,37 @@ CONFIG.setConfig(config);
 const subscription = Subscription.getInstance();
 
 /** create subscription */
-subscription
-.create({
-  activeDays: 1,
-  notifyURL: "https://enh9mjeq0jhmc.x.pipedream.net/"
-})
-.then(results => {
-    console.log('subscription.create:', results);
-    subscription.get()
-    .then(results => {
-        console.log('subscription.get:', results);
-    });
-});
+// subscription
+// .create({
+//   activeDays: 1,
+//   notifyURL: "https://enh9mjeq0jhmc.x.pipedream.net/"
+// })
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// })
 
 /** retrieve subscription */
-// subscription.get()
-// .then(results => {
-//     console.log(results);
-// });
+subscription.get()
+.then(result => {
+    console.log(result);
+})
+.catch(error => {
+    console.error(error);
+})
 
 /** delete subscription */
 // subscription.delete({
 //     emptyArr: 0
 // })
-// .then(results => {
-//     console.log(results);
-// });
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// })
 
 /**
  * SMS
@@ -54,14 +59,22 @@ subscription
 // sms.send({
 //     to: process.env.TLS_MOBILE_NUMBER ? process.env.TLS_MOBILE_NUMBER : '<mobile number>',
 //     body: "Hello from Messaging SDK",
-// }).then((result) => {
+// })
+// .then(result => {
 //     console.log(result);
-// });
+// })
+// .catch(error => {
+//     console.error(error);
+// })
 
 /** retrieve replies */
-// sms.get_next_unread_reply().then(results => {
-//     console.log(results);
-// });
+// sms.get_next_unread_reply()
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// })
 
 /**
  * Free Trial
@@ -70,9 +83,12 @@ subscription
 
 /** retrieve bnums */
 // bnum.get()
-// .then(results => {
-//     console.log(results);
-// });
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// })
 
 /** register bnums */
 // bnum
@@ -81,6 +97,9 @@ subscription
 //     process.env.TLS_MOBILE_NUMBER ? process.env.TLS_MOBILE_NUMBER : '<mobile number>'
 //   ]
 // })
-// .then(results => {
-//   console.log(results);
-// });
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// })

@@ -10,8 +10,16 @@ import {
 import { API_URL } from './constants';
 import { validateError } from './validate';
 export class SMS extends HttpClient {
+    /**
+     * property to cache our single instance
+     * private, so we can’t get it outside the class
+     * static, to use it without creating an instance
+     */
     private static classInstance?: SMS;
 
+    /**
+     * private, to prevent the ability to create an instance
+     */
     private constructor() {
         super(API_URL);
         this._initializeRequestInterceptor();
@@ -25,13 +33,20 @@ export class SMS extends HttpClient {
     };
 
     private _handleRequest = async (config: AxiosRequestConfig) => {
-        const oauth = new OAUTH();
-        const authToken = await oauth.getToken();
-        config.headers['Content-Type'] = `application/json`;
-        config.headers['Authorization'] = `Bearer ${authToken}`;
-        return config;
+        try {
+            const oauth = new OAUTH();
+            const authToken = await oauth.getToken();
+            config.headers['Content-Type'] = `application/json`;
+            config.headers['Authorization'] = `Bearer ${authToken}`;
+            return config;
+        } catch (error) {
+            throw validateError(error);
+        }
     };
 
+    /**
+     * method, returns the instance
+     */
     public static getInstance() {
         if (!this.classInstance) {
             this.classInstance = new SMS();
@@ -47,7 +62,7 @@ export class SMS extends HttpClient {
             );
             return result;
         } catch (error) {
-            return validateError(error);
+            throw validateError(error);
         }
     };
 

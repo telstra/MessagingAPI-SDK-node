@@ -25,11 +25,15 @@ export class BNUM extends HttpClient {
     };
 
     private _handleRequest = async (config: AxiosRequestConfig) => {
-        const oauth = new OAUTH();
-        const authToken = await oauth.getToken();
-        config.headers['Content-Type'] = `application/json`;
-        config.headers['Authorization'] = `Bearer ${authToken}`;
-        return config;
+        try {
+            const oauth = new OAUTH();
+            const authToken = await oauth.getToken();
+            config.headers['Content-Type'] = `application/json`;
+            config.headers['Authorization'] = `Bearer ${authToken}`;
+            return config;
+        } catch (error) {
+            throw validateError(error);
+        }
     };
 
     public static getInstance() {
@@ -47,7 +51,7 @@ export class BNUM extends HttpClient {
             );
             return result;
         } catch (error) {
-            return validateError(error);
+            throw validateError(error);
         }
     };
 
@@ -58,7 +62,7 @@ export class BNUM extends HttpClient {
             );
             return result;
         } catch (error) {
-            return validateError(error);
+            throw validateError(error);
         }
     };
 }

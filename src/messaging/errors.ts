@@ -24,3 +24,7 @@ export class StorageError extends TError {}
 export class RequestError extends TError {}
 
 export class AuthError extends TError {}
+
+export class ClientError extends TError {}
+
+export class UnknownError extends TError {}

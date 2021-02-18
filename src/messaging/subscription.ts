@@ -3,6 +3,8 @@ import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
 import {
     TSubscriptionCreateRequest,
+    TSubscriptionCreateResponse,
+    TSubscriptionRetrieveResponse,
     TSubscriptionDeleteRequest,
 } from './types';
 import { API_URL } from './constants';
@@ -23,11 +25,15 @@ export class Subscription extends HttpClient {
     };
 
     private _handleRequest = async (config: AxiosRequestConfig) => {
-        const oauth = new OAUTH();
-        const authToken = await oauth.getToken();
-        config.headers['Content-Type'] = `application/json`;
-        config.headers['Authorization'] = `Bearer ${authToken}`;
-        return config;
+        try {
+            const oauth = new OAUTH();
+            const authToken = await oauth.getToken();
+            config.headers['Content-Type'] = `application/json`;
+            config.headers['Authorization'] = `Bearer ${authToken}`;
+            return config;
+        } catch (error) {
+            throw validateError(error);
+        }
     };
 
     public static getInstance() {
@@ -39,24 +45,24 @@ export class Subscription extends HttpClient {
 
     public create = async (body: TSubscriptionCreateRequest) => {
         try {
-            const result = await this.instance.post(
-                `/v2/messages/provisioning/subscriptions`,
-                body
-            );
+            const result = await this.instance.post<
+                TSubscriptionCreateResponse
+            >(`/v2/messages/provisioning/subscriptions`, body);
             return result;
         } catch (error) {
-            return validateError(error);
+            throw validateError(error);
         }
     };
 
     public get = async () => {
         try {
-            const result = await this.instance.get(
-                `/v2/messages/provisioning/subscriptions`
-            );
+            const result = await this.instance.get<
+                TSubscriptionRetrieveResponse
+            >(`/v2/messages/provisioning/subscriptions`);
             return result;
         } catch (error) {
-            return validateError(error);
+            console.error(error);
+            throw validateError(error);
         }
     };
 
@@ -68,7 +74,7 @@ export class Subscription extends HttpClient {
             );
             return result;
         } catch (error) {
-            return validateError(error);
+            throw validateError(error);
         }
     };
 }
