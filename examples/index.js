@@ -15,7 +15,7 @@ CONFIG.setConfig(config);
 /**
  * Subscription
  */
-const subscription = Subscription.getInstance();
+// const subscription = Subscription.getInstance();
 
 /** create subscription */
 // subscription
@@ -31,13 +31,13 @@ const subscription = Subscription.getInstance();
 // })
 
 /** retrieve subscription */
-subscription.get()
-.then(result => {
-    console.log(result);
-})
-.catch(error => {
-    console.error(error);
-})
+// subscription.get()
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// });
 
 /** delete subscription */
 // subscription.delete({
@@ -53,11 +53,11 @@ subscription.get()
 /**
  * SMS
  */
-// const sms = SMS.getInstance();
+const sms = new SMS();
 
 /** send message */
 // sms.send({
-//     to: process.env.TLS_MOBILE_NUMBER ? process.env.TLS_MOBILE_NUMBER : '<mobile number>',
+//     // to: process.env.TLS_MOBILE_NUMBER ? process.env.TLS_MOBILE_NUMBER : '<mobile number>',
 //     body: "Hello from Messaging SDK",
 // })
 // .then(result => {
@@ -65,7 +65,23 @@ subscription.get()
 // })
 // .catch(error => {
 //     console.error(error);
-// })
+//     const { errorStatus, errorCode, errorMessage } = error;
+//     console.error(errorStatus, errorCode, errorMessage);
+// });
+
+try {
+    sms.send({
+        // to: process.env.TLS_MOBILE_NUMBER ? process.env.TLS_MOBILE_NUMBER : '<mobile number>',
+        body: "Hello from Messaging SDK",
+    })
+    .then(result => {
+        // console.log(result);
+    });
+} catch (error) {
+    // console.error(error);
+    // const { errorStatus, errorCode, errorMessage } = error;
+    // console.error(errorStatus, errorCode, errorMessage);
+}
 
 /** retrieve replies */
 // sms.get_next_unread_reply()
