@@ -15,7 +15,7 @@ CONFIG.setConfig(config);
 /**
  * Subscription
  */
-// const subscription = Subscription.getInstance();
+// const subscription = new Subscription;
 
 /** create subscription */
 // subscription
@@ -28,7 +28,7 @@ CONFIG.setConfig(config);
 // })
 // .catch(error => {
 //     console.error(error);
-// })
+// });
 
 /** retrieve subscription */
 // subscription.get()
@@ -48,7 +48,7 @@ CONFIG.setConfig(config);
 // })
 // .catch(error => {
 //     console.error(error);
-// })
+// });
 
 /**
  * SMS
@@ -90,12 +90,12 @@ try {
 // })
 // .catch(error => {
 //     console.error(error);
-// })
+// });
 
 /**
  * Free Trial
  */
-// const bnum = BNUM.getInstance();
+// const bnum = new BNUM();
 
 /** retrieve bnums */
 // bnum.get()
@@ -104,7 +104,7 @@ try {
 // })
 // .catch(error => {
 //     console.error(error);
-// })
+// });
 
 /** register bnums */
 // bnum
@@ -118,4 +118,4 @@ try {
 // })
 // .catch(error => {
 //     console.error(error);
-// })
+// });
