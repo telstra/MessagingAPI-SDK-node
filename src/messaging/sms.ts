@@ -1,4 +1,4 @@
-import HttpClient from './http-client';
+import HttpClient from './HttpClient';
 import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
 import {
@@ -10,13 +10,6 @@ import {
 import { API_URL } from './constants';
 import { validateError } from './validate';
 export class SMS extends HttpClient {
-    /**
-     * property to cache our single instance
-     * private, so we can’t get it outside the class
-     * static, to use it without creating an instance
-     */
-    private static classInstance?: SMS;
-
     /**
      * private, to prevent the ability to create an instance
      */
@@ -44,16 +37,6 @@ export class SMS extends HttpClient {
         }
     };
 
-    /**
-     * method, returns the instance
-     */
-    public static getInstance() {
-        if (!this.classInstance) {
-            this.classInstance = new SMS();
-        }
-        return this.classInstance;
-    }
-
     public send = async (body: TMessageSendRequest) => {
         try {
             const result = await this.instance.post<TMessageSendResponse>(
@@ -73,7 +56,7 @@ export class SMS extends HttpClient {
             );
             return result;
         } catch (error) {
-            return validateError(error);
+            throw validateError(error);
         }
     };
 
@@ -84,7 +67,7 @@ export class SMS extends HttpClient {
             );
             return result;
         } catch (error) {
-            return validateError(error);
+            throw validateError(error);
         }
     };
 }

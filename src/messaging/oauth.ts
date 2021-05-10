@@ -1,4 +1,4 @@
-import HttpClient from './http-client';
+import HttpClient from './HttpClient';
 import { AxiosRequestConfig } from 'axios';
 import { API_URL } from './constants';
 import { URLSearchParams } from 'url';

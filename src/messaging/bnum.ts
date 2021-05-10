@@ -1,4 +1,4 @@
-import HttpClient from './http-client';
+import HttpClient from './HttpClient';
 import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
 import {
@@ -10,8 +10,6 @@ import { API_URL } from './constants';
 import { validateError } from './validate';
 
 export class BNUM extends HttpClient {
-    private static classInstance?: BNUM;
-
     private constructor() {
         super(API_URL);
         this._initializeRequestInterceptor();
@@ -35,13 +33,6 @@ export class BNUM extends HttpClient {
             throw validateError(error);
         }
     };
-
-    public static getInstance() {
-        if (!this.classInstance) {
-            this.classInstance = new BNUM();
-        }
-        return this.classInstance;
-    }
 
     public register = async (body: TBnumRegisterRequest) => {
         try {

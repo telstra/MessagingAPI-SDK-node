@@ -1,4 +1,4 @@
-import HttpClient from './http-client';
+import HttpClient from './HttpClient';
 import { AxiosRequestConfig } from 'axios';
 import OAUTH from './oauth';
 import {
@@ -10,8 +10,6 @@ import {
 import { API_URL } from './constants';
 import { validateError } from './validate';
 export class Subscription extends HttpClient {
-    private static classInstance?: Subscription;
-
     private constructor() {
         super(API_URL);
         this._initializeRequestInterceptor();
@@ -35,13 +33,6 @@ export class Subscription extends HttpClient {
             throw validateError(error);
         }
     };
-
-    public static getInstance() {
-        if (!this.classInstance) {
-            this.classInstance = new Subscription();
-        }
-        return this.classInstance;
-    }
 
     public create = async (body: TSubscriptionCreateRequest) => {
         try {
