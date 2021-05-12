@@ -1,8 +1,4 @@
-/** Using CJS */
-var {
-    CONFIG,
-    Message,
-} = require('../dist/index.js');
+import { CONFIG, Message } from '../dist/index.js'
 
 const config = {
     tls_client_key: process.env.TLS_CLIENT_KEY ? process.env.TLS_CLIENT_KEY : '<client id>',
@@ -10,12 +6,14 @@ const config = {
 }
 CONFIG.setConfig(config);
 
-/** SMS */
+/**
+ * SMS
+ */
  const message = Message.getInstance();
 
 /** send message */
 message.send({
-    // to: '+61402000823',
+    // to: '+61000000000',
     body: 'Hello from Messaging SDK'
 })
 .then(result => {

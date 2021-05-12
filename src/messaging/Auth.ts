@@ -3,8 +3,8 @@ import { AxiosRequestConfig } from 'axios';
 import { API_URL } from './constants';
 import { URLSearchParams } from 'url';
 import { getConfig } from './config';
-import { validateError } from './validate';
-export default class OAUTH extends HttpClient {
+import { remap } from './errors';
+export class Auth extends HttpClient {
     public constructor() {
         super(API_URL);
         this._initializeRequestInterceptor();
@@ -38,7 +38,7 @@ export default class OAUTH extends HttpClient {
             const { access_token } = auth;
             return access_token;
         } catch (error) {
-            throw validateError(error);
+            throw remap(error);
         }
     };
 }

@@ -1,6 +1,6 @@
 import HttpClient from './HttpClient';
 import { AxiosRequestConfig } from 'axios';
-import OAUTH from './oauth';
+import { Auth } from './Auth';
 import {
     TSubscriptionCreateRequest,
     TSubscriptionCreateResponse,
@@ -8,44 +8,44 @@ import {
     TSubscriptionDeleteRequest,
 } from './types';
 import { API_URL } from './constants';
-import { validateError } from './validate';
-export class Subscription extends HttpClient {
+import { remap } from './errors';
+export class Numbers extends HttpClient {
     private constructor() {
         super(API_URL);
         this._initializeRequestInterceptor();
     }
 
-    private _initializeRequestInterceptor = () => {
+    private _initializeRequestInterceptor() {
         this.instance.interceptors.request.use(
             this._handleRequest,
             this._handleError
         );
-    };
+    }
 
-    private _handleRequest = async (config: AxiosRequestConfig) => {
+    private async _handleRequest(config: AxiosRequestConfig) {
         try {
-            const oauth = new OAUTH();
-            const authToken = await oauth.getToken();
+            const auth = new Auth();
+            const authToken = await auth.getToken();
             config.headers['Content-Type'] = `application/json`;
             config.headers['Authorization'] = `Bearer ${authToken}`;
             return config;
         } catch (error) {
-            throw validateError(error);
+            throw remap(error);
         }
-    };
+    }
 
-    public create = async (body: TSubscriptionCreateRequest) => {
+    public async create(body: TSubscriptionCreateRequest) {
         try {
             const result = await this.instance.post<
                 TSubscriptionCreateResponse
             >(`/v2/messages/provisioning/subscriptions`, body);
             return result;
         } catch (error) {
-            throw validateError(error);
+            throw remap(error);
         }
-    };
+    }
 
-    public get = async () => {
+    public async get() {
         try {
             const result = await this.instance.get<
                 TSubscriptionRetrieveResponse
@@ -53,11 +53,11 @@ export class Subscription extends HttpClient {
             return result;
         } catch (error) {
             console.error(error);
-            throw validateError(error);
+            throw remap(error);
         }
-    };
+    }
 
-    public delete = async (body: TSubscriptionDeleteRequest) => {
+    public async delete(body: TSubscriptionDeleteRequest) {
         try {
             const result = await this.instance.delete(
                 `/v2/messages/provisioning/subscriptions`,
@@ -65,7 +65,7 @@ export class Subscription extends HttpClient {
             );
             return result;
         } catch (error) {
-            throw validateError(error);
+            throw remap(error);
         }
-    };
+    }
 }

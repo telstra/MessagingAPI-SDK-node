@@ -1,40 +1,40 @@
 import HttpClient from './HttpClient';
 import { AxiosRequestConfig } from 'axios';
-import OAUTH from './oauth';
+import { Auth } from './Auth';
 import {
     TBnumRetrieveResponse,
     TBnumRegisterRequest,
     TBnumRegisterResponse,
 } from './types';
 import { API_URL } from './constants';
-import { validateError } from './validate';
+import { remap } from './errors';
 
-export class BNUM extends HttpClient {
+export class TrialNumbers extends HttpClient {
     private constructor() {
         super(API_URL);
         this._initializeRequestInterceptor();
     }
 
-    private _initializeRequestInterceptor = () => {
+    private _initializeRequestInterceptor() {
         this.instance.interceptors.request.use(
             this._handleRequest,
             this._handleError
         );
-    };
+    }
 
-    private _handleRequest = async (config: AxiosRequestConfig) => {
+    private async _handleRequest(config: AxiosRequestConfig) {
         try {
-            const oauth = new OAUTH();
-            const authToken = await oauth.getToken();
+            const auth = new Auth();
+            const authToken = await auth.getToken();
             config.headers['Content-Type'] = `application/json`;
             config.headers['Authorization'] = `Bearer ${authToken}`;
             return config;
         } catch (error) {
-            throw validateError(error);
+            throw remap(error);
         }
-    };
+    }
 
-    public register = async (body: TBnumRegisterRequest) => {
+    public async register(body: TBnumRegisterRequest) {
         try {
             const result = await this.instance.post<TBnumRegisterResponse>(
                 `/v2/messages/freetrial/bnum`,
@@ -42,18 +42,18 @@ export class BNUM extends HttpClient {
             );
             return result;
         } catch (error) {
-            throw validateError(error);
+            throw remap(error);
         }
-    };
+    }
 
-    public get = async () => {
+    public async get() {
         try {
             const result = await this.instance.get<TBnumRetrieveResponse>(
                 `/v2/messages/freetrial/bnum`
             );
             return result;
         } catch (error) {
-            throw validateError(error);
+            throw remap(error);
         }
-    };
+    }
 }

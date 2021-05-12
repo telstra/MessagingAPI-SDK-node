@@ -2,7 +2,7 @@ import { getStorage } from './storage';
 import { TAuthConfig, TAuthResponse } from './types';
 import { StorageError } from './errors';
 
-export const setConfig = async (authConfig: TAuthConfig) => {
+export const setConfig = async (authConfig: TAuthConfig): Promise<void> => {
     await getStorage()
         .set({
             bucket: 'authStore',
@@ -11,14 +11,13 @@ export const setConfig = async (authConfig: TAuthConfig) => {
         })
         .catch(() => {
             throw new StorageError({
-                errorStatus: 500,
-                errorCode: `ERROR_STORAGE`,
-                errorMessage: `Unable to set auth config.`,
+                errorCode: `STORAGE_ERROR`,
+                errorMessage: `Unable to set auth config in storage.`,
             });
         });
 };
 
-export const getConfig = async () => {
+export const getConfig = async (): Promise<string> => {
     return await getStorage()
         .get({
             bucket: 'authStore',
@@ -26,18 +25,17 @@ export const getConfig = async () => {
         })
         .catch(() => {
             throw new StorageError({
-                errorStatus: 500,
-                errorCode: `ERROR_STORAGE`,
-                errorMessage: `Unable to get auth config.`,
+                errorCode: `STORAGE_ERROR`,
+                errorMessage: `Unable to get auth config from storage.`,
             });
         });
 };
 
-export const clearConfig = async () => {
+export const clearConfig = async (): Promise<void> => {
     await getStorage().clear({ bucket: 'authStore' });
 };
 
-export const setAuthToken = async (authToken: TAuthResponse) => {
+export const setAuthToken = async (authToken: TAuthResponse): Promise<void> => {
     await getStorage().set({
         bucket: 'authStore',
         key: 'authToken',
@@ -45,7 +43,7 @@ export const setAuthToken = async (authToken: TAuthResponse) => {
     });
 };
 
-export const getAuthToken = async () => {
+export const getAuthToken = async (): Promise<string> => {
     return await getStorage().get({
         bucket: 'authStore',
         key: 'authToken',

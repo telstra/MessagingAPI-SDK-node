@@ -1,55 +1,7 @@
-/**
- * https://khalilstemmler.com/articles/enterprise-typescript-nodejs/handling-errors-result-class/
- */
-
-// export class Result<T> {
-//     public isSuccess: boolean;
-//     public isFailure: boolean
-//     public error?: string;
-//     private _value?: T;
-
-//     private constructor (isSuccess: boolean, error?: string, value?: T) {
-//       if (isSuccess && error) {
-//         throw new Error(`InvalidOperation: A result cannot be successful and contain an error`);
-//       }
-//       if (!isSuccess && !error) {
-//         throw new Error(`InvalidOperation: A failing result needs to contain an error message`);
-//       }
-
-//       this.isSuccess = isSuccess;
-//       this.isFailure = !isSuccess;
-//       this.error = error;
-//       this._value = value;
-
-//       Object.freeze(this);
-//     }
-
-//     public getValue () : T | undefined {
-//       if (!this.isSuccess) {
-//         throw new Error(`Cant retrieve the value from a failed result.`)
-//       }
-//       return this._value;
-//     }
-
-//     public static ok<U> (value?: U) : Result<U> {
-//       return new Result<U>(true, '', value);
-//     }
-
-//     public static fail<U> (error: string): Result<U> {
-//       return new Result<U>(false, error);
-//     }
-
-//     public static combine (results: Result<any>[]) : Result<any> {
-//       for (let result of results) {
-//         if (result.isFailure) return result;
-//       }
-//       return Result.ok<any>();
-//     }
-//   }
-
-/**
- * https://dev.to/_gdelgado/type-safe-error-handling-in-typescript-1p4n
- */
+export interface ErrorResponse {
+    errorCode: string;
+    errorMessage: string;
+}
 
 export type ResultSuccess<T> = { type: 'success'; value: T };
 export type ResultError = { type: 'error'; error: Error };
@@ -64,12 +16,6 @@ export type TAuthResponse = {
     access_token: string;
     token_type: string;
     expires_in: string;
-};
-
-export type TErrorResponse = {
-    errorStatus?: number;
-    errorCode?: string;
-    errorMessage?: string;
 };
 
 export type TMessage = {
