@@ -4,6 +4,8 @@ import { API_URL, Constants } from './Constants';
 import { URLSearchParams } from 'url';
 import { getConfig, setConfig } from './config';
 import { AuthError, remap } from './Errors';
+const fs = require('fs');
+
 export class Auth extends HttpClient {
     public constructor() {
         super(API_URL);
@@ -40,7 +42,54 @@ export class Auth extends HttpClient {
     }
 
     private tokenFromSharedCredentials(): boolean {
-        return false;
+        try {
+            let telstra_messaging_client_id: string | undefined;
+            let telstra_messaging_client_secret: string | undefined;
+            const data: string[] = fs
+                .readFileSync(Constants.SHARED_CREDENTIALS, 'utf8')
+                .toString()
+                .split('\n');
+
+            data.forEach((line: string, index: number): void => {
+                if (line.includes('[default]')) {
+                    // Iterate the next three lines past default profile
+                    [1, 2, 3].forEach((item: number): void => {
+                        let lineIndex = data[index + item]
+                            .replace(/\s+/g, '')
+                            .split('=');
+
+                        switch (lineIndex[0]) {
+                            case 'TELSTRA_MESSAGING_CLIENT_ID': {
+                                telstra_messaging_client_id = lineIndex[1];
+                                break;
+                            }
+                            case 'TELSTRA_MESSAGING_CLIENT_SECRET': {
+                                telstra_messaging_client_secret = lineIndex[1];
+                                break;
+                            }
+                            default: {
+                                break;
+                            }
+                        }
+                    });
+                }
+            });
+
+            if (
+                telstra_messaging_client_id &&
+                telstra_messaging_client_secret
+            ) {
+                setConfig({
+                    telstra_messaging_client_id,
+                    telstra_messaging_client_secret,
+                });
+                return true;
+            }
+
+            return false;
+        } catch (err) {
+            return false;
+        }
     }
 
     private tokenFromFileImport(): boolean {
@@ -58,6 +107,7 @@ export class Auth extends HttpClient {
             }
 
             const authConfig = await getConfig();
+            console.log('authConfig:', authConfig);
             const {
                 telstra_messaging_client_id,
                 telstra_messaging_client_secret,

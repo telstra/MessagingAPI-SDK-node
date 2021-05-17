@@ -8,10 +8,9 @@ export class Validator<T> {
     }
 
     /** setup generic constraint to limit the types that K can be */
-    check<K extends keyof T>(key: K, type: string): this {
+    check<K extends keyof T>(key: K): this {
         console.log('data:', this.data);
         console.log('key:', key);
-        console.log('type:', type);
         console.log(typeof this.data[key]);
 
         /** validate key exists */

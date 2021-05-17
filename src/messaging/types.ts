@@ -41,6 +41,7 @@ export type TMessageSend = {
 export type TCountrySend = {
     AUS: number;
 };
+
 export type TMessageSendResponse = {
     messages: Array<TMessageSend>;
     Country?: Array<TCountrySend>;

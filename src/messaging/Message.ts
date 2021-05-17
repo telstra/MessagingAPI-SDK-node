@@ -88,7 +88,7 @@ export class Message extends HttpClient {
     public async send(data: TMessage): Promise<TMessageSendResponse> {
         try {
             const validator = new Validator<TMessage>(data);
-            validator.check('to', 'string').check('body', 'string');
+            validator.check('to').check('body');
 
             const result = await this.instance.post<TMessageSendResponse>(
                 `/v2/messages/sms`,
