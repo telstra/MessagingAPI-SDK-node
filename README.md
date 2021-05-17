@@ -18,13 +18,7 @@ You can find the `Client key` and `Client secret` here: <https://dev.telstra.com
 
 ```javascript
 /** Using CommonJS */
-var { CONFIG, SMS } = require('@tls/messaging');
-
-const config = {
-    tls_client_key: '<client key>',
-    tls_client_secret: '<client secret>',
-};
-CONFIG.setConfig(config);
+var { SMS } = require('@tls/messaging');
 
 const sms = SMS.getInstance();
 sms.send({
@@ -41,13 +35,7 @@ sms.send({
 
 ```javascript
 /** Using ES Modules (ECMAScript) */
-import { CONFIG, SMS } from '@tls/messaging';
-
-const config = {
-    tls_client_key: '<client key>',
-    tls_client_secret: '<client secret>',
-};
-CONFIG.setConfig(config);
+import { SMS } from '@tls/messaging';
 
 const sms = SMS.getInstance();
 sms.send({
@@ -60,18 +48,13 @@ sms.send({
 
 ## Authentication
 
-Authentication through code is supported.
+Authentication through environment variables is supported.
 
 For example:
 
-```javascript
-import { CONFIG, SMS } from '@tls/messaging';
-
-const authConfig = {
-    tls_client_key: '<client key>',
-    tls_client_secret: '<client secret>',
-};
-CONFIG.setConfig(authConfig);
+```shell
+export TELSTRA_MESSAGING_CLIENT_ID="<CLIENT_ID>"
+export TELSTRA_MESSAGING_CLIENT_SECRET="<CLIENT_SECRET>"
 ```
 
 This should be done before any interactions requiring authentication, such as
