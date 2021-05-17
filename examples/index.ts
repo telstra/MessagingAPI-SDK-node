@@ -6,14 +6,9 @@ const config = {
 }
 CONFIG.setConfig(config);
 
-/**
- * SMS
- */
- const message = Message.getInstance();
-
-/** send message */
+const message = Message.getInstance();
 message.send({
-    // to: '+61000000000',
+    to: '+61000000000',
     body: 'Hello from Messaging SDK'
 })
 .then(result => {

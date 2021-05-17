@@ -7,8 +7,8 @@ import {
     TSubscriptionRetrieveResponse,
     TSubscriptionDeleteRequest,
 } from './types';
-import { API_URL } from './constants';
-import { remap } from './errors';
+import { API_URL } from './Constants';
+import { remap } from './Errors';
 export class Numbers extends HttpClient {
     private constructor() {
         super(API_URL);

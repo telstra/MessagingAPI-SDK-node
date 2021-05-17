@@ -8,8 +8,8 @@ export type ResultError = { type: 'error'; error: Error };
 export type Result<T> = ResultSuccess<T> | ResultError;
 
 export type TAuthConfig = {
-    tls_client_key: string;
-    tls_client_secret: string;
+    telstra_messaging_client_id: string;
+    telstra_messaging_client_secret: string;
 };
 
 export type TAuthResponse = {
@@ -19,17 +19,6 @@ export type TAuthResponse = {
 };
 
 export type TMessage = {
-    to: string;
-    deliveryStatus: string;
-    messageId: string;
-    messageStatusURL?: string;
-};
-
-export type TCountry = {
-    AUS: number;
-};
-
-export type TMessageSendRequest = {
     to: string;
     body: string;
     from?: string;
@@ -42,9 +31,19 @@ export type TMessageSendRequest = {
     userMsgRef?: string;
 };
 
+export type TMessageSend = {
+    to: string;
+    deliveryStatus: string;
+    messageId: string;
+    messageStatusURL?: string;
+};
+
+export type TCountrySend = {
+    AUS: number;
+};
 export type TMessageSendResponse = {
-    messages: Array<TMessage>;
-    Country?: Array<TCountry>;
+    messages: Array<TMessageSend>;
+    Country?: Array<TCountrySend>;
     ReplyAddress?: string;
     messageType: string;
     numberSegments: number;

@@ -1,15 +1,27 @@
-// import { AssertionError } from './errors';
+import { AssertionError } from './Errors';
+export class Validator<T> {
+    constructor(public data: T) {}
 
-// export class Validator<T extends K> {
-//     constructor(
-//         public deserialise: (json: K) => T
-//     ) {}
+    checkAttrs<K extends keyof T>(propertyNames: K[]): void {
+        console.log('data:', this.data);
+        console.log('propertyNames:', propertyNames);
+    }
 
-//     checkPayload(data: T): void {
-//         console.log('hello');
-//         throw new AssertionError({
-//             errorCode: 'InvalidNumber',
-//             errorMessage: `Number [${data}] is not valid.`,
-//         });
-//     }
-// }
+    /** setup generic constraint to limit the types that K can be */
+    check<K extends keyof T>(key: K, type: string): this {
+        console.log('data:', this.data);
+        console.log('key:', key);
+        console.log('type:', type);
+        console.log(typeof this.data[key]);
+
+        /** validate key exists */
+        if (!this.data[key]) {
+            throw new AssertionError({
+                errorCode: 'MISSING_ATTRIBUTE',
+                errorMessage: `Attribute [${key}] is mandatory.`,
+            });
+        }
+
+        return this;
+    }
+}

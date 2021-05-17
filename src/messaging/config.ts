@@ -1,6 +1,7 @@
 import { getStorage } from './storage';
 import { TAuthConfig, TAuthResponse } from './types';
-import { StorageError } from './errors';
+import { StorageError } from './Errors';
+import { Constants } from './Constants';
 
 export const setConfig = async (authConfig: TAuthConfig): Promise<void> => {
     await getStorage()
@@ -10,10 +11,7 @@ export const setConfig = async (authConfig: TAuthConfig): Promise<void> => {
             data: JSON.stringify(authConfig),
         })
         .catch(() => {
-            throw new StorageError({
-                errorCode: `STORAGE_ERROR`,
-                errorMessage: `Unable to set auth config in storage.`,
-            });
+            throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
         });
 };
 
@@ -24,10 +22,7 @@ export const getConfig = async (): Promise<string> => {
             key: 'clientCredentials',
         })
         .catch(() => {
-            throw new StorageError({
-                errorCode: `STORAGE_ERROR`,
-                errorMessage: `Unable to get auth config from storage.`,
-            });
+            throw new StorageError(Constants.ERRORS.STORAGE_ERROR_GET);
         });
 };
 

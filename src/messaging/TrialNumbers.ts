@@ -6,8 +6,8 @@ import {
     TBnumRegisterRequest,
     TBnumRegisterResponse,
 } from './types';
-import { API_URL } from './constants';
-import { remap } from './errors';
+import { API_URL } from './Constants';
+import { remap } from './Errors';
 
 export class TrialNumbers extends HttpClient {
     private constructor() {

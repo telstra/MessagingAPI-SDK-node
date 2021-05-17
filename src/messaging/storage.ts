@@ -1,4 +1,4 @@
-import { StorageError } from './errors';
+import { StorageError } from './Errors';
 
 /**
  * Construct an instance of a storage based on the environment
