@@ -6,23 +6,21 @@ import {
     TMessageSendResponse,
     TMessageRepliesResponse,
     TMessageStatusResponse,
+    AuthConfigProps,
 } from './types';
 import { Validator } from './Validator';
 import { API_URL } from './Constants';
 import { remap } from './Errors';
 export class Message extends HttpClient {
-    /**
-     * property to cache our single instance
-     * private - so we can’t get it outside the class
-     * static - so we use it without creating an instance
-     */
-    private static classInstance?: Message;
+    public auth: Auth;
 
-    /**
-     * private constructor to prevent the ability to create an instance
-     */
-    private constructor() {
+    public constructor(authConfig?: AuthConfigProps) {
         super(API_URL);
+        if (authConfig) {
+            this.auth = new Auth(authConfig);
+        } else {
+            this.auth = new Auth();
+        }
         this._initializeRequestInterceptor();
     }
 
@@ -37,21 +35,11 @@ export class Message extends HttpClient {
         config: AxiosRequestConfig
     ): Promise<AxiosRequestConfig> {
         try {
-            const auth = new Auth();
-            const authToken = await auth.getToken();
             config.headers['Content-Type'] = `application/json`;
-            config.headers['Authorization'] = `Bearer ${authToken}`;
             return config;
         } catch (error) {
             throw remap(error);
         }
-    }
-
-    public static getInstance() {
-        if (!this.classInstance) {
-            this.classInstance = new Message();
-        }
-        return this.classInstance;
     }
 
     /**
@@ -71,7 +59,7 @@ export class Message extends HttpClient {
         ```typescript
         import { Message } from '@telstra/messaging'
 
-        const message = Message.getInstance();
+        const message = new Message();
 
         message.send({
             to: '+61000000000',
@@ -85,10 +73,15 @@ export class Message extends HttpClient {
         });
         ```
      */
-    public async send(data: TMessage): Promise<TMessageSendResponse> {
+    public async send(data: TMessage): Promise<{}> {
         try {
             const validator = new Validator<TMessage>(data);
             validator.check('to').check('body');
+
+            const accessToken = await this.auth.getToken();
+            this.instance.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${accessToken}`;
 
             const result = await this.instance.post<TMessageSendResponse>(
                 `/v2/messages/sms`,
@@ -100,8 +93,33 @@ export class Message extends HttpClient {
         }
     }
 
+    /**
+     * Messages are retrieved one at a time, starting with the earliest reply.
+     * The API supports the encoding of emojis in the reply message. The emojis will be in their UTF-8 format.
+     * If the subscription has a notifyURL, reply messages will be logged there instead.
+     * @link https://dev.telstra.com/content/messaging-api#operation/retrieveInboundSms
+     * @example
+        ```typescript
+        import { Message } from '@telstra/messaging'
+
+        const message = new Message();
+
+        message.getNextUnreadReply()
+        .then(result => {
+            console.log(result);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        ```
+     */
     public async getNextUnreadReply(): Promise<TMessageRepliesResponse> {
         try {
+            const accessToken = await this.auth.getToken();
+            this.instance.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${accessToken}`;
+
             const result = await this.instance.get<TMessageRepliesResponse>(
                 `/v2/messages/sms`
             );
@@ -112,10 +130,31 @@ export class Message extends HttpClient {
     }
 
     /**
-     * @param messageId - Id of the message being retrieved
+     * If no delivery receipt notification URL has been specified, it is possible to poll for the message status.
+     * @param data.messageId - (Required) Phone number (in E.164 format) to send the message to.
+     * @link https://dev.telstra.com/content/messaging-api#operation/getSmsStatus
+     * @example
+        ```typescript
+        import { Message } from '@telstra/messaging'
+
+        const message = new Message();
+
+        message.status('<MESSAGE_ID>')
+        .then(result => {
+            console.log(result);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        ```
      */
     public async status(messageId: string): Promise<TMessageStatusResponse> {
         try {
+            const accessToken = await this.auth.getToken();
+            this.instance.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${accessToken}`;
+
             const result = await this.instance.get<TMessageStatusResponse>(
                 `/v2/messages/sms/${messageId}/status`
             );

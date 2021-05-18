@@ -6,12 +6,20 @@ import {
     TSubscriptionCreateResponse,
     TSubscriptionRetrieveResponse,
     TSubscriptionDeleteRequest,
+    AuthConfigProps,
 } from './types';
 import { API_URL } from './Constants';
 import { remap } from './Errors';
 export class Numbers extends HttpClient {
-    private constructor() {
+    public auth: Auth;
+
+    public constructor(authConfig?: AuthConfigProps) {
         super(API_URL);
+        if (authConfig) {
+            this.auth = new Auth(authConfig);
+        } else {
+            this.auth = new Auth();
+        }
         this._initializeRequestInterceptor();
     }
 
@@ -34,8 +42,33 @@ export class Numbers extends HttpClient {
         }
     }
 
+    /**
+     * Invoke the provisioning API to get a dedicated mobile number for an application.
+     * @param data.activeDays - (Required) The number of days before for which this number is provisioned.
+     * @param data.notifyURL - A notification URL that will be POSTed to whenever a new message (i.e. a reply to a message sent) arrives at this destination address. Must end with a trailing slash.
+     * @link https://dev.telstra.com/content/messaging-api#operation/createSubscription
+     * @example
+        ```typescript
+        import { Numbers } from '@telstra/messaging'
+
+        const numbers = new Numbers();
+
+        numbers.register({ activeDays: 1 })
+        .then(result => {
+            console.log(result);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        ```
+     */
     public async create(body: TSubscriptionCreateRequest) {
         try {
+            const accessToken = await this.auth.getToken();
+            this.instance.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${accessToken}`;
+
             const result = await this.instance.post<
                 TSubscriptionCreateResponse
             >(`/v2/messages/provisioning/subscriptions`, body);
@@ -45,8 +78,31 @@ export class Numbers extends HttpClient {
         }
     }
 
+    /**
+     * Retrieve mobile number subscription for an account.
+     * @link https://dev.telstra.com/content/messaging-api#operation/getSubscription
+     * @example
+        ```typescript
+        import { Numbers } from '@telstra/messaging'
+
+        const numbers = new Numbers();
+
+        numbers.get()
+        .then(result => {
+            console.log(result);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        ```
+     */
     public async get() {
         try {
+            const accessToken = await this.auth.getToken();
+            this.instance.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${accessToken}`;
+
             const result = await this.instance.get<
                 TSubscriptionRetrieveResponse
             >(`/v2/messages/provisioning/subscriptions`);
@@ -57,8 +113,32 @@ export class Numbers extends HttpClient {
         }
     }
 
+    /**
+     * Delete a mobile number subscription from an account
+     * @param data.emptyArr - (Required)
+     * @link https://dev.telstra.com/content/messaging-api#operation/deleteSubscription
+     * @example
+        ```typescript
+        import { Numbers } from '@telstra/messaging'
+
+        const numbers = new Numbers();
+
+        numbers.delete({ emptyArr: 0 })
+        .then(result => {
+            console.log(result);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        ```
+     */
     public async delete(body: TSubscriptionDeleteRequest) {
         try {
+            const accessToken = await this.auth.getToken();
+            this.instance.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${accessToken}`;
+
             const result = await this.instance.delete(
                 `/v2/messages/provisioning/subscriptions`,
                 { data: body }

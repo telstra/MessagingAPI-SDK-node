@@ -20,13 +20,17 @@ You can find the `Client key` and `Client secret` here: <https://dev.telstra.com
 /** Using CommonJS */
 var { SMS } = require('@tls/messaging');
 
-const sms = SMS.getInstance();
+const sms = new SMS();
 sms.send({
     to: '<mobile number>',
     body: 'Hello from Messaging SDK',
-}).then(results => {
-    console.log(results);
-});
+})
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
 ```
 
 ### Getting started using ESM (ES Modules)
@@ -37,24 +41,60 @@ sms.send({
 /** Using ES Modules (ECMAScript) */
 import { SMS } from '@tls/messaging';
 
-const sms = SMS.getInstance();
+const sms = new SMS();
 sms.send({
     to: '<mobile number>',
     body: 'Hello from Messaging SDK',
-}).then(results => {
-    console.log(results);
-});
+})
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
 ```
 
 ## Authentication
 
-Authentication through environment variables is supported.
+Authentication through environment variables, shared configuration file and json file import are supported.
 
-For example:
+### Environment variables
+
+Export the following two environment variables, replacing the values with your own credentials.
 
 ```shell
 export TELSTRA_MESSAGING_CLIENT_ID="<CLIENT_ID>"
 export TELSTRA_MESSAGING_CLIENT_SECRET="<CLIENT_SECRET>"
+```
+
+### Shared credentials
+
+Create a `~/.telstra/credentials` file in your home path with the following contents, replacing the values with your own credentials.
+
+```markdown
+[default]
+TELSTRA_MESSAGING_CLIENT_ID = <CLIENT_ID>
+TELSTRA_MESSAGING_CLIENT_SECRET = <CLIENT_SECRET>
+```
+
+### Shared credentials
+
+Create a `json` file in your project path with the following contents, replacing the values with your own credentials.
+
+```json
+{
+    "TELSTRA_MESSAGING_CLIENT_ID": "XXXXX",
+    "TELSTRA_MESSAGING_CLIENT_SECRET": "XXXXX"
+}
+```
+
+Then `import` the `json` file into your project source.
+
+```typescript
+import { Message } from '../dist/index.js';
+import AUTH_CONFIG from './credentials.json';
+
+const message = new Message(AUTH_CONFIG);
 ```
 
 This should be done before any interactions requiring authentication, such as
@@ -88,14 +128,19 @@ It returns the list of phone numbers that have been registered.
 For example:
 
 ```javascript
-import { BNUM } from '@tls/messaging';
+import { TrialNumbers } from '@tls/messaging';
 
-const bnum = BNUM.getInstance();
-bnum.register({
-    bnum: ['<mobile number>'],
-}).then(results => {
-    console.log(results);
-});
+const trialNumber = new TrialNumbers();
+trialNumber
+    .register({
+        bnum: ['<mobile number>'],
+    })
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
 ```
 
 ### Retrieve Destinations
@@ -111,12 +156,17 @@ It takes no arguments. It returns the list of phone numbers that have been regis
 For example:
 
 ```javascript
-import { BNUM } from '@tls/messaging';
+import { TrialNumbers } from '@tls/messaging';
 
-const bnum = BNUM.getInstance();
-bnum.get().then(results => {
-    console.log(results);
-});
+const trialNumber = new TrialNumbers();
+trialNumber
+    .get()
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
 ```
 
 ## Subscription
@@ -150,15 +200,18 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Subscription } from '@tls/messaging';
+import { Numbers } from '@tls/messaging';
 
-const subscription = Subscription.getInstance();
-subscription
+const numbers = new Numbers();
+numbers
     .create({
         activeDays: 1,
     })
     .then(results => {
         console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
     });
 ```
 
@@ -177,12 +230,17 @@ properties:
 For example:
 
 ```javascript
-import { Subscription } from '@tls/messaging';
+import { Numbers } from '@tls/messaging';
 
-const subscription = Subscription.getInstance();
-subscription.get().then(results => {
-    console.log(results);
-});
+const numbers = new Numbers();
+numbers
+    .get()
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
 ```
 
 ### Delete Subscription
@@ -194,15 +252,18 @@ The function `subscription.delete` can be used to delete the current
 subscription.
 
 ```javascript
-import { Subscription } from '@tls/messaging';
+import { Numbers } from '@tls/messaging';
 
-const subscription = Subscription.getInstance();
-subscription
+const numbers = new Numbers();
+numbers
     .delete({
         emptyArr: 0,
     })
     .then(results => {
         console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
     });
 ```
 
@@ -250,15 +311,20 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { SMS } from '@tls/messaging';
+import { Message } from '@tls/messaging';
 
-const sms = SMS.getInstance();
-sms.send({
-    to: '<mobile number>',
-    body: 'Hello from Messaging SDK',
-}).then(results => {
-    console.log(results);
-});
+const message = new Message();
+message
+    .send({
+        to: '<mobile number>',
+        body: 'Hello from Messaging SDK',
+    })
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
 ```
 
 ### Get SMS Status
@@ -281,11 +347,17 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { SMS } from '@tls/messaging';
+import { Message } from '@tls/messaging';
 
-const { messageId } = '<messageID from sms.send() response>';
-const sms = SMS.getInstance();
-sms.status(messageId);
+const message = new Message();
+message
+    .status(messageId)
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
 ```
 
 ### Retrieve Replies
@@ -307,10 +379,15 @@ arguments. It returns an object with the following properties:
 For example:
 
 ```javascript
-import { SMS } from '@tls/messaging';
+import { Message } from '@tls/messaging';
 
-const sms = SMS.getInstance();
-sms.get_next_unread_reply().then(results => {
-    console.log(results);
-});
+const message = new Message();
+message
+    .getNextUnreadReply()
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
 ```

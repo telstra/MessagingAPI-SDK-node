@@ -4,32 +4,34 @@ import { API_URL, Constants } from './Constants';
 import { URLSearchParams } from 'url';
 import { getConfig, setConfig } from './config';
 import { AuthError, remap } from './Errors';
+import { AuthConfigProps } from './types';
+
 const fs = require('fs');
 
 export class Auth extends HttpClient {
-    public constructor() {
+    public constructor(public authConfig?: AuthConfigProps) {
         super(API_URL);
         this._initializeRequestInterceptor();
     }
 
-    public _initializeRequestInterceptor = () => {
+    private _initializeRequestInterceptor = () => {
         this.instance.interceptors.request.use(
             this._handleRequest,
             this._handleError
         );
     };
 
-    public _handleRequest = (config: AxiosRequestConfig) => {
+    private _handleRequest = (config: AxiosRequestConfig) => {
         config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
         return config;
     };
 
-    private tokenFromEnvVars(): boolean {
+    private async credentialsFromEnvVars(): Promise<boolean> {
         if (
             process.env.TELSTRA_MESSAGING_CLIENT_ID &&
             process.env.TELSTRA_MESSAGING_CLIENT_SECRET
         ) {
-            setConfig({
+            await setConfig({
                 telstra_messaging_client_id:
                     process.env.TELSTRA_MESSAGING_CLIENT_ID,
                 telstra_messaging_client_secret:
@@ -41,7 +43,7 @@ export class Auth extends HttpClient {
         }
     }
 
-    private tokenFromSharedCredentials(): boolean {
+    private async credentialsFromSharedFile(): Promise<boolean> {
         try {
             let telstra_messaging_client_id: string | undefined;
             let telstra_messaging_client_secret: string | undefined;
@@ -79,7 +81,7 @@ export class Auth extends HttpClient {
                 telstra_messaging_client_id &&
                 telstra_messaging_client_secret
             ) {
-                setConfig({
+                await setConfig({
                     telstra_messaging_client_id,
                     telstra_messaging_client_secret,
                 });
@@ -92,26 +94,47 @@ export class Auth extends HttpClient {
         }
     }
 
-    private tokenFromFileImport(): boolean {
-        return false;
+    private async credentialsFromFileImport(): Promise<boolean> {
+        if (!this.authConfig) return false;
+
+        const {
+            TELSTRA_MESSAGING_CLIENT_ID,
+            TELSTRA_MESSAGING_CLIENT_SECRET,
+        } = this.authConfig;
+
+        if (!TELSTRA_MESSAGING_CLIENT_ID || !TELSTRA_MESSAGING_CLIENT_SECRET)
+            return false;
+
+        await setConfig({
+            telstra_messaging_client_id: TELSTRA_MESSAGING_CLIENT_ID,
+            telstra_messaging_client_secret: TELSTRA_MESSAGING_CLIENT_SECRET,
+        });
+
+        return true;
     }
 
-    public getToken = async () => {
+    public async getToken(): Promise<string> {
         try {
+            /**
+             * Order of precedence;
+             * 1: Defined in constructor
+             * 2: Defined in environment variables
+             * 3: Defined in shared credentials file
+             * 4: Defined in imported json file
+             */
             if (
-                !this.tokenFromEnvVars() &&
-                !this.tokenFromSharedCredentials() &&
-                !this.tokenFromFileImport()
+                !(await this.credentialsFromEnvVars()) &&
+                !(await this.credentialsFromSharedFile()) &&
+                !(await this.credentialsFromFileImport())
             ) {
                 throw new AuthError(Constants.ERRORS.AUTH_ERROR);
             }
 
-            const authConfig = await getConfig();
-            console.log('authConfig:', authConfig);
+            const credentialsFromStorage = await getConfig();
             const {
                 telstra_messaging_client_id,
                 telstra_messaging_client_secret,
-            } = JSON.parse(authConfig);
+            } = JSON.parse(credentialsFromStorage);
 
             if (
                 !telstra_messaging_client_id ||
@@ -129,11 +152,19 @@ export class Auth extends HttpClient {
             params.append('grant_type', 'client_credentials');
             params.append('scope', 'NSMS');
             const auth = await this.instance.post(`/v2/oauth/token`, params);
-            if (!auth) return false;
+            if (!auth) throw new AuthError(Constants.ERRORS.AUTH_ERROR);
             const { access_token } = auth;
+
+            // if (access_token) {
+            //     console.log('access_token:', access_token);
+            //     this.instance.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+            // } else {
+            //     delete this.instance.defaults.headers.common['Authorization'];
+            // }
+
             return access_token;
         } catch (error) {
             throw remap(error);
         }
-    };
+    }
 }
