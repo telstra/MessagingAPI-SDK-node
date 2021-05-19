@@ -318,7 +318,7 @@ import { Message } from '@tls/messaging';
 const message = new Message();
 message
     .send({
-        to: '<mobile number>',
+        to: '<MOBILE_NUMBER>',
         body: 'Hello from Messaging SDK',
     })
     .then(results => {
