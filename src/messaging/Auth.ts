@@ -1,6 +1,6 @@
 import HttpClient from './HttpClient';
 import { AxiosRequestConfig } from 'axios';
-import { API_URL, Constants } from './Constants';
+import { Constants } from './Constants';
 import { URLSearchParams } from 'url';
 import { getConfig, setConfig } from './config';
 import { AuthError, remap } from './Errors';
@@ -10,7 +10,7 @@ const fs = require('fs');
 
 export class Auth extends HttpClient {
     public constructor(public authConfig?: AuthConfigProps) {
-        super(API_URL);
+        super(Constants.API_URL);
         this._initializeRequestInterceptor();
     }
 

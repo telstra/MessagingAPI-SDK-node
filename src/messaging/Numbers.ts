@@ -8,13 +8,13 @@ import {
     TSubscriptionDeleteRequest,
     AuthConfigProps,
 } from './types';
-import { API_URL } from './Constants';
+import { Constants } from './Constants';
 import { remap } from './Errors';
 export class Numbers extends HttpClient {
     public auth: Auth;
 
     public constructor(authConfig?: AuthConfigProps) {
-        super(API_URL);
+        super(Constants.API_URL);
         if (authConfig) {
             this.auth = new Auth(authConfig);
         } else {

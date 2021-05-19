@@ -9,13 +9,13 @@ import {
     AuthConfigProps,
 } from './types';
 import { Validator } from './Validator';
-import { API_URL } from './Constants';
+import { Constants } from './Constants';
 import { remap } from './Errors';
 export class Message extends HttpClient {
     public auth: Auth;
 
     public constructor(authConfig?: AuthConfigProps) {
-        super(API_URL);
+        super(Constants.API_URL);
         if (authConfig) {
             this.auth = new Auth(authConfig);
         } else {

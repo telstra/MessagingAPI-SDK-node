@@ -1,7 +1,5 @@
 const os = require('os');
 
-export const API_URL: string = 'https://tapi.telstra.com/';
-
 interface ErrorProps {
     errorCode: string;
     errorMessage: string;
@@ -9,6 +7,7 @@ interface ErrorProps {
 
 export abstract class Constants {
     static readonly SHARED_CREDENTIALS: string = `${os.homedir()}/.telstra/credentials`;
+    static readonly API_URL: string = 'https://tapi.telstra.com/';
 
     static readonly ERRORS = {
         STORAGE_ERROR_GET: {
