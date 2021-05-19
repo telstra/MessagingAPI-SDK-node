@@ -18,13 +18,14 @@ You can find the `Client key` and `Client secret` here: <https://dev.telstra.com
 
 ```javascript
 /** Using CommonJS */
-var { SMS } = require('@tls/messaging');
+var { Message } = require('@tls/messaging');
 
-const sms = new SMS();
-sms.send({
-    to: '<mobile number>',
-    body: 'Hello from Messaging SDK',
-})
+const message = new Message();
+message
+    .send({
+        to: '<MOBILE_NUMBER>',
+        body: 'Hello from Messaging SDK',
+    })
     .then(results => {
         console.log(results);
     })
@@ -39,13 +40,14 @@ sms.send({
 
 ```javascript
 /** Using ES Modules (ECMAScript) */
-import { SMS } from '@tls/messaging';
+import { Message } from '@tls/messaging';
 
-const sms = new SMS();
-sms.send({
-    to: '<mobile number>',
-    body: 'Hello from Messaging SDK',
-})
+const message = new Message();
+message
+    .send({
+        to: '<MOBILE_NUMBER>',
+        body: 'Hello from Messaging SDK',
+    })
     .then(results => {
         console.log(results);
     })
@@ -83,8 +85,8 @@ Create a `json` file in your project path with the following contents, replacing
 
 ```json
 {
-    "TELSTRA_MESSAGING_CLIENT_ID": "XXXXX",
-    "TELSTRA_MESSAGING_CLIENT_SECRET": "XXXXX"
+    "TELSTRA_MESSAGING_CLIENT_ID": "<CLIENT_ID>",
+    "TELSTRA_MESSAGING_CLIENT_SECRET": "<CLIENT_SECRET>"
 }
 ```
 
@@ -117,7 +119,7 @@ Register destinations for the free trial. For more information, please see
 here:
 <https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumRegister>.
 
-The function `bnum.register` can be used to register destinations.
+The function `trialNumber.register` can be used to register destinations.
 It takes the following arguments:
 
 -   `bnum`: A list of destinations, expected to be phone numbers of the
@@ -133,7 +135,7 @@ import { TrialNumbers } from '@tls/messaging';
 const trialNumber = new TrialNumbers();
 trialNumber
     .register({
-        bnum: ['<mobile number>'],
+        bnum: ['<MOBILE_NUMBER>'],
     })
     .then(results => {
         console.log(results);
@@ -150,7 +152,7 @@ trialNumber
 Retrieve destinations for the free trial. For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumList>.
 
-The function `bnum.get` can be used to retrieve registered destinations.
+The function `trialNumber.get` can be used to retrieve registered destinations.
 It takes no arguments. It returns the list of phone numbers that have been registered.
 
 For example:
@@ -180,7 +182,7 @@ more information, please see here:
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/createSubscription>.
 
-The function `subscription.create` can be used to create a subscription.
+The function `numbers.create` can be used to create a subscription.
 
 It takes the following arguments:
 
@@ -220,7 +222,7 @@ numbers
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSubscription>.
 
-The function `subscription.get` can be used to get the current
+The function `numbers.get` can be used to get the current
 subscription. It takes no arguments. It returns an object with the following
 properties:
 
@@ -248,7 +250,7 @@ numbers
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/deleteSubscription>.
 
-The function `subscription.delete` can be used to delete the current
+The function `numbers.delete` can be used to delete the current
 subscription.
 
 ```javascript
@@ -277,7 +279,7 @@ For more information, please see here:
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/sendSms>.
 
-The function `sms.send` can be used to send SMS. It takes the
+The function `message.send` can be used to send SMS. It takes the
 following arguments:
 
 -   `to`: The destination address, expected to be a phone number of the form `+614XXXXXXXX` or `04XXXXXXXX`.
@@ -332,7 +334,7 @@ message
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSmsStatus>.
 
-The function `sms.status` can be used to retrieve
+The function `message.status` can be used to retrieve
 the status of a SMS. It takes the following arguments:
 
 -   `messageId`: Unique identifier for the message.
@@ -365,7 +367,7 @@ message
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/retrieveSmsReplies>.
 
-The function `sms.get_next_unread_reply` can be used to retrieve
+The function `message.getNextUnreadReply` can be used to retrieve
 the next unread reply for your phone number subscription. It takes no
 arguments. It returns an object with the following properties:
 
