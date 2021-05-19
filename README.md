@@ -79,7 +79,7 @@ TELSTRA_MESSAGING_CLIENT_ID = <CLIENT_ID>
 TELSTRA_MESSAGING_CLIENT_SECRET = <CLIENT_SECRET>
 ```
 
-### Shared credentials
+### JSON file import
 
 Create a `json` file in your project path with the following contents, replacing the values with your own credentials.
 
