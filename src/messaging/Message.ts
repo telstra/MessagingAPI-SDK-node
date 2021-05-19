@@ -73,7 +73,7 @@ export class Message extends HttpClient {
         });
         ```
      */
-    public async send(data: TMessage): Promise<{}> {
+    public async send(data: TMessage): Promise<TMessageSendResponse> {
         try {
             const validator = new Validator<TMessage>(data);
             validator.check('to').check('body');

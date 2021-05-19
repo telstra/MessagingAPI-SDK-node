@@ -151,17 +151,10 @@ export class Auth extends HttpClient {
             );
             params.append('grant_type', 'client_credentials');
             params.append('scope', 'NSMS');
+
             const auth = await this.instance.post(`/v2/oauth/token`, params);
             if (!auth) throw new AuthError(Constants.ERRORS.AUTH_ERROR);
             const { access_token } = auth;
-
-            // if (access_token) {
-            //     console.log('access_token:', access_token);
-            //     this.instance.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-            // } else {
-            //     delete this.instance.defaults.headers.common['Authorization'];
-            // }
-
             return access_token;
         } catch (error) {
             throw remap(error);
