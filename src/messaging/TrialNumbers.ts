@@ -11,7 +11,7 @@ import { Constants } from './Constants';
 import { remap } from './Errors';
 
 export class TrialNumbers extends HttpClient {
-    public auth: Auth;
+    private auth: Auth;
 
     public constructor(authConfig?: AuthConfigProps) {
         super(Constants.API_URL);
