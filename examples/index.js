@@ -1,19 +1,35 @@
 /** Using CJS */
-var {
-    Message,
-    // Numbers,
-} = require('../dist/index.js');
+var { Message, Numbers, TrialNumbers } = require('../dist/index.js');
 
-// var AUTH_CONFIG = require('./credentials.json');
-// const message = new Message(AUTH_CONFIG);
+// const trialNumbers = new TrialNumbers();
+
+// trialNumbers.register({
+//     bnum: ['+61234567890']
+// })
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// });
 
 // const numbers = new Numbers();
 
 // numbers.create({
-//   activeDays: 1
+//     activeDays: 1
 // })
-// .then(results => {
-//   console.log(results);
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// });
+
+// numbers.delete({
+//     emptyArr: 1
+// })
+// .then(result => {
+//     console.log(result);
 // })
 // .catch(error => {
 //     console.error(error);
@@ -22,8 +38,8 @@ var {
 const message = new Message();
 
 message.send({
-    to: '+61123456789',
-    body: 'Hello from Messaging SDK'
+    // to: '+61123456789',
+    // body: 'Hello from Messaging SDK'
 })
 .then(result => {
     console.log(result);
@@ -31,3 +47,11 @@ message.send({
 .catch(error => {
     console.error(error);
 });
+
+// message.status('<MESSAGE ID>')
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.error(error);
+// });

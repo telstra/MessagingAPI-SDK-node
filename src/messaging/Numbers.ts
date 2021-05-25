@@ -8,6 +8,7 @@ import {
     TSubscriptionDeleteRequest,
     AuthConfigProps,
 } from './types';
+import { Validator } from './Validator';
 import { Constants } from './Constants';
 import { remap } from './Errors';
 export class Numbers extends HttpClient {
@@ -64,6 +65,24 @@ export class Numbers extends HttpClient {
      */
     public async create(body: TSubscriptionCreateRequest) {
         try {
+            const validate = new Validator<TSubscriptionCreateRequest>(body);
+            validate.schemaRef('ProvisionNumberRequest').schemaInline({
+                properties: {
+                    activeDays: {
+                        type: 'number',
+                        minimum: 1,
+                        exclusiveMaximum: 1825,
+                    },
+                },
+                optionalProperties: {
+                    notifyURL: {
+                        type: 'string',
+                    },
+                },
+                required: ['activeDays'],
+                additionalProperties: false,
+            });
+
             const accessToken = await this.auth.getToken();
             this.instance.defaults.headers.common[
                 'Authorization'
@@ -134,6 +153,17 @@ export class Numbers extends HttpClient {
      */
     public async delete(body: TSubscriptionDeleteRequest) {
         try {
+            const validate = new Validator<TSubscriptionDeleteRequest>(body);
+            validate.schemaRef('DeleteNumberRequest').schemaInline({
+                properties: {
+                    emptyArr: {
+                        type: 'number',
+                    },
+                },
+                required: ['emptyArr'],
+                additionalProperties: false,
+            });
+
             const accessToken = await this.auth.getToken();
             this.instance.defaults.headers.common[
                 'Authorization'

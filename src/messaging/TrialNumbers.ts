@@ -7,6 +7,7 @@ import {
     TBnumRegisterResponse,
     AuthConfigProps,
 } from './types';
+import { Validator } from './Validator';
 import { Constants } from './Constants';
 import { remap } from './Errors';
 
@@ -65,6 +66,27 @@ export class TrialNumbers extends HttpClient {
      */
     public async register(body: TBnumRegisterRequest) {
         try {
+            const validate = new Validator<TBnumRegisterRequest>(body);
+            validate
+                // .schemaRef('inline_object')
+                .schemaInline({
+                    properties: {
+                        bnum: {
+                            type: 'array',
+                            items: {
+                                type: 'string',
+                                minLength: 10,
+                                maxLength: 12,
+                            },
+                            minItems: 1,
+                            maxItems: 5,
+                            uniqueItems: true,
+                        },
+                    },
+                    required: ['bnum'],
+                    additionalProperties: false,
+                });
+
             const accessToken = await this.auth.getToken();
             this.instance.defaults.headers.common[
                 'Authorization'

@@ -75,8 +75,8 @@ export class Message extends HttpClient {
      */
     public async send(data: TMessage): Promise<TMessageSendResponse> {
         try {
-            const validator = new Validator<TMessage>(data);
-            validator.check('to').check('body');
+            const validate = new Validator<TMessage>(data);
+            validate.schemaRef('SendSMSRequest');
 
             const accessToken = await this.auth.getToken();
             this.instance.defaults.headers.common[
@@ -150,6 +150,11 @@ export class Message extends HttpClient {
      */
     public async status(messageId: string): Promise<TMessageStatusResponse> {
         try {
+            const validate = new Validator<string>(messageId);
+            validate.schemaInline({
+                type: 'string',
+            });
+
             const accessToken = await this.auth.getToken();
             this.instance.defaults.headers.common[
                 'Authorization'

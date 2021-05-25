@@ -1,27 +1,37 @@
+import OPENAPISCHEMAS from './openapi.json';
 import { AssertionError } from './Errors';
+var Ajv = require('ajv');
+var ajv = new Ajv({ allErrors: true, format: false });
+
 export class Validator<T> {
     constructor(public data: T) {}
 
-    // public checkAttrs<K extends keyof T>(propertyNames: K[]): this {
-    //     // console.log('data:', this.data);
-    //     // console.log('propertyNames:', propertyNames);
-    //     return this;
-    // }
-
-    /** setup generic constraint to limit the types that K can be */
-    public check<K extends keyof T>(key: K): this {
-        // console.log('data:', this.data);
-        // console.log('key:', key);
-        // console.log(typeof this.data[key]);
-
-        /** validate key exists */
-        if (!this.data[key]) {
+    public schemaRef(ref: string): this {
+        ajv.addSchema(OPENAPISCHEMAS, 'openapi.json');
+        var valid = ajv.validate(
+            { $ref: `openapi.json#/components/schemas/${ref}` },
+            this.data
+        );
+        if (valid) {
+            return this;
+        } else {
             throw new AssertionError({
                 errorCode: 'MISSING_ATTRIBUTE',
-                errorMessage: `Attribute [${key}] is mandatory.`,
+                errorMessage: `${ajv.errorsText(valid.errors)}`,
             });
         }
+    }
 
-        return this;
+    public schemaInline(ref: any): this {
+        ajv.addSchema(OPENAPISCHEMAS, 'openapi-inline.json');
+        var valid = ajv.validate(ref, this.data);
+        if (valid) {
+            return this;
+        } else {
+            throw new AssertionError({
+                errorCode: 'MISSING_ATTRIBUTE',
+                errorMessage: `${ajv.errorsText(valid.errors)}`,
+            });
+        }
     }
 }
