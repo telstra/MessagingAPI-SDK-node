@@ -1,90 +1,146 @@
 name: SDK CI-CD
 
 on:
-    push:
-        branches:
-            - refactor/modernize-sdk
+  push:
+    branches:
+      - refactor/modernize-sdk
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: set up node
-              uses: actions/setup-node@v2.1.4
-              with:
-                  node-version: 14.x
-            - name: cache node_modules
-              id: cache-node_modules
-              uses: actions/cache@v2
-              with:
-                  path: node_modules
-                  key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
-            - name: install dependencies
-              if: steps.cache-node_modules.outputs.cache-hit != 'true'
-              run: |
-                  npm install
-            - name: run tests
-              run: |
-                  npm run test
+  retrieve-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - id: openapi-to-json-schema
+        name: openapi to json schema
+        uses: telstra/openapi-spec-to-json-schema@v0.0.3
+        with:
+          # specification-url: 'https://dev.telstra.com/sites/default/files/redocs/1620871323/messaging-api-swagger_0.yaml'
+          specification-url: 'https://devxspecs.s3-ap-southeast-2.amazonaws.com/openapi.yaml'
+      - id: list-file
+        name: List file
+        run: |
+          value=`ls -al ${{ github.workspace }}/openapi/${{ steps.openapi-to-json-schema.outputs.json-schema-file }}`
+          echo The spec file is $value
+        shell: bash
+      - id: upload-artifact
+        name: openapi.json
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.openapi-to-json-schema.outputs.json-schema-file }}
+          path: ${{ github.workspace }}/openapi/${{ steps.openapi-to-json-schema.outputs.json-schema-file }}
 
-    lint:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: set up node
-              uses: actions/setup-node@v2.1.4
-              with:
-                  node-version: 14.x
-            - name: cache node_modules
-              id: cache-node_modules
-              uses: actions/cache@v2
-              with:
-                  path: node_modules
-                  key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
-            - name: install dependencies
-              if: steps.cache-node_modules.outputs.cache-hit != 'true'
-              run: |
-                  npm install
-            - name: run linting
-              run: |
-                  npm run lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up node
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.x
+      - name: cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
+      - name: install dependencies
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: |
+          npm install
+      - id: download-artifact
+        name: openapi.json
+        uses: actions/download-artifact@v2
+        with:
+          name: openapi.json
+      - id: copy-file
+        name: Copy file
+        run: |
+          value=`cp ${{ github.workspace }}/openapi.json src/messaging/openapi.json`
+          ls -al src/messaging/openapi.json
+        shell: bash
+      - name: run tests
+        run: |
+          npm run test
 
-    publish:
-        runs-on: ubuntu-latest
-        needs:
-            - test
-            - lint
-        steps:
-            - uses: actions/checkout@v1
-            - uses: actions/setup-node@v2.1.4
-              with:
-                  node-version: 14.x
-                  registry-url: 'https://registry.npmjs.org'
-            - name: cache node_modules
-              id: cache-node_modules
-              uses: actions/cache@v2
-              with:
-                  path: node_modules
-                  key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
-            - name: install dependencies
-              if: steps.cache-node_modules.outputs.cache-hit != 'true'
-              run: |
-                  npm install
-            - name: create .npmrc
-              run: |
-                  echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}
-                  registry=https://registry.npmjs.org/
-                  always-auth=true' > .npmrc
-            - name: publish
-              env:
-                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-              run: |
-                  PUBLISHED_VERSION=$(npm view "@tls/messaging" dist-tags.latest)
-                  PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-                  [[ "$PUBLISHED_VERSION" == "$PACKAGE_VERSION" ]] || npm publish --access public
-            - name: upload artifacts that were released
-              uses: actions/upload-artifact@v2
-              with:
-                  name: sdk
-                  path: dist/
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up node
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.x
+      - name: cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
+      - name: install dependencies
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: |
+          npm install
+      - id: download-artifact
+        name: openapi.json
+        uses: actions/download-artifact@v2
+        with:
+          name: openapi.json
+      - id: copy-file
+        name: Copy file
+        run: |
+          value=`cp ${{ github.workspace }}/openapi.json src/messaging/openapi.json`
+          ls -al src/messaging/openapi.json
+        shell: bash
+      - name: run linting
+        run: |
+          npm run lint
+
+  publish:
+    runs-on: ubuntu-latest
+    needs:
+      - retrieve-schema
+      - test
+      - lint
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.x
+          registry-url: 'https://registry.npmjs.org'
+      - name: cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
+      - name: install dependencies
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: |
+          npm install
+      - id: download-artifact
+        name: openapi.json
+        uses: actions/download-artifact@v2
+        with:
+          name: openapi.json
+      - id: copy-file
+        name: Copy file
+        run: |
+          value=`cp ${{ github.workspace }}/openapi.json src/messaging/openapi.json`
+          ls -al src/messaging/openapi.json
+        shell: bash
+      - name: create .npmrc
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}
+          registry=https://registry.npmjs.org/
+          always-auth=true' > .npmrc
+      - name: publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          PUBLISHED_VERSION=$(npm view "@tls/messaging" dist-tags.latest)
+          PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+          [[ "$PUBLISHED_VERSION" == "$PACKAGE_VERSION" ]] || npm publish --access public
+      - name: upload artifacts that were released
+        uses: actions/upload-artifact@v2
+        with:
+          name: sdk
+          path: dist/
