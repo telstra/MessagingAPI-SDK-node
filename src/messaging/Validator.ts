@@ -3,11 +3,12 @@ import { AssertionError } from './Errors';
 var Ajv = require('ajv');
 var ajv = new Ajv({ allErrors: true, format: false });
 
+ajv.addSchema(OPENAPISCHEMAS, 'openapi.json');
+
 export class Validator<T> {
     constructor(public data: T) {}
 
     public schemaRef(ref: string): this {
-        ajv.addSchema(OPENAPISCHEMAS, 'openapi.json');
         var valid = ajv.validate(
             { $ref: `openapi.json#/components/schemas/${ref}` },
             this.data
@@ -23,7 +24,6 @@ export class Validator<T> {
     }
 
     public schemaInline(ref: any): this {
-        ajv.addSchema(OPENAPISCHEMAS, 'openapi-inline.json');
         var valid = ajv.validate(ref, this.data);
         if (valid) {
             return this;
