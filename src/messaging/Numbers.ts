@@ -64,7 +64,9 @@ export class Numbers extends HttpClient {
      */
     public async create(subscription: TSubscriptionCreateRequest) {
         try {
-            const validate = new Validator<TSubscriptionCreateRequest>(subscription);
+            const validate = new Validator<TSubscriptionCreateRequest>(
+                subscription
+            );
             validate.schemaRef('ProvisionNumberRequest').schemaInline({
                 properties: {
                     activeDays: {
@@ -152,7 +154,9 @@ export class Numbers extends HttpClient {
      */
     public async delete(subscription: TSubscriptionDeleteRequest) {
         try {
-            const validate = new Validator<TSubscriptionDeleteRequest>(subscription);
+            const validate = new Validator<TSubscriptionDeleteRequest>(
+                subscription
+            );
             validate.schemaRef('DeleteNumberRequest').schemaInline({
                 properties: {
                     emptyArr: {
