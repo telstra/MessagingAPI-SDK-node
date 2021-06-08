@@ -10,7 +10,7 @@ import {
 } from './types';
 import { Validator } from './Validator';
 import { Constants } from './Constants';
-import { remap } from './Errors';
+
 export class Message extends HttpClient {
     private auth: Auth;
 
@@ -38,22 +38,22 @@ export class Message extends HttpClient {
             config.headers['Content-Type'] = `application/json`;
             return config;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 
     /**
      * Send an SMS Message to a single or multiple mobile number/s.
-     * @param data.to - (Required) Phone number (in E.164 format) to send the message to.
-     * @param data.body - (Required) The text body of the message.
-     * @param data.from - This will be the source address that will be displayed on the receiving device.
-     * @param data.validity - How long the platform should attempt to deliver the message for.
-     * @param data.scheduledDelivery - How long the platform should wait before attempting to send the message - specified in minutes.
-     * @param data.notifyURL - Contains a URL that will be called once your message has been processed.
-     * @param data.replyRequest - If false or not present, then normal message handling is implemented.
-     * @param data.priority - When messages are queued up for a number, then it is possible to set where a new message will be placed in the queue.
-     * @param data.receiptOff - Whether Delivery Receipt will be sent back or not.
-     * @param data.userMsgRef - Optional field used by some clients for custom reporting.
+     * @param message.to - (Required) Phone number (in E.164 format) to send the message to.
+     * @param message.body - (Required) The text body of the message.
+     * @param message.from - This will be the source address that will be displayed on the receiving device.
+     * @param message.validity - How long the platform should attempt to deliver the message for.
+     * @param message.scheduledDelivery - How long the platform should wait before attempting to send the message - specified in minutes.
+     * @param message.notifyURL - Contains a URL that will be called once your message has been processed.
+     * @param message.replyRequest - If false or not present, then normal message handling is implemented.
+     * @param message.priority - When messages are queued up for a number, then it is possible to set where a new message will be placed in the queue.
+     * @param message.receiptOff - Whether Delivery Receipt will be sent back or not.
+     * @param message.userMsgRef - Optional field used by some clients for custom reporting.
      * @link https://dev.telstra.com/content/messaging-api#operation/sendSms
      * @example
         ```typescript
@@ -73,9 +73,9 @@ export class Message extends HttpClient {
         });
         ```
      */
-    public async send(data: TMessage): Promise<TMessageSendResponse> {
+    public async send(message: TMessage): Promise<TMessageSendResponse> {
         try {
-            const validate = new Validator<TMessage>(data);
+            const validate = new Validator<TMessage>(message);
             validate.schemaRef('SendSMSRequest');
 
             const accessToken = await this.auth.getToken();
@@ -85,11 +85,11 @@ export class Message extends HttpClient {
 
             const result = await this.instance.post<TMessageSendResponse>(
                 `/v2/messages/sms`,
-                data
+                message
             );
             return result;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 
@@ -125,13 +125,13 @@ export class Message extends HttpClient {
             );
             return result;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 
     /**
      * If no delivery receipt notification URL has been specified, it is possible to poll for the message status.
-     * @param data.messageId - (Required) Phone number (in E.164 format) to send the message to.
+     * @param messageId - (Required) Phone number (in E.164 format) to send the message to.
      * @link https://dev.telstra.com/content/messaging-api#operation/getSmsStatus
      * @example
         ```typescript
@@ -165,7 +165,7 @@ export class Message extends HttpClient {
             );
             return result;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 }

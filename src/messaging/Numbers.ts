@@ -10,7 +10,7 @@ import {
 } from './types';
 import { Validator } from './Validator';
 import { Constants } from './Constants';
-import { remap } from './Errors';
+
 export class Numbers extends HttpClient {
     private auth: Auth;
 
@@ -31,22 +31,21 @@ export class Numbers extends HttpClient {
         );
     }
 
-    private async _handleRequest(config: AxiosRequestConfig) {
+    private async _handleRequest(
+        config: AxiosRequestConfig
+    ): Promise<AxiosRequestConfig> {
         try {
-            const auth = new Auth();
-            const authToken = await auth.getToken();
             config.headers['Content-Type'] = `application/json`;
-            config.headers['Authorization'] = `Bearer ${authToken}`;
             return config;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 
     /**
      * Invoke the provisioning API to get a dedicated mobile number for an application.
-     * @param data.activeDays - (Required) The number of days before for which this number is provisioned.
-     * @param data.notifyURL - A notification URL that will be POSTed to whenever a new message (i.e. a reply to a message sent) arrives at this destination address. Must end with a trailing slash.
+     * @param subscription.activeDays - (Required) The number of days before for which this number is provisioned.
+     * @param subscription.notifyURL - A notification URL that will be POSTed to whenever a new message (i.e. a reply to a message sent) arrives at this destination address. Must end with a trailing slash.
      * @link https://dev.telstra.com/content/messaging-api#operation/createSubscription
      * @example
         ```typescript
@@ -63,9 +62,9 @@ export class Numbers extends HttpClient {
         });
         ```
      */
-    public async create(body: TSubscriptionCreateRequest) {
+    public async create(subscription: TSubscriptionCreateRequest) {
         try {
-            const validate = new Validator<TSubscriptionCreateRequest>(body);
+            const validate = new Validator<TSubscriptionCreateRequest>(subscription);
             validate.schemaRef('ProvisionNumberRequest').schemaInline({
                 properties: {
                     activeDays: {
@@ -90,10 +89,10 @@ export class Numbers extends HttpClient {
 
             const result = await this.instance.post<
                 TSubscriptionCreateResponse
-            >(`/v2/messages/provisioning/subscriptions`, body);
+            >(`/v2/messages/provisioning/subscriptions`, subscription);
             return result;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 
@@ -128,13 +127,13 @@ export class Numbers extends HttpClient {
             return result;
         } catch (error) {
             console.error(error);
-            throw remap(error);
+            throw error;
         }
     }
 
     /**
      * Delete a mobile number subscription from an account
-     * @param data.emptyArr - (Required)
+     * @param subscription.emptyArr - (Required)
      * @link https://dev.telstra.com/content/messaging-api#operation/deleteSubscription
      * @example
         ```typescript
@@ -151,9 +150,9 @@ export class Numbers extends HttpClient {
         });
         ```
      */
-    public async delete(body: TSubscriptionDeleteRequest) {
+    public async delete(subscription: TSubscriptionDeleteRequest) {
         try {
-            const validate = new Validator<TSubscriptionDeleteRequest>(body);
+            const validate = new Validator<TSubscriptionDeleteRequest>(subscription);
             validate.schemaRef('DeleteNumberRequest').schemaInline({
                 properties: {
                     emptyArr: {
@@ -171,11 +170,11 @@ export class Numbers extends HttpClient {
 
             const result = await this.instance.delete(
                 `/v2/messages/provisioning/subscriptions`,
-                { data: body }
+                { data: subscription }
             );
             return result;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 }

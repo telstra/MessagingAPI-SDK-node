@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import { Constants } from './Constants';
 import { URLSearchParams } from 'url';
 import { getConfig, setConfig } from './config';
-import { AuthError, remap } from './Errors';
+import { AuthError } from './Errors';
 import { AuthConfigProps } from './types';
 
 const fs = require('fs');
@@ -14,7 +14,7 @@ export class Auth extends HttpClient {
         this._initializeRequestInterceptor();
     }
 
-    private _initializeRequestInterceptor = () => {
+    private _initializeRequestInterceptor = (): void => {
         this.instance.interceptors.request.use(
             this._handleRequest,
             this._handleError
@@ -117,15 +117,16 @@ export class Auth extends HttpClient {
         try {
             /**
              * Order of precedence;
-             * 1: Defined in constructor
-             * 2: Defined in environment variables
-             * 3: Defined in shared credentials file
-             * 4: Defined in imported json file
+             * - Defined in constructor
+             * - Defined in imported json file
+             * - Defined in environment variables
+             * - Defined in shared credentials file
+             * First match wins!
              */
             if (
+                !(await this.credentialsFromFileImport()) &&
                 !(await this.credentialsFromEnvVars()) &&
-                !(await this.credentialsFromSharedFile()) &&
-                !(await this.credentialsFromFileImport())
+                !(await this.credentialsFromSharedFile())
             ) {
                 throw new AuthError(Constants.ERRORS.AUTH_ERROR);
             }
@@ -157,7 +158,7 @@ export class Auth extends HttpClient {
             const { access_token } = auth;
             return access_token;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 }

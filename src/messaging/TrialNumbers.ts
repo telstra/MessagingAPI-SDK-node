@@ -9,7 +9,6 @@ import {
 } from './types';
 import { Validator } from './Validator';
 import { Constants } from './Constants';
-import { remap } from './Errors';
 
 export class TrialNumbers extends HttpClient {
     private auth: Auth;
@@ -31,12 +30,14 @@ export class TrialNumbers extends HttpClient {
         );
     }
 
-    private async _handleRequest(config: AxiosRequestConfig) {
+    private async _handleRequest(
+        config: AxiosRequestConfig
+    ): Promise<AxiosRequestConfig> {
         try {
             config.headers['Content-Type'] = `application/json`;
             return config;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 
@@ -98,7 +99,7 @@ export class TrialNumbers extends HttpClient {
             );
             return result;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 
@@ -132,7 +133,7 @@ export class TrialNumbers extends HttpClient {
             );
             return result;
         } catch (error) {
-            throw remap(error);
+            throw error;
         }
     }
 }
