@@ -4,7 +4,7 @@ declare module 'axios' {
     interface AxiosResponse<T = any> extends Promise<T> {}
 }
 
-export default abstract class HttpClient {
+export abstract class HttpClient {
     protected readonly instance: AxiosInstance;
 
     public constructor(baseURL: string) {

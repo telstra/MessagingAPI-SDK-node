@@ -1,4 +1,4 @@
-import HttpClient from './HttpClient';
+import { HttpClient } from './HttpClient';
 import { AxiosRequestConfig } from 'axios';
 import { Auth } from './Auth';
 import {
