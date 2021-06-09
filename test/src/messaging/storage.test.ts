@@ -1,6 +1,7 @@
+/* eslint-disable */
 import jestEach from 'jest-each';
 
-import { createStorage, getStorage, Memory } from '../src/messaging/storage';
+import { createStorage, getStorage, Memory } from '../../../src/messaging/storage';
 
 describe('createStorage', () => {
     let initialNodeEnv: string | undefined;
