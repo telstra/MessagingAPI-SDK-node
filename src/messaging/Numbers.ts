@@ -1,6 +1,4 @@
 import { HttpClient } from './HttpClient';
-import { AxiosRequestConfig } from 'axios';
-import { Auth } from './Auth';
 import {
     TSubscriptionCreateRequest,
     TSubscriptionCreateResponse,
@@ -9,37 +7,10 @@ import {
     AuthConfigProps,
 } from './types';
 import { Validator } from './Validator';
-import { Constants } from './Constants';
 
 export class Numbers extends HttpClient {
-    private auth: Auth;
-
-    public constructor(authConfig?: AuthConfigProps) {
-        super(Constants.API_URL);
-        if (authConfig) {
-            this.auth = new Auth(authConfig);
-        } else {
-            this.auth = new Auth();
-        }
-        this._initializeRequestInterceptor();
-    }
-
-    private _initializeRequestInterceptor() {
-        this.instance.interceptors.request.use(
-            this._handleRequest,
-            this._handleError
-        );
-    }
-
-    private async _handleRequest(
-        config: AxiosRequestConfig
-    ): Promise<AxiosRequestConfig> {
-        try {
-            config.headers['Content-Type'] = `application/json`;
-            return config;
-        } catch (error) {
-            throw error;
-        }
+    public constructor(public authConfig?: AuthConfigProps) {
+        super(authConfig);
     }
 
     /**
@@ -84,11 +55,6 @@ export class Numbers extends HttpClient {
                 additionalProperties: false,
             });
 
-            const accessToken = await this.auth.getToken();
-            this.instance.defaults.headers.common[
-                'Authorization'
-            ] = `Bearer ${accessToken}`;
-
             const result = await this.instance.post<
                 TSubscriptionCreateResponse
             >(`/v2/messages/provisioning/subscriptions`, subscription);
@@ -118,17 +84,11 @@ export class Numbers extends HttpClient {
      */
     public async get() {
         try {
-            const accessToken = await this.auth.getToken();
-            this.instance.defaults.headers.common[
-                'Authorization'
-            ] = `Bearer ${accessToken}`;
-
             const result = await this.instance.get<
                 TSubscriptionRetrieveResponse
             >(`/v2/messages/provisioning/subscriptions`);
             return result;
         } catch (error) {
-            console.error(error);
             throw error;
         }
     }
@@ -166,11 +126,6 @@ export class Numbers extends HttpClient {
                 required: ['emptyArr'],
                 additionalProperties: false,
             });
-
-            const accessToken = await this.auth.getToken();
-            this.instance.defaults.headers.common[
-                'Authorization'
-            ] = `Bearer ${accessToken}`;
 
             const result = await this.instance.delete(
                 `/v2/messages/provisioning/subscriptions`,

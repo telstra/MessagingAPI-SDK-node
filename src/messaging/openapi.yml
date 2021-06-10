@@ -1,0 +1,1852 @@
+openapi: '3.1.0'
+info:
+  title: Telstra Messaging API
+  version: 2.2.10
+  description: |
+
+    # Introduction
+
+    <table><tbody><tr><td class = 'into_api' style='border:none;padding:0 0 0 0'><p>Send and receive SMS and MMS messages globally using Telstra's enterprise grade Messaging API. It also allows your application to track the delivery status of both sent and received messages. Get your dedicated Australian number, and start sending and receiving messages today.</p></td><td class = 'into_api_logo' style='width: 20%;border:none'><img class = 'api_logo' style='margin: -26px 0 0 0' src = 'https://test-dev.telstra.net/sites/default/files/messagingapi-icon.png'></td></tr></tbody></table>
+
+    # Features
+
+    The Telstra Messaging API provides the features below.
+
+    | Feature | Description |
+    | --- | --- |
+    | `Dedicated Number` | Provision a mobile number for your account to be used as `from` address in the API |
+    | `Send Messages` | Sending SMS or MMS messages |
+    | `Receive Messages` | Telstra will deliver messages sent to a dedicated number or to the `notifyURL` defined by you |
+    | `Broadcast Messages` | Invoke a single API call to send a message to a list of numbers provided in `to` |
+    | `Delivery Status` | Query the delivery status of your messages |
+    | `Callbacks` | Provide a notification URL and Telstra will notify your app when a message status changes |
+    | `Alphanumeric Identifier` | Differentiate yourself by providing an alphanumeric string in `from`. This feature is only available on Telstra Account paid plans and support is only guaranteed when sending messages to Telstra destinations |
+    | `Concatenation` | Send messages up to 1998 characters long and Telstra will automaticaly segment and reassemble them |
+    | `Reply Request` | Create a chat session by associating `messageId` and `to` number to track responses received from a mobile number. We will store this association for 8 days |
+    | `Character set` | Accepts all Unicode characters as part of UTF-8 |
+    | `Bounce-back response` | See if your SMS hits an unreachable or unallocated number (Australia Only) |
+    | `Queuing` | Messaging API will automatically queue and deliver each message at a compliant rate. |
+    | `Emoji Encoding` | The API supports the encoding of emojis in the Basic Multilingual Plane U+0000 to U+FFFF. Support for emojis in the Supplementary Planes include those in the U+1F600 to U+1F6FF block. Emojis in the inbound messages will be in their UTF-8 format |
+
+    ## Free Trial vs Paid Plan Features
+    We welcome you to try the Messaging API with our Free Trial. Limited to the first 100 messages. Some features are not available with Free Trial.
+
+    After your Free Trial ends, signing up for a Paid Plan will give you access to the full suite of Messaging API features, namely:
+    - Have more than 1 provisioned number
+    - Send to ANY eligible recipient mobile number (limited to 5 dedicated recipients only in Free Trial)
+    - Send unlimited number of paid messages (limited to 100 in Free Trial)
+    - Use alphanumeric sender ID (Australian destinations only)
+    - Provision dedicated virtual numbers for up to 5 years (30 days only in Free Trial)
+
+    Check out [the FAQ page](https://dev.telstra.com/support/frequently-asked-questions) for our pricing and process for activating a Paid Plan.
+
+    ## Delivery Status: Notification/Callbacks vs Polling
+
+    The API provides two methods to confirm that a message has been delivered to the destination.
+
+    1. When you send a message there is an opportunity to specify a `notifyURL`. Once the message has been delivered, the API will make a call to this URL to advise of the message status.
+    2. If you do not specify a URL you can always call the `GET /status` API to get the status of the message.
+
+    Please see [this blog](https://dev.telstra.com/content/understanding-messaging-api-callbacks-part-1) for more information on using callbacks.
+
+    # Getting Access to the API
+
+    1. Register at [https://dev.telstra.com](https://dev.telstra.com).
+    2. After registration, login to [https://dev.telstra.com](https://dev.telstra.com) and navigate to the **My apps** page.
+    3. Create your application by clicking the **Add new app** button
+    4. Select **API Free Trial** Product when configuring your application. This Product includes the Telstra Messaging API as well as other free trial APIs. Your application will be approved automatically.
+    5. There is a maximum of 100 free messages per developer. Additional messages and features can be purchased from [https://dev.telstra.com](https://dev.telstra.com).
+    6. Note your `Client key` and `Client secret` as these will be needed to provision a number for your application and for authentication.
+
+    Now head over to **Getting Started** where you can find a postman collection as well as some links to sample apps and SDKs to get you started.
+
+    Happy Messaging!
+
+    # Frequently Asked Questions
+
+    **Q: Is creating a subscription via the Provisioning call a required step?**
+
+    A. Yes. You will only be able to start sending messages if you have a provisioned dedicated number. Use Provisioning to create a dedicated number subscription, or renew your dedicated number if it has expired.
+
+    **Q: When trying to send an SMS I receive a `400 Bad Request` or a `404 RESOURCE-NOT-FOUND` response. How can I fix this?**
+
+    A. You need to make sure you have a provisioned dedicated number before you can send an SMS.
+
+    Use Provisioning to create a dedicated number subscription, or renew your dedicated number if it has expired.
+
+    Perform a GET /provisioning/subscriptions call and ensure that your provisioned number is still actively linked to your API key. Otherwise, you will need to perform a POST /provisioning/subscriptions call to re-provision your API MSISDN to your API key.
+
+    If you do not have a provisioned dedicated number and you try to send a message via the API, you will get the error below in the response.
+
+    <pre><code class="language-sh">{
+      "status":"400",
+      "code":"DELIVERY-IMPOSSIBLE",
+      "message":"Invalid \'from\' address specified"
+    }</code></pre>
+
+    OR
+
+    <pre><code class="language-sh">{
+      "status":"404",
+      "code":"RESOURCE-NOT-FOUND",
+      "message":"Invalid resource. Refer to API docs at https://dev.telstra.com"
+    }</code></pre>
+
+    **Q: How long does my dedicated number stay active for?**
+
+    A. When you provision a dedicated number, by default it will be active for 30 days.
+    You can use the `activeDays` parameter during the provisioning call to increment or decrement the number of days your dedicated number will remain active.
+
+    Note that Free Trial apps will have 30 days as the maximum `activeDays` they can add to their provisioned number. If the Provisioning call is made several times within that 30-day period, it will return the `expiryDate` in the Unix format and will not add any activeDays until after that `expiryDate`.
+
+    **Q: Can I send a broadcast message using the Telstra Messaging API?**
+
+    A. Yes. Recipient numbers can be in the form of an array of strings if a broadcast message needs to be sent, allowing you to send to multiple mobile numbers in one API call.
+      A sample request body for this will be: `{"to":["+61412345678","+61487654321"],"body":"Test Message"}`
+
+    **Q: How many recipient numbers can I send a broadcast message to at one time?**
+
+    A. The API currently supports up to 10 recipient numbers in the `"to"` array.
+
+    **Q: Can I send SMS and MMS to all countries?**
+
+    A. You can send SMS and MMS to the countries in [this list](https://raw.githubusercontent.com/telstra/MessagingAPI-v2/master/docs/Telstra_Messaging_API_Country_Codes.csv), provided the destination network supports delivery.
+    International message delivery is on a best-effort basis.
+    Messages CANNOT be sent to countries which are subject to global sanctions namely: Burma, Côte d'Ivoire, Cuba, Iran, North Korea, Syria.
+
+    **Q: Can I use `Alphanumeric Identifier` from my paid plan via credit card?**
+
+    A. `Alphanumeric Identifier` is only available on Telstra Account paid plans, not through credit card paid plans.
+
+    **Q: What is the maximum sized MMS that I can send?**
+
+    A. This will depend on the carrier that will receive the MMS. For Telstra, it's up to 2MB. You will need to check with other carriers for their MMS size limits.
+
+    **Q: How is the size of an MMS calculated?**
+
+    A. Images are scaled up to approximately 4/3 when base64 encoded.
+    Additionally, there is approximately 200 bytes of overhead on each MMS.
+    Assuming the maximum MMS that can be sent on Telstra’s network is 2MB, then the maximum image size that can be sent will be approximately 1.378MB (1.378 x 1.34 + 200, without SOAP encapsulation).
+
+    **Q: How is an MMS classified as Small or Large?**
+
+    A. MMSes with numberSegments below 600 are classed as Small whereas those that are bigger than 600 are classed as Large. They will be charged accordingly.
+
+    **Q: Are SMILs supported by the Messaging API?**
+
+    A. While there will be no error if you send an MMS with a SMIL presentation, the actual layout or sequence defined in the SMIL may not display as expected because most of the new smartphone devices ignore the SMIL presentation layer. SMIL was used in feature phones which had limited capability and SMIL allowed a *powerpoint type* presentation to be provided. Smartphones now have the capability to display video which is the better option for presentations. It is recommended that MMS messages should just drop the SMIL.
+
+    **Q: How do I assign a delivery notification or callback URL?**
+
+    A. You can assign a delivery notification or callback URL by adding the `notifyURL` parameter in the body of the request when you send a message. Once the message has been delivered, a notification will then be posted to this callback URL.
+
+    **Q: Sometimes I am missing delivery receipts, why is this happening?**
+
+    A. Telstra can guarantee delivery receipts are provided for any mobile service connected on Telstra's network so long as the destination handset is able to receive SMS or MMS messages. For other carriers, although messages will be delivered to valid handsets on those carriers, they do not have an obligation to provide delivery receipts back to Telstra.
+
+    **Q: What is the difference between the `notifyURL` parameter in the Provisoning call versus the `notifyURL` parameter in the Send Message call?**
+
+    A. The `notifyURL` in the Provisoning call will be the URL where replies to the provisioned number will be posted.
+    On the other hand, the `notifyURL` in the Send Message call will be the URL where the delivery notification will be posted, e.g. when an SMS has already been delivered to the recipient.
+
+    **Q: Is there a specific format for the `notifyURL` parameter?**
+
+    A. The `notifyURL` should be a complete URL address which includes the protocol identifier (e.g. `https://`).
+    It should also have a forward slash at the end if it is just a domain (e.g. http://www.example.com/).
+
+    **Q: Can I use Messaging API from my paid plan via credit card billing?**
+
+    A. No. As of 1 June 2020, developers no longer have access to Messaging API production keys with new credit card billing accounts. To access the paid account for Messaging API, you must create a company with a Telstra Billing account number associated. If you are not an existing Telstra customer, or if you are an existing Telstra customer but don't have a 10 digit account number ending in 0, please contact TelstraDev support by emailing telstradev@team.telstra.com and we will help you create a Telstra Account.
+
+    If you already have access to the Messaging API production keys with an existing Credit Card billing method, your account will not be affected by this change. This applies only to accounts created with Credit Card billing after 1 June 2020.
+
+    # Getting Started
+
+    Below are the steps to get started with the Telstra Messaging API.
+      1. Generate an OAuth2 token using your `Client key` and `Client secret`.
+      2. Use the Provisioning call to create a subscription and receive a dedicated number.
+      3. Send a message to a specific mobile number.
+
+    ## Run in Postman
+    <a
+    href="https://app.getpostman.com/run-collection/84aeaeb6569ba7a92c47#?env%5BTelstra%20Messaging%20API%20Environment%5D=W3sia2V5IjoiaG9zdCIsInZhbHVlIjoidGFwaS50ZWxzdHJhLmNvbSIsImVuYWJsZWQiOnRydWUsInR5cGUiOiJ0ZXh0In0seyJrZXkiOiJjbGllbnRfaWQiLCJ2YWx1ZSI6IiIsImVuYWJsZWQiOnRydWUsInR5cGUiOiJ0ZXh0In0seyJrZXkiOiJjbGllbnRfc2VjcmV0IiwidmFsdWUiOiIiLCJlbmFibGVkIjp0cnVlLCJ0eXBlIjoidGV4dCJ9LHsia2V5IjoiYWNjZXNzX3Rva2VuIiwidmFsdWUiOm51bGwsImVuYWJsZWQiOnRydWUsInR5cGUiOiJ0ZXh0In0seyJrZXkiOiJtZXNzYWdlX2lkIiwidmFsdWUiOiIiLCJlbmFibGVkIjp0cnVlLCJ0eXBlIjoidGV4dCJ9XQ=="><img
+    src="https://run.pstmn.io/button.svg" alt="Run in Postman"/></a>
+
+    ## Sample Apps
+    - [Perl Sample App](https://github.com/telstra/MessagingAPI-perl-sample-app)
+    - [Happy Chat App](https://github.com/telstra/messaging-sample-code-happy-chat)
+    - [PHP Sample App](https://github.com/developersteve/telstra-messaging-php)
+
+    ## SDK Repos
+    - [Messaging API - PHP SDK](https://github.com/telstra/MessagingAPI-SDK-php)
+    - [Messaging API - Python SDK](https://github.com/telstra/MessagingAPI-SDK-python)
+    - [Messaging API - Ruby SDK](https://github.com/telstra/MessagingAPI-SDK-ruby)
+    - [Messaging API - NodeJS SDK](https://github.com/telstra/MessagingAPI-SDK-node)
+    - [Messaging API - .Net2 SDK](https://github.com/telstra/MessagingAPI-SDK-dotnet)
+    - [Messaging API - Java SDK](https://github.com/telstra/MessagingAPI-SDK-Java)
+
+    ## Blog Posts
+    For more information on the Messaging API, you can read these blog posts:
+    - [Get Started with the TelstraDev Messaging API](https://dev.telstra.com/content/get-started-telstradev-messaging-api)
+    - [Connecting our community in an emergency with mobile messaging](https://dev.telstra.com/content/connecting-our-community-emergency-mobile-messaging-govhack-2020-part-1)
+    - [Callbacks Part 1](https://dev.telstra.com/content/understanding-messaging-api-callbacks-part-1)
+    - [Callbacks Part 2](https://dev.telstra.com/content/understanding-messaging-api-callbacks-part-2)
+    - [Conversation via replyRequest](https://dev.telstra.com/content/conversation-telstra-messaging-api)
+
+  termsOfService: 'https://www.telstra.com.au/customer-terms/business-government#cloud-services'
+  license:
+    name: MIT
+    url: 'http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT'
+host: tapi.telstra.com
+basePath: /v2
+securityDefinitions:
+  auth:
+    type: oauth2
+    flow: application
+    tokenUrl: 'https://tapi.telstra.com/v2/oauth/token'
+    scopes:
+      NSMS: NSMS
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /oauth/token:
+    post:
+      description: |
+        To generate an OAuth2 Authentication token, pass through your `Client key` and `Client secret` that you received when you registered for the **API Free Trial** Product.
+        The grant_type should be left as `client_credentials` and the scope as `NSMS`. The token will expire in one hour.
+      summary: Generate OAuth2 token
+      tags:
+        - Authentication
+      operationId: authToken
+      produces:
+        - application/json
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: client_id
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: client_secret
+          in: formData
+          required: true
+          type: string
+          description: ''
+        - name: grant_type
+          in: formData
+          required: true
+          type: string
+          default: client_credentials
+        - name: scope
+          in: formData
+          type: string
+          description: NSMS
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OAuthResponse'
+          examples: {}
+        '400':
+          description: |
+            grant_type is incorrect. grant_type should be "client_credentials" (without quotes).
+            Refer to the sample code for generate authentication token in the link for more details https://dev.telstra.com/content/messaging-api#section/Authentication
+        '401':
+          description: |
+            Either client_id or client_secret or both are not valid.
+
+            Ensure the client_id and client_secret matches with your keys.  Keys can be found under https://dev.telstra.com/user/me/apps and ensure there are no white spaces in client_id and client_secret
+        '404':
+          description: |
+            The requested URI does not exist
+        '503':
+          description: |
+            The service is currently unavailable.
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running.
+            If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+        default:
+          description: |
+            An internal error occurred when processing the request.
+
+            If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+      x-code-samples:
+        - lang: curl
+          source: |
+            #!/bin/bash
+            # Obtain these keys from the Telstra Developer Portal
+            CLIENT_KEY="your client key"
+            CLIENT_SECRET="your client secret"
+
+            curl -X POST -H 'Content-Type: application/x-www-form-urlencoded' \
+            -d 'grant_type=client_credentials&client_id=$CLIENT_KEY&client_secret=$CLIENT_SECRET&scope=NSMS' \
+            'https://tapi.telstra.com/v2/oauth/token'
+  /messages/provisioning/subscriptions:
+    post:
+      description: |
+        Invoke the provisioning API to get a dedicated mobile number for an application.
+
+        Note that Free Trial apps will have a 30-Day Limit for their provisioned number. If the Provisioning call is made several times within that 30-Day period, it will return the `expiryDate` in the Unix format and will not add any activeDays until after that `expiryDate`. After the `expiryDate`, you may make another Provisioning call to extend the activeDays by another 30-Days.
+
+        For paid apps, a provisioned number can be allotted for a maximum of 5 years. If a Provisioning call is made which will result to activeDays > 1825, a 409 `Active Days Max` response will be returned to indicate that the provisioned number is already valid for more than 5 years and that no update to activeDays has been made.
+
+        Once activeDays=0, the provisioned number will be quarantined for 90 days after which the number will be made available for other API customers to use. If you wish to continue using the same number, you will need to make another Provisioning call before or within the quarantine period to extend the activeDays. For paid apps, if the Provisioning call is made after the 90-day quarantine period, a different number may be assigned to the app.
+      summary: Create Subscription
+      tags:
+        - Provisioning
+      operationId: createSubscription
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: A JSON payload containing the required attributes
+          schema:
+            $ref: '#/definitions/ProvisionNumberRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/ProvisionNumberResponse'
+          examples: {}
+        '400':
+          description: |
+            The request is missing parameter "activeDays".
+
+            Refer to the sample code for **Create Subscription** in the link: https://dev.telstra.com/content/messaging-api#operation/createSubscription
+        '401':
+          description: |
+            TECH-ERR - Either the token has expired or incorrect token was used. <br/><br/>
+            OR <br/><br/>
+            TECH-ERR - Technical error : Invalid API call as no apiproduct match found. Credit card billing method is not supported. Update billing method to Telstra Account from update billing method page. If you don't have a Telstra Account ending with 0 but ABN is available then you can request for a Telstra Account by filling the details in this link https://dev.telstra.com/content/requesting-telstra-billing-account
+            If problem persists, write a post in the Messaging API forum https://dev.telstra.com/forums/messaging-api-forum for the TelstraDev admin to check the issue.
+            Refer to the sample code for **generate authentication token** in the link for more details
+            https://dev.telstra.com/content/messaging-api#section/Authentication
+
+            If problem persists, write a post in the Messaging API forum https://dev.telstra.com/forums/messaging-api-forum for the TelstraDev admin to check the issue.
+        '403':
+          description: |
+            Authorization credentials passed and accepted but account does not have permission <br/><br/>
+            OR <br/><br/>
+            SpikeArrest-The API call rate limit has been exceeded.
+            You will receive a SpikeArrest error in two possible situations:
+            A: You have exceeded your free trial quota. If you would like to continue using the Messaging API, please upgrade to a paid plan by creating a company with Telstra Billing details (not, credit card is no longer accepted for this API product).
+            B: Concurrent API Calls are higher than supported, reduce the concurrent calls and try again. If problem persists, contact us at telstradev@team.telstra.com
+        '404':
+          description: |
+            The URL is incorrect. Correct the URL and try again.
+
+            For Free Trial:
+            A Free Trial MSISDN may have been previously provisioned. Free Trial developers can be provisioned with only 1 Free Trial MSISDN.
+            Use only the default App "Free Trial APIs". If a new app was created, it will throw this error.
+            For paid version:
+            If you are a customer with Telstra account (not credit card), use the keys available under https://dev.telstra.com/user/me/apps under the App name "Production Keys".
+            Execute 'get' subscription and ensure you get successful response with valid subscription details.
+            If valid subscription not found, Please raise an issue with Telstradev support (telstradev@team.telstra.com) along with request details and error details.
+        '405':
+          description: |
+            **For Free Trial**:
+            A Free Trial MSISDN may have been previously provisioned. Free Trial developers can be provisioned with only 1 Free Trial MSISDN.
+            Use only the default App "Free Trial APIs". If a new app was created, it will throw this error.
+            **For paid version**:
+            If you are a customer with Telstra account (not credit card), use the keys available under https://dev.telstra.com/user/me/apps under the App name "Production Keys".
+            Execute 'get' subscription and ensure you get successful response with valid subscription details.
+            If valid subscription not found, Please raise an issue with Telstradev support (telstradev@team.telstra.com) along with request details and error details.
+        '409':
+          description: |
+            **For paid version**:
+            You cannot have activeDays greater than 1825.
+
+            Run get subscription. For example: If active days (in the response) = 1000 days then run create subscription for 825 days (i.e. 1825-1000).
+        '500':
+          description: |
+            Technical error : A server error has occurred while processing your request or the endpoints provided does not exist in the API.
+
+            If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+        default:
+          description: |
+            An internal error occurred when processing the request
+
+            If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+      security:
+        - auth:
+            - NSMS
+      x-code-samples:
+        - lang: curl
+          source: |
+            #!/bin/bash
+            curl -X POST \
+            https://tapi.telstra.com/v2/messages/provisioning/subscriptions \
+            -H 'authorization: Bearer $ACCESS_TOKEN' \
+            -H 'cache-control: no-cache' \
+            -H 'content-type: application/json' \
+            -d '{
+            "activeDays":30,
+            "notifyURL":"http://example.com/"
+            }'
+    get:
+      description: |
+        Get mobile number subscription for an account
+      summary: Get Subscription
+      tags:
+        - Provisioning
+      operationId: getSubscription
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/GetSubscriptionResponse'
+        '400':
+          description: |
+            Either your subscription has expired or you have not created a valid subscription.
+
+            Refer to the sample code for **create Subscription** in the link for more details: https://dev.telstra.com/content/messaging-api#operation/createSubscription
+        '401':
+          description: |
+            Either the token has expired or incorrect token was used.
+
+            Please re-run 'post' Authentication and use the updated token.
+            Refer to the sample code for **generate authentication token** in the link for more details https://dev.telstra.com/content/messaging-api#section/Authentication
+
+            If problem persists, write a post in the Messaging API forum https://dev.telstra.com/forums/messaging-api-forum for the TelstraDev admin to check the issue.
+        '403':
+          description: |
+            Authorization credentials passed and accepted but account does not have permission
+
+            OR
+
+            SpikeArrest-The API call rate limit has been exceeded
+            You will receive a SpikeArrest error in two possible situations:
+            A: You have exceeded your free trial quota. If you would like to continue using the Messaging API, please upgrade to a paid plan by creating a company with Telstra Billing details (not, credit card is no longer accepted for this API product).
+            B: Concurrent API Calls are higher than supported, reduce the concurrent calls and try again. If problem persists, contact us at telstradev@team.telstra.com
+        '404':
+          description: |
+            RESOURCE-NOT-FOUND - The requested URI does not exist. Please check the URL and try again.
+            The correct URL can be found in the sample code section of:
+            https://dev.telstra.com/content/messaging-api#operation/getSubscription <br/><br/>
+            OR <br/><br/>
+            The requested URI does not exist - There are no active subscription. Run create subscription.
+            Refer to the sample code for  create Subscription  in the link for more details:
+            https://dev.telstra.com/content/messaging-api#operation/createSubscription <br/><br/>
+            OR <br/><br/>
+            If you created a subscription less than a minute ago, wait for a minute before calling get subscription again.
+
+            If problem persists, write a post in the Messaging API forum https://dev.telstra.com/forums/messaging-api-forum for the TelstraDev admin to check the issue.
+        '500':
+          description: |
+            Technical error : A server error has occurred while processing your request or the endpoints provided does not exist in the API.
+
+            If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+        default:
+          description: |
+            An internal error occurred when processing the request
+
+            If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+      security:
+        - auth:
+            - NSMS
+    delete:
+      description: |
+        Delete a mobile number subscription from an account
+      summary: Delete Subscription
+      tags:
+        - Provisioning
+      operationId: deleteSubscription
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: EmptyArr
+          schema:
+            $ref: '#/definitions/DeleteNumberRequest'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: |
+            For Free Trial App only - Delete Subscription is not allowed.
+            For Paid App only - Request flagged as containing invalid body. Request has been refused.
+
+            Refer to the sample code for create Subscription  in the link for more details:
+            https://dev.telstra.com/content/messaging-api#operation/createSubscription
+        '401':
+          description: |
+            Either the token has expired or incorrect token was used.
+            Please re-run 'post' Authentication and use the updated token.
+            Refer to the sample code for generate authentication token in the link for more details https://dev.telstra.com/content/messaging-api#section/Authentication
+            If problem persists, write a post in the Messaging API forum https://dev.telstra.com/forums/messaging-api-forum for the TelstraDev admin to check the issue.
+        '403':
+          description: |
+            Authorization credentials passed and accepted but account does not have permission.
+            For unaccepted credentials, please raise an issue with Telstradev support (telstradev@team.telstra.com) along with request details and error details. <br/><br/>
+            OR <br/><br/>
+            SpikeArrest - The API call rate limit has been exceeded
+
+            You will receive a SpikeArrest error in two possible situations:
+            A: You have exceeded your free trial quota. If you would like to continue using the Messaging API, please upgrade to a paid plan by creating a company with Telstra Billing details (not, credit card is no longer accepted for this API product).
+            B: Concurrent API Calls are higher than supported, reduce the concurrent calls and try again. If problem persists, contact us at telstradev@team.telstra.com
+        '404':
+          description: |
+            The URL is incorrect. Correct the URL and try again.
+
+            The correct URL can be found in the sample code section of: https://dev.telstra.com/content/messaging-api#operation/deleteSubscription
+        '500':
+          description: |
+            Technical error : A server error has occurred while processing your request or the endpoints provided does not exist in the API.
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+        default:
+          description: |
+            An internal error occurred when processing the request
+
+            If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+      security:
+        - auth:
+            - NSMS
+  /messages/freetrial/bnum:
+    post:
+      description: |
+        Before sending any messages, Free Trial apps are required to register destination mobile numbers that will be used while trialling Telstra's Messaging API. Up to five destination numbers can be registered. These are the `B numbers`. Any messages sent to numbers NOT on your Free Trial app's registered bnum list will fail.
+
+        Register your max 5 B numbers using this POST call. You can send this POST call multiple times, until the max 5 numbers has been reached. Once 5 B numbers have been registered, there is no way to override them and subsequent attempts to register bnums will fail. You are not able to change the list of registered B numbers after registering 5, so we recommend you include your own number to ensure that you can send and receive meaningful test messages while using the Free Trial. You can check which numbers have been registered by using the below GET /bnum call.
+      summary: Free Trial Bnum Register
+      tags:
+        - Free Trial
+      operationId: freeTrialBnumRegister
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: A JSON payload containing the required attributes
+          schema:
+            type: object
+            properties:
+              bnum:
+                description: List of destination numbers
+                type: string
+                example: ["+61412345671", "+61412345672", "+61412345673", "+61412345674", "+61412345675"]
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              bnum:
+                description: List of destination numbers
+                type: string
+                example: ["+61412345671", "+61412345672", "+61412345673", "+61412345674", "+61412345675"]
+        '400':
+          description: |
+            FREE-TRIAL-MAX-BNUM. Free Trial apps are only allowed up to 5 destination numbers. or Free Trial apps cannot re-run registration once 5 destination numbers are assigned. <br/><br/>
+            OR <br/><br/>
+            BNUM-TOO-LONG. Ensure that destination number follows correct format example: +61401234567
+
+            Refer to the sample code for Register Bnum  in the link for more details:
+            https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumRegister
+        '401':
+          description: |
+            Either the token has expired or incorrect token was used.
+            Please re-run 'post' Authentication and use the updated token.
+
+            Refer to the sample code for generate authentication token in the link for more details https://dev.telstra.com/content/messaging-api#section/Authentication
+            If problem persists, write a post in the Messaging API forum https://dev.telstra.com/forums/messaging-api-forum for the TelstraDev admin to check the issue.
+        '403':
+          description: |
+            Authorization credentials passed and accepted but account does not have permission.
+
+            SpikeArrest-The API call rate limit has been exceeded.
+
+            You will receive a SpikeArrest error in two possible situations:
+
+            A: You have exceeded your free trial quota. If you would like to continue using the Messaging API, please upgrade to a paid plan by creating a company with Telstra Billing details (not, credit card is no longer accepted for this API product).
+
+            B: Concurrent API Calls are higher than supported, reduce the concurrent calls and try again. If problem persists, contact us at telstradev@team.telstra.com
+        '404':
+          description: |
+            The URL is incorrect. Correct the URL and try again.
+
+            The correct URL can be found in the sample code section of: https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumRegister
+        '500':
+          description: |
+            Technical error : A server error has occurred while processing your request or the endpoints provided does not exist in the API.
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+        default:
+          description: |
+            An internal error occurred when processing the request
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+      security:
+        - auth:
+            - NSMS
+    get:
+      description: |
+        Get list of destination numbers registered for Free Trial account.
+      summary: Free Trial Bnum List
+      tags:
+        - Free Trial
+      operationId: freeTrialBnumList
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              bnum:
+                description: List of destination numbers
+                type: string
+                example: ["+61412345671", "+61412345672", "+61412345673", "+61412345674", "+61412345675"]
+        '400':
+          description: |
+            Either your subscription has expired or you have not created a valid subscription or you have not created Bnums.
+
+            Refer to the sample code for create Subscription in the link for more details: https://dev.telstra.com/content/messaging-api#operation/createSubscription
+        '401':
+          description: |
+            Either the token has expired or incorrect token was used.
+
+            Please re-run 'post' Authentication and use the updated token.
+
+            Refer to the sample code for **generate authentication token** in the link for more details https://dev.telstra.com/content/messaging-api#section/Authentication
+
+            If problem persists, write a post in the Messaging API forum https://dev.telstra.com/forums/messaging-api-forum for the TelstraDev admin to check the issue.
+        '403':
+          description: |
+            Authorization credentials passed and accepted but account does not have permission. <br/><br/>
+            OR <br/><br/>
+            SpikeArrest - The API call rate limit has been exceeded.
+            You will receive a SpikeArrest error in two possible situations:
+            A: You have exceeded your free trial quota. If you would like to continue using the Messaging API, please upgrade to a paid plan by creating a company with Telstra Billing details (not, credit card is no longer accepted for this API product).
+            B: Concurrent API Calls are higher than supported, reduce the concurrent calls and try again. If problem persists, contact us at telstradev@team.telstra.com
+        '404':
+          description: |
+            The URL is incorrect. Correct the URL and try again.
+
+            The correct URL can be found in the sample code section of: https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumList
+        '500':
+          description: |
+            Technical error : A server error has occurred while processing your request or the endpoints provided does not exist in the API.
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+        default:
+          description: |
+            An internal error occurred when processing the request
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+      security:
+        - auth:
+            - NSMS
+  /messages/sms:
+    post:
+      description: |
+        Send an SMS Message to a single or multiple mobile number/s.
+      summary: Send SMS
+      tags:
+        - Messaging
+      operationId: sendSms
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: payload
+          in: body
+          required: true
+          description: |
+            A JSON or XML payload containing the recipient's phone number and text message.
+            This number can be in international format if preceeded by a '+' or in national format ('04xxxxxxxx') where x is a digit.
+          schema:
+            $ref: '#/definitions/SendSMSRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/MessageSentResponseSms'
+          examples: {}
+        '400':
+          description: |
+            You may receive any of the below error message if API is unable to send SMS. While we work on improving the error handling through service error codes, check for the corrective action against each error message. Please reach out to telstradev@team.telstra.com if error persists.
+            Invalid 'from' address specified - Ensure the 'from' field is as per API reference doc.
+
+            DELIVERY-IMPOSSIBLE - Check the 'to' field and ensure it is a valid phone number as per API reference doc.
+
+            FROM-MSISDN-TOO-LONG - Ensure the from address is not more than 15 chars in length.
+
+            BODY-TOO-LONG - Request BODY cannot be more than 1999 UTF-8 characters for single recipient and 1998 UTF-8 characters for multiple recipients.
+
+            BODY-MISSING. Request BODY is missing. Ensure appropriate request BODY is included as per the API reference doc.
+
+            TO-MSISDN-TOO-LONG - Ensure phone number is in E.164 format. This number can be in international format "to": "+61412345678" or in national format "0412345678". Can be an array of strings if sending to multiple numbers: "to":["+61412345678", "+61418765432"].
+
+            TO-MSISDN-NOT-VALID - Ensure 'to' field's value is a valid phone number in E.164 format.
+
+            TECH-ERR - Send the details to telstradev@team.telstra.com for troubleshooting this issue.
+
+            BODY-NOT-VALID - Ensure Body does not contain characters other than UTF-8.
+
+            NOT-PROVISIONED - Check get subscription is returning successful response, if not, run create subscription and try again. If issue persists e-mail telstradev@team.telstra.com.
+
+            Request flagged as containing suspicious content. Please check the request content but if problem persists contact support at telstradev@team.telstra.com with details of the request.
+
+            FREE-TRIAL-NO-BNUM - For Free Trial App only. Run free trial bnum register before sending SMS.
+
+            FREE-TRIAL-INVALID-BNUM - Free Trial apps are only allowed to send to specified destination numbers. Verify that all your destination numbers are in your list.
+
+            TOO MANY DESTINATIONS - Do not use more than 10 recipients in a single call and ensure replyRequest=false or remove the [ ] brackets when using single recipient.
+
+            Refer to the sample code for Send SMS in the link for more details: https://dev.telstra.com/content/messaging-api#operation/sendSms
+        '401':
+          description: |
+            Invalid access token. Please try with a valid token:
+            Either the token has expired or incorrect token was used. <br/><br/>
+            OR <br/><br/>
+            Invalid API call as no apiproduct match found:
+            If you are using credit card as billing method, Messaging API product has not been added to your Apps & Keys.
+            Please re-run 'post' Authentication and use the updated token.
+            Refer to the sample code for generate authentication token in the link for more details https://dev.telstra.com/content/messaging-api#section/Authentication
+
+            If problem persists, write a post in the Messaging API forum https://dev.telstra.com/forums/messaging-api-forum for the TelstraDev admin to check the issue.
+        '403':
+          description: |
+            Authorization credentials passed and accepted but account does not have permission. <br/><br/>
+            OR <br/><br/>
+            MSG_Monetization_ERR. Credit Card API limit may have been reached, e-mail telstradev@team.telstra.com for support. If you are using the Free Trial account, this error shows you have exceeded the number of free messages available. <br/><br/>
+            OR <br/><br/>
+            SpikeArrest. The API call rate limit has been exceeded
+            You will receive a SpikeArrest error in two possible situations:
+
+            A: You have exceeded your free trial quota. If you would like to continue using the Messaging API, please upgrade to a paid plan by creating a company with Telstra Billing details (not, credit card is no longer accepted for this API product).
+
+            B: Concurrent API Calls are higher than supported, reduce the concurrent calls and try again. If problem persists, contact us at telstradev@team.telstra.com
+        '404':
+          description: |
+            RESOURCE-NOT-FOUND - Subscription Expired. Re-provision your MSISDN through create subscription call using the same client credentials and try sending an SMS again. <br/><br/>
+            OR <br/><br/>
+            TO-MSISDN-NOT-VALID. Invalid resource: verify that a valid destination number is used. <br/><br/>
+            OR <br/><br/>
+            RESOURCE-NOT-FOUND. The requested URI does not exist. Ensure a correct URL is used.
+            The correct URL can be found in the sample code section of:
+            https://dev.telstra.com/content/messaging-api#operation/createSubscription
+        '405':
+          description: |
+            Only POST and GET methods are supported.
+
+            Read the documentation for send SMS : https://dev.telstra.com/content/messaging-api#operation/sendSms
+        '415':
+          description: API does not support the requested content type
+        '422':
+          description: |
+            The request is formed correctly, but due to some condition the request cannot be processed e.g. email is required and it is not provided in the request
+        '429':
+          description: |
+            Too Many Requests.
+
+            Concurrent API Calls are higher than supported, reduce the concurrent calls and try again. If problem persists, contact us at telstradev@team.telstra.com
+        '500':
+          description: |
+            Technical error : A server error has occurred while processing your request or the endpoints provided does not exist in the API.
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+        '501':
+          description: |
+            The HTTP method being used has not yet been implemented for the requested resource
+        '503':
+          description: |
+            The service requested is currently unavailable.
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+        default:
+          description: |
+            An internal error occurred when processing the request.
+
+            Please correct the API endpoint and try again. If the error persists even after re-try, check our https://dev.telstra.com/api/status page to ensure the service is up and running. If the service is not up and running check our forum page https://dev.telstra.com/forums/api-live-status-page and leave a post to confirm the outage for the Telstradev admin to check the issue.
+      security:
+        - auth:
+            - NSMS
+      x-code-samples:
+        - lang: curl
+          source: |
+            #!/bin/bash
+            # Use the Messaging API to send an SMS
+            # Note: only to: and body: are required
+            #
+            #
+            # TO SINGLE NUMBER
+            AccessToken="Access Token"
+            Dest="Destination number"
+            curl -X POST -H "Authorization: Bearer $AccessToken" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "to":"$Dest",
+                "body":"Test Message",
+                "from":"+61412345678",
+                "validity":5,
+                "scheduledDelivery":1,
+                "notifyURL":"http://www.example.com/",
+                "replyRequest": false,
+                "priority": false,
+                "receiptOff": true
+              }' https://tapi.telstra.com/v2/messages/sms
+            #
+            #
+            # TO MULTIPLE NUMBERS
+            AccessToken="Access Token"
+            Dest1="Destination number1"
+            Dest2="Destination number2"
+            Dest3="Destination number3"
+            curl -X post -H "Authorization: Bearer $AccessToken" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "to":["$Dest1", "$Dest2", "$Dest3"],
+                "body":"Test Message"
+              }' https://tapi.telstra.com/v2/messages/sms
+    get:
+      description: |
+        Messages are retrieved one at a time, starting with the earliest reply.
+
+        The API supports the encoding of emojis in the reply message. The emojis will be in their UTF-8 format.
+
+        If the subscription has a `notifyURL`, reply messages will be logged there instead.
+
+        # SMS Reply with Notification URL
+
+        When a reply is received, the API will send a POST to the subscription URL that has been previously specified.
+
+        <pre><code class="language-sh">{
+          "to":"+61472880123",
+          "from":"+61412345678",
+          "body":"Foo4",
+          "sentTimestamp":"2018-04-20T14:24:35",
+          "messageId":"DMASApiA0000000146"
+        }</code></pre>
+
+        The fields are:
+
+        | Field | Description |
+        | --- |--- |
+        | `to` | The number the message was sent to. |
+        | `from` | The number the message was sent from. |
+        | `body` | The content of the SMS response. |
+        | `sentTimestamp` | Time handling of the message ended. |
+        | `messageId` | The ID assigned to the message. |
+
+      summary: Retrieve Inbound SMS
+      tags:
+        - Messaging
+      operationId: retrieveInboundSms
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/InboundPollResponse'
+          examples: {}
+        '400':
+          description: |
+            Invalid or missing request parameters
+            NOT-PROVISIONED
+            Request flagged as containing suspicious content
+        '401':
+          description: Invalid access token. Please try with a valid token
+        '403':
+          description: >
+            Authorization credentials passed and accepted but account does not
+            have permission
+
+            SpikeArrest-The API call rate limit has been exceeded
+        '404':
+          description: |
+            The requested URI does not exist
+            RESOURCE-NOT-FOUND
+        '405':
+          description: The requested resource does not support the supplied verb
+        '415':
+          description: API does not support the requested content type
+        '422':
+          description: |
+            The request is formed correctly, but due to some condition the
+            request cannot be processed e.g. email is required and it is not
+            provided in the request
+        '500':
+          description: |
+            Technical error : Unable to route the message to a Target Endpoint :
+            An error has occurred while processing your request, please refer to
+            API Docs for summary on the issue
+        '501':
+          description: |
+            The HTTP method being used has not yet been implemented for
+            the requested resource
+        '503':
+          description: The service requested is currently unavailable
+        default:
+          description: An internal error occurred when processing the request
+      security:
+        - auth:
+            - NSMS
+  '/messages/sms/{messageId}/status':
+    get:
+      description: |
+        If no delivery receipt notification URL has been specified, it is possible to poll for the message status.
+
+        **SMS Status with Notification URL**
+
+        When a message has reached its final state, the API will send a POST to the URL that has been previously specified.
+        Upon receiving this call it is expected that your servers will give a 204 (No Content) response.
+      summary: Get SMS Status
+      tags:
+        - Messaging
+      operationId: getSmsStatus
+      produces:
+        - application/json
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          type: string
+          description: |
+            Unique identifier of a message - it is the value returned from a previous POST call to https://tapi.telstra.com/v2/messages/sms.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OutboundPollResponse'
+          examples: {}
+        '400':
+          description: |-
+            Invalid or missing request parameters
+             NOT-PROVISIONED
+             Request flagged as containing suspicious content
+        '401':
+          description: Invalid access token. Please try with a valid token
+        '403':
+          description: |-
+            Authorization credentials passed and accepted but account does
+            not have permission
+             SpikeArrest-The API call rate limit has been exceeded
+        '404':
+          description: |
+            The requested URI does not exist
+            * OLD-NONEXISTANT-MESSAGE-ID. Invalid Message ID. Message ID is more than 7 days old. If `receiptOff` has been set to `true`, Delivery Receipts will be disabled and Message ID will not exist.
+            * RESOURCE-NOT-FOUND
+        '405':
+          description: The requested resource does not support the supplied verb
+        '415':
+          description: API does not support the requested content type
+        '422':
+          description: >
+            The request is formed correctly, but due to some condition the
+            request cannot be processed e.g. email is required and it is not
+            provided in the request
+        '500':
+          description: |
+            Technical error : Unable to route the message to a Target Endpoint :
+            An error has occurred while processing your request, please refer to
+            API Docs for summary on the issue
+        '501':
+          description: >
+            The HTTP method being used has not yet been implemented for the
+            requested resource
+        '503':
+          description: The service requested is currently unavailable
+        default:
+          description: An internal error occurred when processing the request
+      security:
+        - auth:
+            - NSMS
+      x-code-samples:
+        - lang: curl
+          source: |
+            #!/bin/bash
+            # Example of how to poll for a message status
+            AccessToken="Consumer Access Token"
+            MessageId="Previous supplied Message Id, URL encoded"
+            curl -X get -H "Authorization: Bearer $AccessToken" \
+              -H "Content-Type: application/json" \
+              "https://tapi.telstra.com/v2/messages/sms/{messageId}/status"
+  /messages/sms/healthcheck:
+    get:
+      description: |
+        Determine whether the SMS service is up or down.
+      summary: SMS Health Check
+      tags:
+        - Messaging
+      operationId: smsHealthCheck
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/HealthCheckResponse'
+          examples: {}
+        '500':
+          description: |
+            Technical error : Unable to route the message to a Target Endpoint : An error has occurred while processing your request, please refer to API Docs for summary on the issue
+        '501':
+          description: |
+            The HTTP method being used has not yet been implemented for the requested resource
+        '503':
+          description: The service requested is currently unavailable
+        default:
+          description: An internal error occurred when processing the request
+  /messages/sms/multi:
+    post:
+      description: |
+        Send multiple SMS in one API call.
+      summary: Send Multiple SMS
+      tags:
+        - Messaging
+      operationId: sendMultipleSms
+      produces:
+        - application/json
+      parameters:
+        - name: payload
+          in: body
+          required: true
+          description: |
+            A JSON payload containing the recipient's phone number and text message.
+            This number can be in international format if preceeded by a '+' or in national format ('04xxxxxxxx') where x is a digit.
+          schema:
+            $ref: '#/definitions/SendSmsMultiRequest'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MessageSentResponseSms'
+        '400':
+          description: |
+            Invalid or missing request parameters
+            * DR-NOTIFY-URL-MISSING. `"receiptOff"` is missing or `"receiptOff":"false"` but notifyURL is missing
+            * FREE-TRIAL-NO-BNUM. Free Trial apps need to specify destination numbers before sending a message.
+        '403':
+          description: |
+            * Authorization credentials passed and accepted but account does not have permission.
+            * SpikeArrest. The API call rate limit has been exceeded
+            * MSG_Monetization_ERR. Credit Card API limit may have been reached. If you are using the free trial account, this error shows you have exceeded the number of free messages available.
+        '404':
+          description: |
+            * RESOURCE-NOT-FOUND. If you have a previously provisioned number for your app, you may be getting this error because the provisioned number for your app has expired which will require you to re-provision your app.
+        '500':
+          description: |
+            Technical error : Unable to route the message to a Target Endpoint : An error has occurred while processing your request, please refer to API Docs for summary on the issue
+        '501':
+          description: |
+            The HTTP method being used has not yet been implemented for the requested resource
+        '503':
+          description: The service requested is currently unavailable
+        default:
+          description: An internal error occurred when processing the request
+      security:
+        - auth:
+            - NSMS
+  /messages/mms:
+    post:
+      description: Send MMS
+      summary: Send MMS
+      tags:
+        - Messaging
+      operationId: sendMms
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: |
+            A JSON or XML payload containing the recipient's phone number and MMS message.
+            The recipient number should be in the format '04xxxxxxxx' where x is a digit.
+          schema:
+            $ref: '#/definitions/SendMmsRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/MessageSentResponseMms'
+          examples: {}
+        '400':
+          description: |
+            Invalid or missing request parameters
+            * MMS-TYPE-MISSING
+            * MMS-PAYLOAD-MISSING
+            * MMS-FILENAME-MISSING
+            * DELIVERY-IMPOSSIBLE
+            * TO-MSISDN-NOT-VALID
+            * SENDER-MISSING
+            * DELIVERY-IMPOSSIBLE
+            * SUBJECT-TOO-LONG
+            * FROM-MSISDN-TOO-LONG
+            * TO-MSISDN-TOO-LONG
+            * NOT-PROVISIONED
+            * Request flagged as containing suspicious content
+            * FREE-TRIAL-NO-BNUM. Free Trial apps need to specify destination numbers before sending a message.
+        '401':
+          description: Invalid access token. Please try with a valid token
+        '403':
+          description: |
+            * Authorization credentials passed and accepted but account does not have permission.
+            * SpikeArrest. The API call rate limit has been exceeded
+            * MSG_Monetization_ERR. Credit Card API limit may have been reached. If you are using the free trial account, this error shows you have exceeded the number of free messages available.
+        '404':
+          description: |
+            * RESOURCE-NOT-FOUND. If you have a previously provisioned number for your app, you may be getting this error because the provisioned number for your app has expired which will require you to re-provision your app.
+            * RESOURCE-NOT-FOUND. The requested URI does not exist.
+        '405':
+          description: The requested resource does not support the supplied verb
+        '415':
+          description: API does not support the requested content type
+        '422':
+          description: >
+            The request is formed correctly, but due to some condition the
+            request cannot be processed e.g. email is required and it is not
+            provided in the request
+        '500':
+          description: >
+            Technical error : Unable to route the message to a Target Endpoint :
+
+            An error has occurred while processing your request, please refer to
+            API Docs for summary on the issue
+        '501':
+          description: |
+            The HTTP method being used has not yet been implemented for
+            the requested resource
+        '503':
+          description: The service requested is currently unavailable
+        default:
+          description: An internal error occurred when processing the request
+      security:
+        - auth:
+            - NSMS
+    get:
+      description: |
+        Inbound messages are retrieved one at a time, starting with the earliest inbound message.
+
+        If the subscription has a `notifyURL`, reply messages will be logged there instead, i.e. `GET` and reply `notifyURL` are exclusive.
+
+        # MMS Reply with Notification URL
+
+        When a reply is received, the API will send a POST to the subscription URL that has been previously specified.
+
+        <pre><code class="language-sh">{
+          "to": "+61418123456",
+          "from": "+61421987654",
+          "sentTimestamp": "2018-03-23T12:15:45+10:00",
+          "messageId": "XFRO1ApiA0000000111",
+          "subject": "Foo",
+          "envelope": "string",
+          "MMSContent":
+            [
+              {
+                "type": "text/plain",
+                "filename": "text_1.txt",
+                "payload": "string"
+              },
+              {
+                "type": "image/jpeg",
+                "filename": "sample.jpeg",
+                "payload": "string"
+              }
+            ]
+        }</code></pre>
+
+        The fields are:
+
+        | Field | Description |
+        | --- | --- |
+        | `to` |The number the message was sent to. |
+        | `from` | The number the message was sent from. |
+        | `sentTimestamp` | Time handling of the message ended. |
+        | `messageId` | Message Id assigned by the MMSC |
+        | `subject` | The subject assigned to the message. |
+        | `envelope` | Information about terminal type and originating operator. |
+        | `MMSContent` | An array of the actual content of the reply message. |
+        | `type` | The content type of the message. |
+        | `filename` | The filename for the message content. |
+        | `payload` | The content of the message. |
+
+      summary: Retrieve Inbound MMS
+      tags:
+        - Messaging
+      operationId: retrieveInboundMms
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/GetMmsResponse'
+          examples: {}
+        '400':
+          description: |
+            Invalid or missing request parameters
+            NOT-PROVISIONED
+            Request flagged as containing suspicious content
+        '401':
+          description: Invalid access token. Please try with a valid token
+        '403':
+          description: >
+            Authorization credentials passed and accepted but account does not
+            have permission
+
+            SpikeArrest-The API call rate limit has been exceeded
+        '404':
+          description: |
+            The requested URI does not exist
+            RESOURCE-NOT-FOUND
+        '405':
+          description: The requested resource does not support the supplied verb
+        '415':
+          description: API does not support the requested content type
+        '422':
+          description: |
+            The request is formed correctly, but due to some condition the
+            request cannot be processed e.g. email is required and it is not
+            provided in the request
+        '500':
+          description: |
+            Technical error : Unable to route the message to a Target Endpoint :
+            An error has occurred while processing your request, please refer to
+            API Docs for summary on the issue
+        '501':
+          description: |
+            The HTTP method being used has not yet been implemented for
+            the requested resource
+        '503':
+          description: The service requested is currently unavailable
+        default:
+          description: An internal error occurred when processing the request
+      security:
+        - auth:
+            - NSMS
+  '/messages/mms/{messageid}/status':
+    get:
+      description: Get MMS Status
+      summary: Get MMS Status
+      tags:
+        - Messaging
+      operationId: getMmsStatus
+      produces:
+        - application/json
+      parameters:
+        - name: messageid
+          in: path
+          required: true
+          type: string
+          description: |
+            Unique identifier of a message - it is the value returned from a previous POST call to https://tapi.telstra.com/v2/messages/mms
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OutboundPollResponse'
+          examples: {}
+        '400':
+          description: |-
+            Invalid or missing request parameters
+             NOT-PROVISIONED
+             Request flagged as containing suspicious content
+        '401':
+          description: Invalid access token. Please try with a valid token
+        '403':
+          description: >
+            Authorization credentials passed and accepted but account does not
+            have permission
+
+            SpikeArrest-The API call rate limit has been exceeded
+        '404':
+          description: |
+            The requested URI does not exist
+            OLD-NONEXISTANT-MESSAGE-ID
+            RESOURCE-NOT-FOUND
+        '405':
+          description: The requested resource does not support the supplied verb
+        '415':
+          description: API does not support the requested content type
+        '422':
+          description: >
+            The request is formed correctly, but due to some condition the
+            request cannot be processed e.g. email is required and it is not
+            provided in the request
+        '500':
+          description: >
+            Technical error : Unable to route the message to a Target Endpoint :
+
+            An error has occurred while processing your request, please refer to
+            API Docs for summary on the issue
+        '501':
+          description: |
+            The HTTP method being used has not yet been implemented for
+            the requested resource
+        '503':
+          description: The service requested is currently unavailable
+        default:
+          description: An internal error occurred when processing the request
+      security:
+        - auth:
+            - NSMS
+  /messages/mms/healthcheck:
+    get:
+      description: |
+        Determine whether the MMS service is up or down.
+      summary: MMS Health Check
+      tags:
+        - Messaging
+      operationId: mmsHealthCheck
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/HealthCheckResponse'
+          examples: {}
+        '500':
+          description: |
+            Technical error : Unable to route the message to a Target Endpoint : An error has occurred while processing your request, please refer to API Docs for summary on the issue
+        '501':
+          description: |
+            The HTTP method being used has not yet been implemented for the requested resource
+        '503':
+          description: The service requested is currently unavailable
+        default:
+          description: An internal error occurred when processing the request
+definitions:
+  ProvisionNumberRequest:
+    title: ProvisionNumberRequest
+    type: object
+    properties:
+      activeDays:
+        description: |
+          The number of days before for which this number is provisioned.
+
+          For Free Trial apps, the value of this field will be ignored and instead the default value of 30 days will be used.
+        type: integer
+        format: int32
+        default: 30
+        example: 1825
+      notifyURL:
+        description: |
+          A notification URL that will be POSTed to whenever a new message (i.e. a reply to a message sent) arrives at this destination address.
+
+          If this is not provided then you can use the Get /sms or /mms API to poll for reply messages.
+
+          If you are using a domain URL you must include the forward slash at the end of the URL (e.g. http://www.example.com/).
+
+          *Please note that the notification URLs and the Get /sms or /mms call are exclusive. If a notification URL has been set then the GET call will not provide any useful information.*
+        type: string
+        example: 'http://wwww.example.com/'
+    required:
+      - activeDays
+  ProvisionNumberResponse:
+    title: ProvisionNumberResponse
+    type: object
+    properties:
+      destinationAddress:
+        description: The MSISDN that is assigned to the app.
+        type: string
+        example: "+61412345678"
+      activeDays:
+        description: The number of days that the MSISDN is assigned to the app.
+        type: string
+        example: "1825"
+      expiryDate:
+        description: For Free Trial only. This field specifies the Unix time when apps can extend the assignment of their MSISDN. Extension can be done only once every 30 days.
+        type: number
+        example: 1534463077362
+  DeleteNumberRequest:
+    title: DeleteNumberRequest
+    type: object
+    properties:
+      emptyArr:
+        description: Empty Arr
+        type: integer
+        format: int32
+        default: 0
+  GetSubscriptionResponse:
+    title: ProvisionNumberResponse
+    type: object
+    properties:
+      activeDays:
+        description: Number of active days
+        type: string
+      notifyURL:
+        description: Notify url configured
+        type: string
+      destinationAddress:
+        description: The mobile phone number that was allocated
+        type: string
+  SendSMSRequest:
+    title: SendSMSRequest
+    type: object
+    properties:
+      to:
+        description: |
+          Phone number (in E.164 format) to send the SMS to.
+          This number can be in international format `"to": "+61412345678"` or in national format.
+          Can be an array of strings if sending to multiple numbers: `"to":["+61412345678", "+61418765432"]`
+        type: string
+        example: ["+61412345678"]
+      body:
+        description: |
+          The text body of the message. Messages longer than 160 characters will be counted as multiple messages.
+          This field contains the message text, this can be up to 1900 (for a single recipient) or 500 (for multiple recipients) UTF-8 characters. As mobile devices rarely support the full range of UTF-8 characters, it is possible that some characters may not be translated correctly by the mobile device
+        type: string
+        example: Test Message
+      from:
+        description: |
+          This will be the source address that will be displayed on the receiving device. You can set an Alphanumeric Sender ID of up to 11 characters. Phone numbers in the `from` attribute will be blocked (400 or 500 error) to prevent number spoofing.
+
+          Support for alphanumeric `from` is only guaranteed when sending messages to Telstra destinations.
+          Most standard ASCII characters are accepted in the alphanumeric `from` attribute, however there are some limitations. The following characters are allowed in the alphanumeric `from` attribute: any alphabetic character (e.g. `abc`), any number mixed with alphabetic characters (e.g. `abc123`), uppercase and lowercase characters (e.g. `aBc`), any of the following special characters mixed with alphabetic characters are supported `~!@#$%^&*()~_~+-={}|[];'?,./` (e.g. `abc~!@`), any combination of lowercase, uppercase, numeric or supported special characters (e.g. `abc@#123DE`).
+
+          If attribute is not present, the service will use the mobile number associated with the application (in E.164 format).
+
+          If `replyRequest` is set to true, `from` field will be ignored.
+
+          *Please note:*
+
+          *- Alphanumeric Sender ID is only available on Telstra Account paid plans, not through Free Trial or Credit Card plans.*
+
+          *- Support for Alphanumeric Sender ID is only guaranteed when sending messages to Telstra destinations.*
+        type: string
+        example: 'Foo_App'
+      validity:
+        description: |
+          How long the platform should attempt to deliver the message for.
+
+          This period is specified in minutes from the message.
+
+          Normally if the message cannot be delivered immediately, it will be stored and delivery will be periodically reattempted. The network will attempt to send the message for up to seven days. It is possible to define a period smaller than 7 days by including this parameter and specifying the number of minutes that delivery should be attempted.
+
+          e.g.: including `"validity": 60` will specify that if a message can't be delivered within the first 60 minutes then the network should stop.
+        type: integer
+        format: int32
+        example: 5
+      scheduledDelivery:
+        description: |
+          How long the platform should wait before attempting to send the message - specified in minutes.
+
+          e.g.: If `"scheduledDelivery": 120` is included, then the network will not attempt to start message delivery for two hours after the message has been submitted
+        type: integer
+        format: int32
+        example: 1
+      notifyURL:
+        description: |
+          Contains a URL that will be called once your message has been processed. The status may be delivered, expired, deleted, etc. Please refer to the Delivery Status section for more information.
+
+          If you are using a domain URL you must include the forward slash at the end of the URL (e.g. http://www.example.com/).
+        type: string
+        example: "http://www.example.com/"
+      replyRequest:
+        description: |
+          If false or not present, then normal message handling is implemented.
+
+          If set to true, the reply message functionality will be implemented. If the `from` field is present, it will be ignored.
+
+          When set to true, network will use a temporary number to deliver this message. All messages sent by a mobile to this temporary number will be stored against the same `messageId`. If a `notifyURL` is provided then user replies will be delivered to the URL where `messageId` will be same as `messageId` in the response to the original API request.
+
+          The replyRequest thread is kept active for 7 days. Up to 50 replyRequest threads and `messageIds` can be supported per destination number.
+        type: boolean
+        example: false
+      priority:
+        description: |
+          When messages are queued up for a number, then it is possible to set where a new message will be placed in the queue. If the priority is set to true then the new message will be placed ahead of all messages with a normal priority. If there are no messages queued for the number, then this parameter has no effect.
+        type: boolean
+        example: false
+      receiptOff:
+        description: |
+          Whether Delivery Receipt will be sent back or not.
+
+          Setting this field to `true` will disable Delivery Receipts. The `notifyURL` field will be ignored, if there is one in the payload. An "OLD-NONEXISTANT-MESSAGE-ID" error will also be returned upon Polling for the SMS Status.
+        type: boolean
+        example: true
+      userMsgRef:
+        description: |
+          Optional field used by some clients for custom reporting.
+        type: string
+        example: "foo-app"
+    required:
+      - to
+      - body
+  MessageSentResponseSms:
+    title: MessageSentResponse
+    type: object
+    properties:
+      messages:
+        description: An array of messages.
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+      Country:
+        description: An array of the countries to which the destination MSISDNs belong.
+        type: array
+        items:
+          type: object
+        example: [{"AUS": 1}]
+      messageType:
+        description: This returns whether the message sent was a SMS or MMS.
+        type: string
+        example: SMS
+      numberSegments:
+        description: |
+          A message which has 160 GSM-7 characters or less will have numberSegments=1.
+          Note that multi-part messages which are over 160 GSM-7 characters will include the User Data Header as part of the numberSegments. The User Data Header is being used for the re-assembly of the messages.
+        type: integer
+        format: int32
+        example: 1
+    required:
+      - messages
+      - messageType
+      - numberSegments
+  SendMmsRequest:
+    title: Send MMS Request
+    type: object
+    properties:
+      to:
+        description: |
+          This is the destination address.
+          Can be an array of strings if sending to multiple numbers: "to":["+61412345678", "+61418765432"]
+        type: string
+        example: ["+61412345678"]
+      from:
+        description: |
+          This will be the source address that will be displayed on the receiving device. You can set an Alphanumeric Sender ID of up to 11 characters. Phone numbers in the `from` attribute will be blocked (400 or 500 error) to prevent number spoofing.
+
+          Support for alphanumeric `from` is only guaranteed when sending messages to Telstra destinations.
+          Most standard ASCII characters are accepted in the alphanumeric `from` attribute, however there are some limitations. The following characters are allowed in the alphanumeric `from` attribute: any alphabetic character (e.g. `abc`), any number mixed with alphabetic characters (e.g. `abc123`), uppercase and lowercase characters (e.g. `aBc`), any of the following special characters mixed with alphabetic characters are supported `~!@#$%^&*()~_~+-={}|[];'?,./` (e.g. `abc~!@`), any combination of lowercase, uppercase, numeric or supported special characters (e.g. `abc@#123DE`). All other characters, including spaces and extended ASCII characters, are not supported (e.g. `<>:"\`).
+
+          If attribute is not present, the service will use the mobile number associated with the application (in E.164 format).
+
+          If `replyRequest` is set to true, `from` field will be ignored.
+
+          *Please note:*
+
+          *- Alphanumeric Sender ID is only available on Telstra Account paid plans, not through Free Trial or Credit Card plans.*
+
+          *- Support for Alphanumeric Sender ID is only guaranteed when sending messages to Telstra destinations.*
+
+          *- When Alphanumeric Sender ID is used in sending MMS, Delivery Receipts will NOT be returned.*
+        type: string
+      subject:
+        description: |
+          The subject that will be used in an MMS message. Subject is limited to maximum of 64 characters.
+
+          Some special characters need to be encoded if used in the `subject` field (e.g. &amp;amp; for & and &amp;lt; for <).
+        type: string
+      notifyURL:
+        description: |
+          Contains a URL that will be called once your message has been processed. The status may be delivered, expired, deleted, etc. Please refer to the Delivery Status section for more information.
+
+          If you are using a domain URL you must include the forward slash at the end of the URL (e.g. http://www.example.com/).
+        type: string
+        example: "http://www.example.com/"
+      replyRequest:
+        description: |
+          If false or not present, then normal message handling is implemented.
+
+          If set to true, the reply message functionality will be implemented. If the `from` field is present, it will be ignored.
+
+          When set to true, network will use a temporary number to deliver this message. All messages sent by a mobile to this temporary number will be stored against the same `messageId`. If a `notifyURL` is provided then user replies will be delivered to the URL where `messageId` will be same as `messageId` in the response to the original API request.
+
+          The replyRequest thread is kept active for 7 days. Up to 50 replyRequest threads and `messageIds` can be supported per destination number.
+        type: boolean
+      MMSContent:
+        description: |
+          An array of content that will be sent in an MMS message. If this array is present it will cause the `body` element to be ignored, and the message will be sent as an MMS.
+        type: array
+        items:
+          $ref: '#/definitions/MMSContent'
+    required:
+      - to
+      - MMSContent
+  MessageSentResponseMms:
+    title: MessageSentResponse
+    type: object
+    properties:
+      messages:
+        description: An array of messages.
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+      MmsMediaKB:
+        description: |
+          Indicates the message size in kB of the MMS sent.
+        type: integer
+        format: int32
+        example: 2
+      Country:
+        description: An array of the countries to which the destination MSISDNs belong.
+        type: array
+        items:
+          type: object
+        example: [{"AUS": 1}]
+      messageType:
+        description: This returns whether the message sent was a SMS or MMS.
+        type: string
+        example: MMS
+      numberSegments:
+        description: |
+          MMS with numberSegments below 600 are classed as Small whereas those that are bigger than 600 are classed as Large. They will be charged accordingly.
+        type: integer
+        format: int32
+        example: 4
+    required:
+      - messages
+      - messageType
+      - numberSegments
+  Message:
+    title: Message
+    type: object
+    properties:
+      to:
+        description: Just a copy of the number the message is sent to.
+        type: string
+        example: '+61412345678'
+      deliveryStatus:
+        description: |
+          Gives an indication if the message has been accepted for delivery. The description field contains information on why a message may have been rejected.
+        type: string
+        example: MessageWaiting
+      messageId:
+        description: |
+          For an accepted message, ths will be a unique reference that can be used to check the messages status. Please refer to the Delivery Notification section.
+
+          Note that `messageId` will be different for each number that the message was sent to.
+        type: string
+        example: d997474900097a1f0000000008d7e18102cc0901-1261412345678
+      messageStatusURL:
+        description: |
+          For an accepted message, ths will be the URL that can be used to check the messages status. Please refer to the Delivery Notification section.
+        type: string
+        example: |
+          https://tapi.telstra.com/v2/messages/sms/d997474900097a1f0000000008d7e18102cc0901-1261412345678/status
+    required:
+      - to
+      - deliveryStatus
+      - messageId
+      - messageStatusUrl
+  OutboundPollResponse:
+    title: OutboundPollResponse
+    type: object
+    properties:
+      to:
+        description: |
+          The phone number (recipient) the message was sent to (in E.164 format).
+        type: string
+        example: "+61418123456"
+      sentTimestamp:
+        description: The date and time when the handling of the message completed.
+        type: string
+        example: "2017-03-17T09:16:54+10:00"
+      receivedTimestamp:
+        description: The date and time when the message was received by the API.
+        type: string
+        example: "2017-03-17T09:16:49+10:00"
+      deliveryStatus:
+        $ref: '#/definitions/Status'
+  Status:
+    title: Status
+    type: string
+    description: |
+      PEND = pending delivery, in transit or retry. Message Service Centre is working on delivering the message. Some messages may have this as the final status if no delivery receipt is sent back by the terminating network.
+
+      DELIVRD = message delivered to target device.
+
+      EXPIRED = message could not be delivered in delivery timeframe. Message not delivered.
+
+      DELETED = in some cases a message not yet delivered can be removed from the queue. Message not delivered.
+
+      UNDVBL = some issue prevented delivery even though the message was accepted for delivery attempt. For example, service deactivated before delivery accomplished. Message not delivered.
+
+      REJECTD = only occurs at the time of submission. Delivery will not even be attempted.
+
+      Unknown
+    example: DELIVRD
+  OAuthResponse:
+    title: OAuthResponse
+    type: object
+    properties:
+      access_token:
+        description: OAuth access token
+        type: string
+      token_type:
+        description: OAuth token type
+        type: string
+      expires_in:
+        description: OAuth expiry time in seconds. Tokens expire in one hour.
+        type: string
+  GetMmsResponse:
+    title: Get MMS Response
+    type: object
+    properties:
+      status:
+        description: |
+          The final state of the message.
+        type: string
+        example: RECEIVED
+      destinationAddress:
+        description: |
+          The number the message was sent to.
+        type: string
+        example: +61412345678
+      senderAddress:
+        description: |
+          The number the message was sent from.
+        type: string
+        example: +61487654321
+      subject:
+        description: |
+          The subject assigned to the message.
+        type: string
+      messageId:
+        description: |
+          Message Id assigned by the MMSC.
+        type: string
+      apiMsgId:
+        description: |
+          Message Id assigned by the API.
+        type: string
+      sentTimestamp:
+        description: |
+          Time handling of the message ended.
+        type: string
+        example: "2018-11-23T16:14:02+10:00"
+      MMSContent:
+        description: |
+          An array of content that was received in an MMS message.
+        type: array
+        items:
+          $ref: '#/definitions/MMSContent'
+    required:
+      - status
+      - destinationAddress
+      - senderAddress
+      - sentTimestamp
+      - MMSContent
+  MMSContent:
+    title: MMSContent
+    type: object
+    properties:
+      type:
+        description: |
+          The following types are supported audio/amr audio/aac audio/mp3 audio/mpeg3 audio/mpeg audio/mpg audio/wav audio/3gpp audio/mp4 image/gif image/jpeg image/jpg image/png image/bmp video/mpeg4 video/mp4 video/mpeg video/3gpp video/3gp video/h263 text/plain text/x-vCard text/x-vCalendar
+        type: string
+      filename:
+        description: |
+          The file name to be associated with the content. Some devices will display this file name with a placeholder for the content.
+        type: string
+      payload:
+        description: |
+          Base64 encoded message content.
+        type: string
+    required:
+      - type
+      - payload
+  InboundPollResponse:
+    title: InboundPollResponse
+    description: |
+      Poll for incoming messages returning the latest. Only works if no callback url was specified when provisioning a number.
+    type: object
+    properties:
+      status:
+        description: message status
+        type: string
+      destinationAddress:
+        description: |
+          The phone number (recipient) that the message was sent to (in E.164 format).
+        type: string
+      senderAddress:
+        description: |
+          The phone number (sender) that the message was sent from (in E.164 format).
+        type: string
+      message:
+        description: Text of the message that was sent
+        type: string
+      messageId:
+        description: Message Id
+        type: string
+      sentTimestamp:
+        description: The date and time when the message was sent by recipient.
+        type: string
+  HealthCheckResponse:
+    title: HealthCheckResponse
+    description: |
+      Information regarding service being up or down.
+    type: object
+    properties:
+      status:
+        description: message status
+        type: string
+        example: up
+  SendSmsMultiRequest:
+    title: SendSmsMultiRequest
+    type: object
+    properties:
+      smsMulti:
+        description: Multiple SMS. Up to 10 messages can be sent in one API call.
+        type: array
+        items:
+          $ref: '#/definitions/MessageMulti'
+      notifyURL:
+        description: |
+          Contains a URL that will be called once your message has been processed. The status may be delivered, expired, deleted, etc. Please refer to the Delivery Status section for more information.
+
+          If you are using a domain URL you must include the forward slash at the end of the URL (e.g. http://www.example.com/).
+
+          This is required when `"receiptOff"` is missing or `"receiptOff":"false"`.
+        type: string
+        example: "http://www.example.com/"
+  MessageMulti:
+    title: MessageMulti
+    type: object
+    properties:
+      to:
+        description: |
+          Phone number (in E.164 format) to send the SMS to.
+          This number can be in international format `"to": "+61412345678"` or in national format.
+        type: string
+        example: "+61412345678"
+      body:
+        description: |
+          The text body of the message. Messages longer than 160 characters will be counted as multiple messages.
+
+          This field contains the message text, this can be up to 1900 (for a single recipient) or 500 (for multiple recipients) UTF-8 characters. As mobile devices rarely support the full range of UTF-8 characters, it is possible that some characters may not be translated correctly by the mobile device
+        type: string
+        example: Test Message
+      receiptOff:
+        description: |
+          Whether Delivery Receipt will be sent back or not.
+
+          Setting this field to `true` will disable Delivery Receipts. The `notifyURL` field will be ignored, if there is one in the payload. An "OLD-NONEXISTANT-MESSAGE-ID" 400 error will also be returned upon Polling for the SMS Status.
+        type: boolean
+        example: "true"
+
+

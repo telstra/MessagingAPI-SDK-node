@@ -1,30 +1,17 @@
-import { HttpClient } from './HttpClient';
-import { AxiosRequestConfig } from 'axios';
 import { Constants } from './Constants';
-import { URLSearchParams } from 'url';
 import { getConfig, setConfig } from './config';
 import { AuthError } from './Errors';
-import { AuthConfigProps } from './types';
+import { AuthConfigProps, AuthCredentials } from './types';
 
 const fs = require('fs');
 
-export class Auth extends HttpClient {
-    public constructor(public authConfig?: AuthConfigProps) {
-        super(Constants.API_URL);
-        this._initializeRequestInterceptor();
-    }
-
-    private _initializeRequestInterceptor = (): void => {
-        this.instance.interceptors.request.use(
-            this._handleRequest,
-            this._handleError
-        );
+export class Auth {
+    protected authCredentials: AuthCredentials = {
+        client_id: '',
+        client_secret: '',
     };
 
-    private _handleRequest = (config: AxiosRequestConfig) => {
-        config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        return config;
-    };
+    public constructor(public authConfig?: AuthConfigProps) {}
 
     private async credentialsFromEnvVars(): Promise<boolean> {
         if (
@@ -113,52 +100,36 @@ export class Auth extends HttpClient {
         return true;
     }
 
-    public async getToken(): Promise<string> {
-        try {
-            /**
-             * Order of precedence;
-             * - Defined in constructor
-             * - Defined in imported json file
-             * - Defined in environment variables
-             * - Defined in shared credentials file
-             * First match wins!
-             */
-            if (
-                !(await this.credentialsFromFileImport()) &&
-                !(await this.credentialsFromEnvVars()) &&
-                !(await this.credentialsFromSharedFile())
-            ) {
-                throw new AuthError(Constants.ERRORS.AUTH_ERROR);
-            }
-
-            const credentialsFromStorage = await getConfig();
-            const {
-                telstra_messaging_client_id,
-                telstra_messaging_client_secret,
-            } = JSON.parse(credentialsFromStorage);
-
-            if (
-                !telstra_messaging_client_id ||
-                !telstra_messaging_client_secret
-            ) {
-                throw new AuthError(Constants.ERRORS.AUTH_ERROR);
-            }
-
-            const params = new URLSearchParams();
-            params.append('client_id', `${telstra_messaging_client_id}`);
-            params.append(
-                'client_secret',
-                `${telstra_messaging_client_secret}`
-            );
-            params.append('grant_type', 'client_credentials');
-            params.append('scope', 'NSMS');
-
-            const auth = await this.instance.post(`/v2/oauth/token`, params);
-            if (!auth) throw new AuthError(Constants.ERRORS.AUTH_ERROR);
-            const { access_token } = auth;
-            return access_token;
-        } catch (error) {
-            throw error;
+    public async getCredentials(): Promise<AuthCredentials> {
+        /**
+         * Order of precedence;
+         * - Defined in constructor
+         * - Defined in imported json file
+         * - Defined in environment variables
+         * - Defined in shared credentials file
+         * First match wins!
+         */
+        if (
+            !(await this.credentialsFromFileImport()) &&
+            !(await this.credentialsFromEnvVars()) &&
+            !(await this.credentialsFromSharedFile())
+        ) {
+            throw new AuthError(Constants.ERRORS.AUTH_ERROR);
         }
+
+        const credentialsFromStorage = await getConfig();
+        const {
+            telstra_messaging_client_id,
+            telstra_messaging_client_secret,
+        } = JSON.parse(credentialsFromStorage);
+
+        if (!telstra_messaging_client_id || !telstra_messaging_client_secret) {
+            throw new AuthError(Constants.ERRORS.AUTH_ERROR);
+        }
+
+        this.authCredentials.client_id = telstra_messaging_client_id;
+        this.authCredentials.client_secret = telstra_messaging_client_secret;
+
+        return this.authCredentials;
     }
 }

@@ -1,6 +1,4 @@
 import { HttpClient } from './HttpClient';
-import { AxiosRequestConfig } from 'axios';
-import { Auth } from './Auth';
 import {
     TMessage,
     TMessageSendResponse,
@@ -9,37 +7,10 @@ import {
     AuthConfigProps,
 } from './types';
 import { Validator } from './Validator';
-import { Constants } from './Constants';
 
 export class Message extends HttpClient {
-    private auth: Auth;
-
-    public constructor(authConfig?: AuthConfigProps) {
-        super(Constants.API_URL);
-        if (authConfig) {
-            this.auth = new Auth(authConfig);
-        } else {
-            this.auth = new Auth();
-        }
-        this._initializeRequestInterceptor();
-    }
-
-    private _initializeRequestInterceptor() {
-        this.instance.interceptors.request.use(
-            this._handleRequest,
-            this._handleError
-        );
-    }
-
-    private async _handleRequest(
-        config: AxiosRequestConfig
-    ): Promise<AxiosRequestConfig> {
-        try {
-            config.headers['Content-Type'] = `application/json`;
-            return config;
-        } catch (error) {
-            throw error;
-        }
+    public constructor(public authConfig?: AuthConfigProps) {
+        super(authConfig);
     }
 
     /**
@@ -78,11 +49,6 @@ export class Message extends HttpClient {
             const validate = new Validator<TMessage>(message);
             validate.schemaRef('SendSMSRequest');
 
-            const accessToken = await this.auth.getToken();
-            this.instance.defaults.headers.common[
-                'Authorization'
-            ] = `Bearer ${accessToken}`;
-
             const result = await this.instance.post<TMessageSendResponse>(
                 `/v2/messages/sms`,
                 message
@@ -115,11 +81,6 @@ export class Message extends HttpClient {
      */
     public async getNextUnreadReply(): Promise<TMessageRepliesResponse> {
         try {
-            const accessToken = await this.auth.getToken();
-            this.instance.defaults.headers.common[
-                'Authorization'
-            ] = `Bearer ${accessToken}`;
-
             const result = await this.instance.get<TMessageRepliesResponse>(
                 `/v2/messages/sms`
             );
@@ -154,11 +115,6 @@ export class Message extends HttpClient {
             validate.schemaInline({
                 type: 'string',
             });
-
-            const accessToken = await this.auth.getToken();
-            this.instance.defaults.headers.common[
-                'Authorization'
-            ] = `Bearer ${accessToken}`;
 
             const result = await this.instance.get<TMessageStatusResponse>(
                 `/v2/messages/sms/${messageId}/status`

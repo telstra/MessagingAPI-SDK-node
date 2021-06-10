@@ -1,6 +1,4 @@
 import { HttpClient } from './HttpClient';
-import { AxiosRequestConfig } from 'axios';
-import { Auth } from './Auth';
 import {
     TBnumRetrieveResponse,
     TBnumRegisterRequest,
@@ -8,37 +6,10 @@ import {
     AuthConfigProps,
 } from './types';
 import { Validator } from './Validator';
-import { Constants } from './Constants';
 
 export class TrialNumbers extends HttpClient {
-    private auth: Auth;
-
-    public constructor(authConfig?: AuthConfigProps) {
-        super(Constants.API_URL);
-        if (authConfig) {
-            this.auth = new Auth(authConfig);
-        } else {
-            this.auth = new Auth();
-        }
-        this._initializeRequestInterceptor();
-    }
-
-    private _initializeRequestInterceptor() {
-        this.instance.interceptors.request.use(
-            this._handleRequest,
-            this._handleError
-        );
-    }
-
-    private async _handleRequest(
-        config: AxiosRequestConfig
-    ): Promise<AxiosRequestConfig> {
-        try {
-            config.headers['Content-Type'] = `application/json`;
-            return config;
-        } catch (error) {
-            throw error;
-        }
+    public constructor(public authConfig?: AuthConfigProps) {
+        super(authConfig);
     }
 
     /**
@@ -88,11 +59,6 @@ export class TrialNumbers extends HttpClient {
                     additionalProperties: false,
                 });
 
-            const accessToken = await this.auth.getToken();
-            this.instance.defaults.headers.common[
-                'Authorization'
-            ] = `Bearer ${accessToken}`;
-
             const result = await this.instance.post<TBnumRegisterResponse>(
                 `/v2/messages/freetrial/bnum`,
                 body
@@ -123,11 +89,6 @@ export class TrialNumbers extends HttpClient {
      */
     public async get() {
         try {
-            const accessToken = await this.auth.getToken();
-            this.instance.defaults.headers.common[
-                'Authorization'
-            ] = `Bearer ${accessToken}`;
-
             const result = await this.instance.get<TBnumRetrieveResponse>(
                 `/v2/messages/freetrial/bnum`
             );
