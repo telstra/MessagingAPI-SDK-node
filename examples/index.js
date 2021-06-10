@@ -1,57 +1,37 @@
 /** Using CJS */
 var { Message, Numbers, TrialNumbers } = require('../dist/index.js');
+var AUTH_CONFIG = require('./credentials.json');
 
-// const trialNumbers = new TrialNumbers();
+const message = new Message(AUTH_CONFIG);
+const number = new Numbers(AUTH_CONFIG);
+const trialNumber = new TrialNumbers(AUTH_CONFIG);
 
-// trialNumbers.register({
-//     bnum: ['+61234567890']
+trialNumber.get()
+.then(result => console.log('DEBUG:trialNumber:get:', result))
+.catch(error => console.error(error));
+
+number.get()
+.then(result => console.log('DEBUG:number:get:', result))
+.catch(error => console.error(error));
+
+message.getNextUnreadReply()
+.then(result => console.log('DEBUG:message:getNextUnreadReply:', result))
+.catch(error => console.error(error));
+
+// trialNumber.register()
+// .then(result => console.log('DEBUG:trialNumber:register:', result))
+// .catch(error => console.error(error));
+
+// number.create({
+//     activeDays: 123456,
+//     extraProperty: 123456
 // })
-// .then(result => {
-//     console.log(result);
-// })
-// .catch(error => {
-//     console.error(error);
-// });
+// .then(result => console.log('DEBUG:number:create:', result))
+// .catch(error => console.error(error));
 
-// const numbers = new Numbers();
-
-// numbers.create({
-//     activeDays: 1
+// message.send({
+//     to: '123456',
+//     body: 123456
 // })
-// .then(result => {
-//     console.log(result);
-// })
-// .catch(error => {
-//     console.error(error);
-// });
-
-// numbers.delete({
-//     emptyArr: 1
-// })
-// .then(result => {
-//     console.log(result);
-// })
-// .catch(error => {
-//     console.error(error);
-// });
-
-const message = new Message();
-
-message.send({
-    // to: '+61123456789',
-    // body: 'Hello from Messaging SDK'
-})
-.then(result => {
-    console.log(result);
-})
-.catch(error => {
-    console.error(error);
-});
-
-// message.status('<MESSAGE ID>')
-// .then(result => {
-//     console.log(result);
-// })
-// .catch(error => {
-//     console.error(error);
-// });
+// .then(result => console.log('DEBUG:message:send:', result))
+// .catch(error => console.error(error));
