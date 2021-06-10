@@ -1,5 +1,3 @@
-import { StorageError } from './Errors';
-
 /**
  * Construct an instance of a storage based on the environment
  */
@@ -12,11 +10,10 @@ let storageInstance: IStorage | null = null;
 /**
  * Returns an instance of a storage
  */
-export function getStorage(): IStorage {
+export function storage(): IStorage {
     if (!storageInstance) {
         storageInstance = createStorage();
     }
-
     return storageInstance;
 }
 
@@ -30,40 +27,8 @@ export class Memory implements IStorage {
         this.memoryStorage = {};
     }
 
-    listKeys(params: IListParams): Promise<TKeyList> {
-        return new Promise((resolve, reject) => {
-            // Check for presence of bucket
-            if (!this.memoryStorage[params.bucket]) {
-                reject(
-                    new StorageError({
-                        errorCode: `STORAGE_ERROR`,
-                        errorMessage: `${params} could not be retrieved.`,
-                    })
-                );
-            }
-
-            // Get keys
-            const keys = Object.keys(
-                this.memoryStorage[params.bucket]
-            ).filter(key => key.startsWith(params.prefix));
-            resolve(keys);
-        });
-    }
-
     get(params: IGetParams): Promise<TData> {
         return new Promise(resolve => {
-            // Check for presence of data
-            if (
-                !this.memoryStorage[params.bucket] ||
-                !this.memoryStorage[params.bucket][params.key]
-            ) {
-                // reject(
-                // new StorageError({
-                //     errorCode: `STORAGE_ERROR`,
-                //     errorMessage: `${params} could not be retrieved.`,
-                // })
-                // );
-            }
             resolve(this.memoryStorage[params.bucket][params.key]);
         });
     }
@@ -74,13 +39,6 @@ export class Memory implements IStorage {
                 this.memoryStorage[params.bucket] = {};
             }
             this.memoryStorage[params.bucket][params.key] = params.data;
-            resolve();
-        });
-    }
-
-    clear(params: IClearParams): Promise<void> {
-        return new Promise(resolve => {
-            delete this.memoryStorage[params.bucket];
             resolve();
         });
     }
@@ -114,13 +72,6 @@ export interface IClearParams {
 
 export interface IStorage {
     /**
-     * List the keys in a bucket that match a prefix in the storage
-     * @param params.bucket The bucket the keys should be retrieved from
-     * @param params.prefix The prefix to filter keys by
-     */
-    listKeys: (params: IListParams) => Promise<TKeyList>;
-
-    /**
      * Get a value from the storage
      * @param params.bucket The bucket the data should be retrieved from
      * @param params.key The key where the data should be retrieved from
@@ -134,10 +85,4 @@ export interface IStorage {
      * @param params.data The data that should be stored
      */
     set: (params: ISetParams) => Promise<void>;
-
-    /**
-     * Remove all items from a bucket and delete it
-     * @param params.bucket The bucket that should be cleared and deleted
-     */
-    clear: (params: IClearParams) => Promise<void>;
 }

@@ -13,7 +13,6 @@ import { Constants } from './Constants';
 import { Auth } from './Auth';
 import { URLSearchParams } from 'url';
 import {
-    // UnknownError,
     RequestError,
     AuthError,
 } from './Errors';

@@ -1,12 +1,63 @@
 /* eslint-disable */
+const { server, rest } = require('./testServer');
 const { Numbers } = require('../../../src/messaging/Numbers');
 const { AssertionError } = require('../../../src/messaging/Errors');
+const AUTH_CONFIG = require('./credentials.json');
 
-const number = new Numbers();
+const number = new Numbers(AUTH_CONFIG);
 
 describe("Numbers", () => {
 
+  describe("delete", () => {
+    describe('when the client sends a valid object', () => {
+      it("should pass", async () => {
+        await expect(number.delete({ "emptyArr": 0 })).resolves.toEqual({ "emptyArr": 0 });
+      });
+    });
+    describe('when the client sends an empty object', () => {
+      it("should throw an assertion error", async () => {
+        const callback = async () => number.delete()
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data should be object`,
+          })
+        );
+      });
+    });
+    describe('when the client sends an invalid object', () => {
+      it("should throw an assertion error", async () => {
+        const callback = async () => number.delete({})
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data should have required property 'emptyArr'`,
+          })
+        );
+      });
+    });
+    describe('when the client sends an invalid object', () => {
+      it("should throw an assertion error", async () => {
+        const callback = async () => number.delete({emptyArr: '0'})
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.emptyArr should be integer`,
+          })
+        );
+      });
+    });
+  });
+
   describe("create", () => {
+    describe('when the client sends a valid object', () => {
+      it("should pass", async () => {
+        await expect(number.create({ activeDays: 1 })).resolves.toEqual({ activeDays: 1 });
+      });
+    });
 
     describe('when the client sends an empty object', () => {
       it("should throw an assertion error for required property [activeDays].", async () => {

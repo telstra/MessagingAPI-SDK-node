@@ -1,10 +1,10 @@
-import { getStorage } from './storage';
+import { storage } from './storage';
 import { TAuthConfig } from './types';
 import { StorageError } from './Errors';
 import { Constants } from './Constants';
 
 export const setConfig = async (authConfig: TAuthConfig): Promise<void> => {
-    await getStorage()
+    await storage()
         .set({
             bucket: Constants.BUCKET_AUTH_STORE,
             key: Constants.CLIENT_CREDENTIALS_BUCKET_KEY,
@@ -16,7 +16,7 @@ export const setConfig = async (authConfig: TAuthConfig): Promise<void> => {
 };
 
 export const getConfig = async (): Promise<string> => {
-    return await getStorage()
+    return await storage()
         .get({
             bucket: Constants.BUCKET_AUTH_STORE,
             key: Constants.CLIENT_CREDENTIALS_BUCKET_KEY,
@@ -26,12 +26,8 @@ export const getConfig = async (): Promise<string> => {
         });
 };
 
-export const clearConfig = async (): Promise<void> => {
-    await getStorage().clear({ bucket: Constants.BUCKET_AUTH_STORE });
-};
-
 export const setAuthToken = async (authToken: string): Promise<void> => {
-    await getStorage().set({
+    await storage().set({
         bucket: Constants.BUCKET_AUTH_STORE,
         key: Constants.ACCESS_TOKEN_BUCKET_KEY,
         data: JSON.stringify(authToken),
@@ -40,7 +36,7 @@ export const setAuthToken = async (authToken: string): Promise<void> => {
 
 export const getAuthToken = async (): Promise<string | boolean> => {
     try {
-        const data = await getStorage().get({
+        const data = await storage().get({
             bucket: Constants.BUCKET_AUTH_STORE,
             key: Constants.ACCESS_TOKEN_BUCKET_KEY,
         });

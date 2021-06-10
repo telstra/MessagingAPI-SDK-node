@@ -1,5 +1,5 @@
 /* eslint-disable */
-// const axios = require('axios');
+const { server, rest } = require('./testServer');
 const { TrialNumbers } = require('../../../src/messaging/TrialNumbers');
 const { AssertionError } = require('../../../src/messaging/Errors');
 const AUTH_CONFIG = require('./credentials.json');
@@ -8,17 +8,28 @@ const trialNumber = new TrialNumbers(AUTH_CONFIG);
 
 describe("TrialNumbers", () => {
 
-  // describe("get", () => {
-
-  //   describe('when the client makes a http request', () => {
-  //     it("should return a list of bums.", async () => {
-  //       const data = {"bnum": ["+61234567890"]};
-  //       await expect(trialNumber.get()).resolves.toEqual(data);
-  //     });
-  //   });
-  // });
+  describe("get", () => {
+    describe('when the client retrieves bnum status', () => {
+      it("should return a result", async () => {
+        const data = {"bnum": ["+61234567890"]};
+        await expect(trialNumber.get()).resolves.toEqual(data);
+      });
+    });
+  });
 
   describe("register", () => {
+
+    describe('when the client sends a valid object', () => {
+      it("should pass having 10 chars", async () => {
+        const data = {"bnum": ["1234567890"]};
+        await expect(trialNumber.register(data)).resolves.toEqual(data);
+      });
+
+      it("should pass having 12 chars", async () => {
+        const data = {"bnum": ["+61234567890"]};
+        await expect(trialNumber.register(data)).resolves.toEqual(data);
+      });
+    });
 
     describe('when the client sends an empty object', () => {
       it("should throw an assertion error for required property [bnum].", async () => {

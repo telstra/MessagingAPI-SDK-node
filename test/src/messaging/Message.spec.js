@@ -1,12 +1,41 @@
 /* eslint-disable */
+const { server, rest } = require('./testServer');
 const { Message } = require('../../../src/messaging/Message');
 const { AssertionError } = require('../../../src/messaging/Errors');
+const AUTH_CONFIG = require('./credentials.json');
 
-const message = new Message();
+const message = new Message(AUTH_CONFIG);
 
 describe("Message", () => {
 
+  describe("getNextUnreadReply", () => {
+    describe('when the client sends a valid request', () => {
+      it("should pass", async () => {
+        await expect(message.getNextUnreadReply()).resolves.toEqual({ "status": "EMPTY" });
+      });
+    });
+  });
+
+  describe("status", () => {
+    describe('when the client sends a valid [messageId] attribute', () => {
+      it("should pass", async () => {
+        await expect(message.status('XXXXX')).resolves.toEqual({ "messageId": "XXXXX"});
+      });
+    });
+  });
+
   describe("send", () => {
+
+    describe('when the client sends a valid object with [to] & [body]', () => {
+      it("should pass with attr [to] having 10 chars", async () => {
+        const data = { "to":"1234567890", "body":"Hello from Messaging SDK!" };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+      it("should pass with attr [to] having 12 chars", async () => {
+        const data = { "to":"+61234567890", "body":"Hello from Messaging SDK!" };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+    });
 
     describe('when the client sends an empty object', () => {
       it("should throw an assertion error for required properties [to] & [body].", async () => {

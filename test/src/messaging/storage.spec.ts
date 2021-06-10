@@ -1,7 +1,7 @@
 /* eslint-disable */
 import jestEach from 'jest-each';
 
-import { createStorage, getStorage, Memory } from '../../../src/messaging/storage';
+import { createStorage, storage, Memory } from '../../../src/messaging/storage';
 
 describe('createStorage', () => {
     let initialNodeEnv: string | undefined;
@@ -41,23 +41,23 @@ describe('createStorage', () => {
     });
 });
 
-describe('getStorage', () => {
-    test('should create a new storage when calling getStorage for the first time', () => {
+describe('storage', () => {
+    test('should create a new storage when calling storage for the first time', () => {
         // GIVEN
 
-        // WHEN getStorage is called
-        const storage = getStorage();
+        // WHEN storage is called
+        const firstStorage = storage();
 
         // THEN a storage is created
-        expect(storage).toBeTruthy();
+        expect(firstStorage).toBeTruthy();
     });
 
-    test('should return the same storage when calling getStorage for future calls', () => {
+    test('should return the same storage when calling storage for future calls', () => {
         // GIVEN
 
-        // WHEN getStorage is called multiple times
-        const firstStorage = getStorage();
-        const secondStorage = getStorage();
+        // WHEN storage is called multiple times
+        const firstStorage = storage();
+        const secondStorage = storage();
 
         // THEN a storage is created
         expect(firstStorage).toBe(secondStorage);

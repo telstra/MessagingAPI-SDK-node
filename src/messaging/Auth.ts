@@ -6,6 +6,8 @@ import { AuthConfigProps, AuthCredentials } from './types';
 const fs = require('fs');
 
 export class Auth {
+    protected hasCredentials: boolean = false;
+
     protected authCredentials: AuthCredentials = {
         client_id: '',
         client_secret: '',
@@ -13,17 +15,40 @@ export class Auth {
 
     public constructor(public authConfig?: AuthConfigProps) {}
 
+    private async credentialsFromFileImport(): Promise<boolean> {
+        if (!this.authConfig) return false;
+
+        const {
+            TELSTRA_MESSAGING_CLIENT_ID,
+            TELSTRA_MESSAGING_CLIENT_SECRET,
+        } = this.authConfig;
+
+        if (!TELSTRA_MESSAGING_CLIENT_ID || !TELSTRA_MESSAGING_CLIENT_SECRET)
+            return false;
+
+        await setConfig({
+            telstra_messaging_client_id: TELSTRA_MESSAGING_CLIENT_ID,
+            telstra_messaging_client_secret: TELSTRA_MESSAGING_CLIENT_SECRET,
+        });
+        this.hasCredentials = true;
+
+        return true;
+    }
+
     private async credentialsFromEnvVars(): Promise<boolean> {
         if (
             process.env.TELSTRA_MESSAGING_CLIENT_ID &&
             process.env.TELSTRA_MESSAGING_CLIENT_SECRET
         ) {
-            await setConfig({
-                telstra_messaging_client_id:
-                    process.env.TELSTRA_MESSAGING_CLIENT_ID,
-                telstra_messaging_client_secret:
-                    process.env.TELSTRA_MESSAGING_CLIENT_SECRET,
-            });
+            if (!this.hasCredentials) {
+                await setConfig({
+                    telstra_messaging_client_id:
+                        process.env.TELSTRA_MESSAGING_CLIENT_ID,
+                    telstra_messaging_client_secret:
+                        process.env.TELSTRA_MESSAGING_CLIENT_SECRET,
+                });
+                this.hasCredentials = true;
+            }
             return true;
         } else {
             return false;
@@ -68,10 +93,13 @@ export class Auth {
                 telstra_messaging_client_id &&
                 telstra_messaging_client_secret
             ) {
-                await setConfig({
-                    telstra_messaging_client_id,
-                    telstra_messaging_client_secret,
-                });
+                if (!this.hasCredentials) {
+                    await setConfig({
+                        telstra_messaging_client_id,
+                        telstra_messaging_client_secret,
+                    });
+                    this.hasCredentials = true;
+                }
                 return true;
             }
 
@@ -79,25 +107,6 @@ export class Auth {
         } catch (err) {
             return false;
         }
-    }
-
-    private async credentialsFromFileImport(): Promise<boolean> {
-        if (!this.authConfig) return false;
-
-        const {
-            TELSTRA_MESSAGING_CLIENT_ID,
-            TELSTRA_MESSAGING_CLIENT_SECRET,
-        } = this.authConfig;
-
-        if (!TELSTRA_MESSAGING_CLIENT_ID || !TELSTRA_MESSAGING_CLIENT_SECRET)
-            return false;
-
-        await setConfig({
-            telstra_messaging_client_id: TELSTRA_MESSAGING_CLIENT_ID,
-            telstra_messaging_client_secret: TELSTRA_MESSAGING_CLIENT_SECRET,
-        });
-
-        return true;
     }
 
     public async getCredentials(): Promise<AuthCredentials> {
@@ -109,11 +118,13 @@ export class Auth {
          * - Defined in shared credentials file
          * First match wins!
          */
-        if (
-            !(await this.credentialsFromFileImport()) &&
-            !(await this.credentialsFromEnvVars()) &&
-            !(await this.credentialsFromSharedFile())
-        ) {
+        await Promise.all([
+            this.credentialsFromFileImport(),
+            this.credentialsFromEnvVars(),
+            this.credentialsFromSharedFile(),
+        ]);
+
+        if (!this.hasCredentials) {
             throw new AuthError(Constants.ERRORS.AUTH_ERROR);
         }
 
