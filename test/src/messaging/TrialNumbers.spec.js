@@ -1,5 +1,5 @@
 /* eslint-disable */
-const axios = require('axios');
+// const axios = require('axios');
 const { TrialNumbers } = require('../../../src/messaging/TrialNumbers');
 const { AssertionError } = require('../../../src/messaging/Errors');
 const AUTH_CONFIG = require('./credentials.json');
