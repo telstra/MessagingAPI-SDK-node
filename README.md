@@ -7,7 +7,7 @@ The Official SDK for the Telstra messaging API.
 ## Installing
 
 ```bash
-npm i -s @tls/messaging
+npm i -s @telstra/messaging
 ```
 
 ## Getting Started
@@ -22,7 +22,7 @@ For `free trial` accounts, you will need to setup a list of `registered destinat
 
 ```javascript
 /** Using CommonJS */
-var { Message } = require('@tls/messaging');
+var { Message } = require('@telstra/messaging');
 
 const message = new Message();
 message
@@ -44,7 +44,7 @@ message
 
 ```javascript
 /** Using ES Modules (ECMAScript) */
-import { Message } from '@tls/messaging';
+import { Message } from '@telstra/messaging';
 
 const message = new Message();
 message
@@ -133,7 +133,7 @@ It returns the list of phone numbers that have been registered.
 For example:
 
 ```javascript
-import { TrialNumbers } from '@tls/messaging';
+import { TrialNumbers } from '@telstra/messaging';
 
 const trialNumber = new TrialNumbers();
 trialNumber
@@ -161,7 +161,7 @@ It takes no arguments. It returns the list of phone numbers that have been regis
 For example:
 
 ```javascript
-import { TrialNumbers } from '@tls/messaging';
+import { TrialNumbers } from '@telstra/messaging';
 
 const trialNumber = new TrialNumbers();
 trialNumber
@@ -205,7 +205,7 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Numbers } from '@tls/messaging';
+import { Numbers } from '@telstra/messaging';
 
 const numbers = new Numbers();
 numbers
@@ -235,7 +235,7 @@ properties:
 For example:
 
 ```javascript
-import { Numbers } from '@tls/messaging';
+import { Numbers } from '@telstra/messaging';
 
 const numbers = new Numbers();
 numbers
@@ -257,7 +257,7 @@ The function `numbers.delete` can be used to delete the current
 subscription.
 
 ```javascript
-import { Numbers } from '@tls/messaging';
+import { Numbers } from '@telstra/messaging';
 
 const numbers = new Numbers();
 numbers
@@ -316,7 +316,7 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Message } from '@tls/messaging';
+import { Message } from '@telstra/messaging';
 
 const message = new Message();
 message
@@ -352,7 +352,7 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Message } from '@tls/messaging';
+import { Message } from '@telstra/messaging';
 
 const message = new Message();
 message
@@ -384,7 +384,7 @@ arguments. It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Message } from '@tls/messaging';
+import { Message } from '@telstra/messaging';
 
 const message = new Message();
 message
@@ -409,7 +409,7 @@ the sms & mms service health status:
 For example:
 
 ```javascript
-import { Message } from '@tls/messaging';
+import { Message } from '@telstra/messaging';
 
 const message = new Message();
 message
