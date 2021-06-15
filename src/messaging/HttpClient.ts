@@ -60,9 +60,20 @@ export abstract class HttpClient {
 
     private _handleRequest = async (config: AxiosRequestConfig) => {
 
-        if (config.url !== '/v2/oauth/token') {
+        // set headers due to oauth api proxy differences
+        if (config.url === '/v2/oauth/token') {
+            config.headers['Accept'] = `*/*`;
+            config.headers['Content-Type'] = `application/x-www-form-urlencoded`;
+        } else {
+            config.headers['Accept'] = `application/json`;
             config.headers['Content-Type'] = `application/json`;
+        }
 
+        if (
+            config.url !== '/v2/oauth/token' &&
+            config.url !== '/v2/messages/sms/healthcheck' &&
+            config.url !== '/v2/messages/mms/healthcheck'
+        ) {
             // retrieve token from storage
             const authToken = await getAuthToken();
 
@@ -86,10 +97,8 @@ export abstract class HttpClient {
                     await setAuthToken(renewToken);
                 }
             }
-        } else {
-            // api auth token endpoint requires this :(
-            config.headers['Content-Type'] = `application/x-www-form-urlencoded`;
         }
+
         return config;
     }
 
@@ -98,7 +107,6 @@ export abstract class HttpClient {
     private _handleResponse = ({ data }: AxiosResponse) => data;
 
     protected _handleResponseError = async (error: AxiosError) => {
-
         // request for token failed, issue with client credentials
         if (error.response?.status === 401 && error.response?.config.url === '/v2/oauth/token') {
             return Promise.reject(
@@ -112,6 +120,12 @@ export abstract class HttpClient {
                     errorCode: error.response?.data?.code,
                     errorMessage: error.response?.data?.message,
                 })
+            );
+        }
+
+        if (error.response?.status && error.response?.statusText ) {
+            return Promise.reject(
+                new RequestError(Constants.ERRORS.UNKNOWN_ERROR)
             );
         }
 

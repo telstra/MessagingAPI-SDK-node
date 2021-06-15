@@ -33,6 +33,11 @@ export type TAuthResponse = {
     expires_in: string;
 };
 
+export enum TMessageType {
+    SMS = 'sms',
+    MMS = 'mms',
+}
+
 export type TMessage = {
     to: string;
     body: string;
@@ -44,6 +49,8 @@ export type TMessage = {
     replyRequest?: boolean;
     receiptOff?: boolean;
     userMsgRef?: string;
+    type?: TMessageType;
+    multimedia?: TMessageType;
 };
 
 export type TMessageSend = {
@@ -116,4 +123,13 @@ export type TBnumRegisterRequest = {
 
 export type TBnumRegisterResponse = {
     bnum: Array<string>;
+};
+
+export type THealthCheck = {
+    status?: string;
+};
+
+export type TMessageHealthCheck = {
+    sms: THealthCheck;
+    mms: THealthCheck;
 };

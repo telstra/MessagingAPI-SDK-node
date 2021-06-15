@@ -8,6 +8,14 @@ const message = new Message(AUTH_CONFIG);
 
 describe("Message", () => {
 
+  describe("healthCheck", () => {
+    describe('when the client makes a healthcheck call', () => {
+      it("should pass", async () => {
+        await expect(message.healthCheck()).resolves.toEqual({ sms: { status: 'up' }, mms: { status: 'up' } });
+      });
+    });
+  });
+
   describe("getNextUnreadReply", () => {
     describe('when the client sends a valid request', () => {
       it("should pass", async () => {
@@ -34,6 +42,33 @@ describe("Message", () => {
       it("should pass with attr [to] having 12 chars", async () => {
         const data = { "to":"+61234567890", "body":"Hello from Messaging SDK!" };
         await expect(message.send(data)).resolves.toEqual(data);
+      });
+    });
+
+    describe('when the client sends an object', () => {
+      it("should pass with attr [type] as a string", async () => {
+        const data = { "to":"1234567890", "body":"Hello from Messaging SDK!", "type": 'sms' };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+      it("should throw an assertion error attr [type] requires a string", async () => {
+        const data = { "to":"1234567890", "body":"Hello from Messaging SDK!", "type": 123456 };
+        await expect(message.send(data)).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.type should be string, data.type should be equal to one of the allowed values`,
+          })
+        );
+      });
+      it("should throw an assertion error attr [type] requires to be enum value", async () => {
+        const data = { "to":"1234567890", "body":"Hello from Messaging SDK!", "type": '123456' };
+        await expect(message.send(data)).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.type should be equal to one of the allowed values`,
+          })
+        );
       });
     });
 

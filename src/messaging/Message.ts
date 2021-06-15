@@ -5,6 +5,8 @@ import {
     TMessageRepliesResponse,
     TMessageStatusResponse,
     AuthConfigProps,
+    THealthCheck,
+    TMessageHealthCheck,
 } from './types';
 import { Validator } from './Validator';
 
@@ -47,10 +49,30 @@ export class Message extends HttpClient {
     public async send(message: TMessage): Promise<TMessageSendResponse> {
         try {
             const validate = new Validator<TMessage>(message);
+
+            // validate using json schema
             validate.schemaRef('SendSMSRequest');
 
+            // validate message type sms|mms
+            if (message?.type) {
+                validate.schemaInline({
+                    type: 'object',
+                    properties: {
+                        type: {
+                            type: 'string',
+                            enum: ['sms', 'mms'],
+                        },
+                    },
+                });
+            }
+
+            let apiResource: string = '/v2/messages/sms';
+            if (message?.multimedia) {
+                apiResource = '/v2/messages/mms';
+            }
+
             const result = await this.instance.post<TMessageSendResponse>(
-                `/v2/messages/sms`,
+                apiResource,
                 message
             );
             return result;
@@ -118,6 +140,43 @@ export class Message extends HttpClient {
 
             const result = await this.instance.get<TMessageStatusResponse>(
                 `/v2/messages/sms/${messageId}/status`
+            );
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Determine whether the messaging service is up or down.
+     * @link https://dev.telstra.com/content/messaging-api#operation/smsHealthCheck
+     * @link https://dev.telstra.com/content/messaging-api#operation/mmsHealthCheck
+     * @example
+        ```typescript
+        import { Message } from '@telstra/messaging'
+
+        const message = new Message();
+
+        message.healthCheck()
+        .then(result => {
+            console.log(result);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        ```
+     */
+    public async healthCheck(): Promise<TMessageHealthCheck> {
+        try {
+            let result: TMessageHealthCheck = {
+                sms: { status: undefined },
+                mms: { status: undefined },
+            };
+            result.sms = await this.instance.get<THealthCheck>(
+                '/v2/messages/sms/healthcheck'
+            );
+            result.mms = await this.instance.get<THealthCheck>(
+                `/v2/messages/mms/healthcheck`
             );
             return result;
         } catch (error) {
