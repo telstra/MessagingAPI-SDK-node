@@ -139,7 +139,7 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          PUBLISHED_VERSION=$(npm view "@tls/messaging" dist-tags.latest)
+          PUBLISHED_VERSION=$(npm view "@telstra/messaging" dist-tags.latest)
           PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
           [[ "$PUBLISHED_VERSION" == "$PACKAGE_VERSION" ]] || npm publish --access public
       - name: upload artifacts that were released

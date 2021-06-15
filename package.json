@@ -1,5 +1,5 @@
 {
-  "version": "0.3.8",
+  "version": "0.3.9",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -31,7 +31,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@tls/messaging",
+  "name": "@telstra/messaging",
   "author": "Chris Trewin",
   "module": "dist/messaging",
   "size-limit": [
