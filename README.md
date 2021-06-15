@@ -7,18 +7,22 @@ The Official SDK for the Telstra messaging API.
 ## Installing
 
 ```bash
-npm i -s @telstra/messaging
+npm i -s @tls/messaging
 ```
 
 ## Getting Started
 
 You can find the `Client key` and `Client secret` here: <https://dev.telstra.com/user/me/apps>.
 
+Before `sending` and `receiving` messages you will need to get your dedicated `Australian number`, see `Subscription` section below.
+
+For `free trial` accounts, you will need to setup a list of `registered destinations` first, see `Free Trial` section below.
+
 ### Getting started using CJS (CommonJS)
 
 ```javascript
 /** Using CommonJS */
-var { Message } = require('@telstra/messaging');
+var { Message } = require('@tls/messaging');
 
 const message = new Message();
 message
@@ -40,7 +44,7 @@ message
 
 ```javascript
 /** Using ES Modules (ECMAScript) */
-import { Message } from '@telstra/messaging';
+import { Message } from '@tls/messaging';
 
 const message = new Message();
 message
@@ -58,7 +62,7 @@ message
 
 ## Authentication
 
-Authentication through environment variables, shared configuration file and json file import are supported.
+Authentication through environment variables, a shared configuration file and json file import are supported.
 
 ### Environment variables
 
@@ -115,8 +119,7 @@ destination. For more information, please see here:
 
 > :information_source: **Only required for the free trial**
 
-Register destinations for the free trial. For more information, please see
-here:
+Register destinations for the free trial. For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumRegister>.
 
 The function `trialNumber.register` can be used to register destinations.
@@ -130,7 +133,7 @@ It returns the list of phone numbers that have been registered.
 For example:
 
 ```javascript
-import { TrialNumbers } from '@telstra/messaging';
+import { TrialNumbers } from '@tls/messaging';
 
 const trialNumber = new TrialNumbers();
 trialNumber
@@ -158,7 +161,7 @@ It takes no arguments. It returns the list of phone numbers that have been regis
 For example:
 
 ```javascript
-import { TrialNumbers } from '@telstra/messaging';
+import { TrialNumbers } from '@tls/messaging';
 
 const trialNumber = new TrialNumbers();
 trialNumber
@@ -173,8 +176,8 @@ trialNumber
 
 ## Subscription
 
-A subscription gives you a dedicated mobile number tied to an application. For
-more information, please see here:
+A subscription gives you a dedicated mobile number tied to an application.
+For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#tag/Provisioning>.
 
 ### Create Subscription
@@ -202,7 +205,7 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Numbers } from '@telstra/messaging';
+import { Numbers } from '@tls/messaging';
 
 const numbers = new Numbers();
 numbers
@@ -217,7 +220,7 @@ numbers
     });
 ```
 
-### Get Subscription
+### Retrieve Subscription
 
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSubscription>.
@@ -232,7 +235,7 @@ properties:
 For example:
 
 ```javascript
-import { Numbers } from '@telstra/messaging';
+import { Numbers } from '@tls/messaging';
 
 const numbers = new Numbers();
 numbers
@@ -254,7 +257,7 @@ The function `numbers.delete` can be used to delete the current
 subscription.
 
 ```javascript
-import { Numbers } from '@telstra/messaging';
+import { Numbers } from '@tls/messaging';
 
 const numbers = new Numbers();
 numbers
@@ -269,12 +272,12 @@ numbers
     });
 ```
 
-## SMS
+## Message
 
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#tag/Messaging>.
 
-### Send SMS
+### Send Message
 
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/sendSms>.
@@ -313,7 +316,7 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Message } from '@telstra/messaging';
+import { Message } from '@tls/messaging';
 
 const message = new Message();
 message
@@ -329,7 +332,7 @@ message
     });
 ```
 
-### Get SMS Status
+### Reteieve Message Status
 
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSmsStatus>.
@@ -349,7 +352,7 @@ It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Message } from '@telstra/messaging';
+import { Message } from '@tls/messaging';
 
 const message = new Message();
 message
@@ -362,7 +365,7 @@ message
     });
 ```
 
-### Retrieve Replies
+### Retrieve Message Replies
 
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/retrieveSmsReplies>.
@@ -381,11 +384,36 @@ arguments. It returns an object with the following properties:
 For example:
 
 ```javascript
-import { Message } from '@telstra/messaging';
+import { Message } from '@tls/messaging';
 
 const message = new Message();
 message
     .getNextUnreadReply()
+    .then(results => {
+        console.log(results);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+```
+
+### Retrieve Message Service Healthcheck
+
+For more information, please see here:
+SMS: <https://dev.telstra.com/content/messaging-api#operation/smsHealthCheck>.
+MMS: <https://dev.telstra.com/content/messaging-api#operation/mmsHealthCheck>.
+
+The function `message.healthCheck` can be used to retrieve
+the sms & mms service health status:
+
+For example:
+
+```javascript
+import { Message } from '@tls/messaging';
+
+const message = new Message();
+message
+    .healthCheck()
     .then(results => {
         console.log(results);
     })
