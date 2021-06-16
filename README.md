@@ -279,7 +279,7 @@ The function `message.send` can be used to send SMS.
 
 It takes the following arguments.
 
--   `to`: The destination address, expected to be a phone number of the form `+614XXXXXXXX` or `04XXXXXXXX`.
+-   `to`: The destination address, expected to be a phone number of the form `+614XXXXXXXX` or `04XXXXXXXX`. Accepts an array of strings to send the message to multiple recipients.
 -   `body`: The SMS to send.
 -   `from` (optional): An alphanumeric value which will appear as the sender.
     Note that phone numbers are not supported amd the maximum length is 11

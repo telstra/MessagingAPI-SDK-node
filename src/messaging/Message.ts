@@ -51,9 +51,70 @@ export class Message extends HttpClient {
     public async send(message: TMessage): Promise<TMessageSendResponse> {
         try {
             const validate = new Validator<TMessage>(message);
-
-            // validate using json schema
-            validate.schemaRef('SendSMSRequest');
+            validate
+                // .schemaRef('SendSMSRequest')
+                .schemaInline({
+                    $id: "https://dev.telstra.com/messages-send.schema.json",
+                    // $schema: "https://dev.telstra.com/telstra-root.schema.json",
+                    description: "A representation of a send message",
+                    type: "object",
+                    properties: {
+                        to: {
+                            anyOf: [
+                                {
+                                    $ref: "#/$defs/to",
+                                },
+                                {
+                                    type: "array",
+                                    items: { "$ref": "#/$defs/to" },
+                                    minItems: 1,
+                                    maxItems: 10,
+                                    uniqueItems: true,
+                                },
+                            ],
+                        },
+                        body: {
+                            type: "string",
+                            minLength: 1,
+                            maxLength: 1900,
+                        },
+                        from: {
+                            type: 'string',
+                        },
+                        validity: {
+                            type: 'number',
+                            minimum: 1,
+                            exclusiveMaximum: 10080, // max 7 days
+                        },
+                        scheduledDelivery: {
+                            type: 'number',
+                            minimum: 1,
+                        },
+                        notifyURL: {
+                            type: 'string',
+                        },
+                        replyRequest: {
+                            type: 'boolean',
+                        },
+                        priority: {
+                            type: 'boolean',
+                        },
+                        receiptOff: {
+                            type: 'boolean',
+                        },
+                        userMsgRef: {
+                            type: 'string',
+                        },
+                    },
+                    required: ['to', 'body'],
+                    $defs: {
+                        to: {
+                            type: "string",
+                            minLength: 10,
+                            maxLength: 12,
+                        }
+                    }
+                });
 
             // validate message type sms|mms
             if (message?.type) {
@@ -137,23 +198,23 @@ export class Message extends HttpClient {
                     },
                     $defs: {
                         multisms: {
-                        type: "object",
-                        required: [ "to", "body" ],
-                        properties: {
-                            to: {
-                                type: "string",
-                                minLength: 10,
-                                maxLength: 12,
-                            },
-                            body: {
-                                type: "string",
-                                minLength: 1,
-                                maxLength: 1900,
-                            },
-                            receiptOff: {
-                                type: 'boolean',
+                            type: "object",
+                            required: [ "to", "body" ],
+                            properties: {
+                                to: {
+                                    type: "string",
+                                    minLength: 10,
+                                    maxLength: 12,
+                                },
+                                body: {
+                                    type: "string",
+                                    minLength: 1,
+                                    maxLength: 1900,
+                                },
+                                receiptOff: {
+                                    type: 'boolean',
+                                }
                             }
-                        }
                         }
                     }
                 });

@@ -39,7 +39,7 @@ export enum TMessageType {
 }
 
 export type TMessage = {
-    to: string;
+    to: string | Array<string>;
     body: string;
     from?: string;
     validity?: string;

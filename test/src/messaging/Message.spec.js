@@ -34,46 +34,44 @@ describe("Message", () => {
 
   describe("send", () => {
 
-    describe('when the client sends a valid object with [to] & [body]', () => {
-      it("should pass with attr [to] having 10 chars", async () => {
-        const data = { "to":"1234567890", "body":"Hello from Messaging SDK!" };
+    describe('when the client sends valid required attributes', () => {
+
+      it("should pass when [to] is a string having 10 chars", async () => {
+        const data = { to: "1234567890", body: "Hello from Messaging SDK!" };
         await expect(message.send(data)).resolves.toEqual(data);
       });
-      it("should pass with attr [to] having 12 chars", async () => {
-        const data = { "to":"+61234567890", "body":"Hello from Messaging SDK!" };
+
+      it("should pass when [to] is a string having 12 chars", async () => {
+        const data = { to: "+61234567890", body: "Hello from Messaging SDK!" };
         await expect(message.send(data)).resolves.toEqual(data);
       });
+
+      it("should pass when [to] is an array of strings having 10 chars", async () => {
+        const data = { to: ['1234567890'], body: "Hello from Messaging SDK!" };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should pass when [to] is an array of strings having 12 chars", async () => {
+        const data = { to: ['+61234567890'], body: "Hello from Messaging SDK!" };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
     });
 
-    describe('when the client sends an object', () => {
-      it("should pass with attr [type] as a string", async () => {
-        const data = { "to":"1234567890", "body":"Hello from Messaging SDK!", "type": 'sms' };
-        await expect(message.send(data)).resolves.toEqual(data);
-      });
-      it("should throw an assertion error attr [type] requires a string", async () => {
-        const data = { "to":"1234567890", "body":"Hello from Messaging SDK!", "type": 123456 };
-        await expect(message.send(data)).rejects
+    describe('when the client sends invalid required attributes', () => {
+
+      it("should fail and throw an assertion error when no object", async () => {
+        const callback = async () => message.send()
+        await expect(callback).rejects
         .toThrow(
           new AssertionError({
             errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data.type should be string, data.type should be equal to one of the allowed values`,
+            errorMessage: `data should be object`,
           })
         );
       });
-      it("should throw an assertion error attr [type] requires to be enum value", async () => {
-        const data = { "to":"1234567890", "body":"Hello from Messaging SDK!", "type": '123456' };
-        await expect(message.send(data)).rejects
-        .toThrow(
-          new AssertionError({
-            errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data.type should be equal to one of the allowed values`,
-          })
-        );
-      });
-    });
 
-    describe('when the client sends an empty object', () => {
-      it("should throw an assertion error for required properties [to] & [body].", async () => {
+      it("should fail and throw an assertion error when object has no key:values", async () => {
         const callback = async () => message.send({})
         await expect(callback).rejects
         .toThrow(
@@ -83,10 +81,8 @@ describe("Message", () => {
           })
         );
       });
-    });
 
-    describe('when the client sends the [body] property as a string and missing [to] property', () => {
-      it("should throw an assertion error for missing property [to].", async () => {
+      it("should fail and throw an assertion error when [to] is missing", async () => {
         const callback = async () => message.send({body: '123456'})
         await expect(callback).rejects
         .toThrow(
@@ -96,11 +92,9 @@ describe("Message", () => {
           })
         );
       });
-    });
 
-    describe('when the client sends the [to] property as a string and missing [body] property', () => {
-      it("should throw an assertion error for missing property [body].", async () => {
-        const callback = async () => message.send({to: '123456'})
+      it("should fail and throw an assertion error when [body] is missing", async () => {
+        const callback = async () => message.send({to: '+61234567890'})
         await expect(callback).rejects
         .toThrow(
           new AssertionError({
@@ -109,50 +103,108 @@ describe("Message", () => {
           })
         );
       });
-    });
 
-    describe('when the client sends the [to] property as a number and missing [body] property', () => {
-      it("should throw an assertion error for invalid type [to] and missing property [body].", async () => {
+      it("should fail and throw an assertion error when [to] is a number and [body] is missing", async () => {
         const callback = async () => message.send({to: 123456})
         await expect(callback).rejects
         .toThrow(
           new AssertionError({
             errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data.to should be string, data should have required property 'body'`,
+            errorMessage: `data.to should be string, data.to should be array, data.to should match some schema in anyOf, data should have required property 'body'`,
           })
         );
       });
-    });
 
-    describe('when the client sends the [to] property as a number and the [body] property as a string', () => {
-      it("should throw an assertion error for invalid type [to] and missing property [body].", async () => {
+      it("should fail and throw an assertion error when [to] is a number", async () => {
         const callback = async () => message.send({to: 123456, body: '123456'})
         await expect(callback).rejects
         .toThrow(
           new AssertionError({
             errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data.to should be string`,
+            errorMessage: `data.to should be string, data.to should be array, data.to should match some schema in anyOf`,
           })
         );
       });
-    });
 
-    describe('when the client sends the [to] property as a number and the [body] property as a number', () => {
-      it("should throw an assertion error for invalid type [to] and [body].", async () => {
+      it("should fail and throw an assertion error when [to] is an empty array", async () => {
+        const callback = async () => message.send({to: [], body: '123456'})
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.to should be string, data.to should NOT have fewer than 1 items, data.to should match some schema in anyOf`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [to] is an array of numbers", async () => {
+        const callback = async () => message.send({to: [123456], body: '123456'})
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.to should be string, data.to[0] should be string, data.to should match some schema in anyOf`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [to] is an array of strings of length less than 10", async () => {
+        const callback = async () => message.send({to: ['123456'], body: '123456'})
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.to should be string, data.to[0] should NOT be shorter than 10 characters, data.to should match some schema in anyOf`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [to] is an array of strings of length greater than 12", async () => {
+        const callback = async () => message.send({to: ['+612345678900'], body: '123456'})
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.to should be string, data.to[0] should NOT be longer than 12 characters, data.to should match some schema in anyOf`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [to] is an array of strings having duplicates", async () => {
+        const callback = async () => message.send({to: ['+61234567890', '+61234567890'], body: '123456'})
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.to should be string, data.to should NOT have duplicate items (items ## 0 and 1 are identical), data.to should match some schema in anyOf`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [to] is an array of strings having more than 10 members", async () => {
+        const callback = async () => message.send({to: ['+61234567890','+61234567891','+61234567892','+61234567893','+61234567894','+61234567895','+61234567896','+61234567897','+61234567898','+61234567899','+62234567890'], body: '123456'})
+        await expect(callback).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.to should be string, data.to should NOT have more than 10 items, data.to should match some schema in anyOf`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [to, body] are numbers", async () => {
         const callback = async () => message.send({to: 123456, body: 123456})
         await expect(callback).rejects
         .toThrow(
           new AssertionError({
             errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data.to should be string, data.body should be string`,
+            errorMessage: `data.to should be string, data.to should be array, data.to should match some schema in anyOf, data.body should be string`,
           })
         );
       });
-    });
 
-    describe('when the client sends the [to] property as a string and the [body] property as a number', () => {
-      it("should throw an assertion error for invalid type [body].", async () => {
-        const callback = async () => message.send({to: '123456', body: 123456})
+      it("should fail and throw an assertion error when [body] is a number", async () => {
+        const callback = async () => message.send({to: '+61234567890', body: 123456})
         await expect(callback).rejects
         .toThrow(
           new AssertionError({
@@ -161,6 +213,250 @@ describe("Message", () => {
           })
         );
       });
+
+    });
+
+    describe('when the client sends invalid optional attributes', () => {
+
+      it("should pass with attr [type] as a string", async () => {
+        const data = { to: "1234567890", body:"Hello from Messaging SDK!", type: 'sms' };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should fail and throw an assertion error when [type] requires a string", async () => {
+        const data = { to: "1234567890", body: "Hello from Messaging SDK!", type: 123456 };
+        await expect(message.send(data)).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.type should be string, data.type should be equal to one of the allowed values`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [type] is a string", async () => {
+        const data = { to: "1234567890", body: "Hello from Messaging SDK!", type: '123456' };
+        await expect(message.send(data)).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.type should be equal to one of the allowed values`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [from] is a number", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          from: 123456
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.from should be string`,
+          })
+        );
+      });
+
+      it("should pass when [from] is a string", async () => {
+        const data = {
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          from: '123456',
+        };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should fail and throw an assertion error when [validity] is a string", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          validity: '54325',
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.validity should be number`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [validity] is greater than 10080", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          validity: 123456,
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.validity should be < 10080`,
+          })
+        );
+      });
+
+      it("should fail and throw an assertion error when [validity] is less than 1", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          validity: -1,
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.validity should be >= 1`,
+          })
+        );
+      });
+
+      it("should pass when [validity] is greater than 0", async () => {
+        const data = {
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          validity: 1,
+        };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should fail and throw an assertion error when [scheduledDelivery] is less than 1", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          scheduledDelivery: -1,
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.scheduledDelivery should be >= 1`,
+          })
+        );
+      });
+
+      it("should pass when [scheduledDelivery] is greater than 0", async () => {
+        const data = {
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          scheduledDelivery: 1,
+        };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should fail and throw an assertion error when [notifyURL] is a number", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          notifyURL: 123456,
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.notifyURL should be string`,
+          })
+        );
+      });
+
+      it("should pass when [notifyURL] is a string", async () => {
+        const data = {
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          notifyURL: 'https://webhook-endpoint/',
+        };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should fail and throw an assertion error when [replyRequest] is a number", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          replyRequest: 123456,
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.replyRequest should be boolean`,
+          })
+        );
+      });
+
+      it("should pass when [replyRequest] is a boolean", async () => {
+        const data = {
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          replyRequest: false,
+        };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should fail and throw an assertion error when [priority] is a number", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          priority: 123456,
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.priority should be boolean`,
+          })
+        );
+      });
+
+      it("should pass when [priority] is a boolean", async () => {
+        const data = {
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          priority: false,
+        };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should fail and throw an assertion error when [receiptOff] is a number", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          receiptOff: 123456,
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.receiptOff should be boolean`,
+          })
+        );
+      });
+
+      it("should pass when [receiptOff] is a boolean", async () => {
+        const data = {
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          receiptOff: false,
+        };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should fail and throw an assertion error when [userMsgRef] is a number", async () => {
+        await expect(message.send({
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          userMsgRef: 123456,
+        })).rejects
+        .toThrow(
+          new AssertionError({
+            errorCode: `MISSING_ATTRIBUTE`,
+            errorMessage: `data.userMsgRef should be string`,
+          })
+        );
+      });
+
+      it("should pass when [userMsgRef] is a string", async () => {
+        const data = {
+          to: '+61234567890',
+          body: 'Hello from Messaging SDK',
+          userMsgRef: '123456',
+        };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
     });
 
   });
