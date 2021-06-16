@@ -3,6 +3,12 @@ const { rest } = require('msw');
 const { setupServer } = require('msw/node');
 
 const server = setupServer(
+  rest.post("https://tapi.telstra.com/v2/messages/sms/multi", (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json(req.body)
+    );
+  }),
   rest.get("https://tapi.telstra.com/v2/messages/sms/healthcheck", (req, res, ctx) => {
     return res(
       ctx.status(200),

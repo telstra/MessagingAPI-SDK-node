@@ -133,3 +133,14 @@ export type TMessageHealthCheck = {
     sms: THealthCheck;
     mms: THealthCheck;
 };
+
+export type TMessagingMultiItem = {
+    to: string;
+    body: string;
+    receiptOff: boolean;
+};
+
+export type TMessagingMulti = {
+    smsMulti: Array<TMessagingMultiItem>;
+    notifyURL: string;
+};

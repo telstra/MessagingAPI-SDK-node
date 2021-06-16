@@ -123,12 +123,11 @@ Register destinations for the free trial. For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumRegister>.
 
 The function `trialNumber.register` can be used to register destinations.
-It takes the following arguments:
+
+It takes the following arguments.
 
 -   `bnum`: A list of destinations, expected to be phone numbers of the
     form `+614XXXXXXXX` or `04XXXXXXXX`.
-
-It returns the list of phone numbers that have been registered.
 
 For example:
 
@@ -156,7 +155,8 @@ Retrieve destinations for the free trial. For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/freeTrialBnumList>.
 
 The function `trialNumber.get` can be used to retrieve registered destinations.
-It takes no arguments. It returns the list of phone numbers that have been registered.
+
+It takes no arguments.
 
 For example:
 
@@ -187,7 +187,7 @@ For more information, please see here:
 
 The function `numbers.create` can be used to create a subscription.
 
-It takes the following arguments:
+It takes the following arguments.
 
 -   `activeDays`: The number of days the subscription will be active,
     defaults to 30.
@@ -196,11 +196,6 @@ It takes the following arguments:
     address. **If you are using a domain URL (e.g. http://www.example.com) for the `notifyURL` attribute, you must include a forward slash at the end to receive notifications, for example, `notifyURL: "http://www.example.com/"`.**
 
 > :warning: If you are using a domain URL (e.g. http://www.example.com) for the `notifyURL` attribute, you must include a forward slash at the end to receive notifications, for example, `notifyURL: "http://www.example.com/"`.
-
-It returns an object with the following properties:
-
--   `destinationAddress`: The phone number that a message can be sent to.
--   `activeDays`: The number of days left on the subscription.
 
 For example:
 
@@ -226,11 +221,9 @@ For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSubscription>.
 
 The function `numbers.get` can be used to get the current
-subscription. It takes no arguments. It returns an object with the following
-properties:
+subscription.
 
--   `destinationAddress`: The phone number that a message can be sent to.
--   `activeDays`: The number of days left on the subscription.
+It takes no arguments.
 
 For example:
 
@@ -282,8 +275,9 @@ For more information, please see here:
 For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/sendSms>.
 
-The function `message.send` can be used to send SMS. It takes the
-following arguments:
+The function `message.send` can be used to send SMS.
+
+It takes the following arguments.
 
 -   `to`: The destination address, expected to be a phone number of the form `+614XXXXXXXX` or `04XXXXXXXX`.
 -   `body`: The SMS to send.
@@ -305,13 +299,6 @@ following arguments:
     reporting.
 
 > :warning: If you are using a domain URL (e.g. http://www.example.com) for the `notifyURL` attribute, you must include a forward slash at the end to receive notifications, for example, `notifyURL: "http://www.example.com/"`.
-
-It returns an object with the following properties:
-
--   `to`: The destination mobile number.
--   `deliveryStatus`: Whether the delivery has been completed.
--   `messageId`: Unique identifier for the message.
--   `messageStatusUrl`: URL to retrieve the current delivery status.
 
 For example:
 
@@ -338,16 +325,11 @@ For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/getSmsStatus>.
 
 The function `message.status` can be used to retrieve
-the status of a SMS. It takes the following arguments:
+the status of a SMS.
+
+It takes the following arguments.
 
 -   `messageId`: Unique identifier for the message.
-
-It returns an object with the following properties:
-
--   `to`: Where the message is delivered to.
--   `deliveryStatus`: Whether the delivery has been completed.
--   `receivedTimestamp`: When the message was received.
--   `sentTimestamp`: When the message was sent.
 
 For example:
 
@@ -371,15 +353,9 @@ For more information, please see here:
 <https://dev.telstra.com/content/messaging-api#operation/retrieveSmsReplies>.
 
 The function `message.getNextUnreadReply` can be used to retrieve
-the next unread reply for your phone number subscription. It takes no
-arguments. It returns an object with the following properties:
+the next unread reply for your phone number subscription.
 
--   `destinationAddress`: Where the message is delivered to.
--   `senderAddress`: Who the message is from.
--   `status`: Whether the delivery has been completed.
--   `message`: The body of the message.
--   `messageId`: Unique identifier for the message.
--   `sentTimestamp`: When the message was sent.
+It takes no arguments.
 
 For example:
 
@@ -397,14 +373,51 @@ message
     });
 ```
 
+### Send Bulk Messages
+
+For more information, please see here:
+<https://dev.telstra.com/content/messaging-api#operation/sendMultipleSms>.
+
+The function `message.sendBulk` can be used to send multiple messages.
+
+It takes the following arguments.
+
+-   `smsMulti`: (Required) Array of objects.
+
+-   `smsMulti.to`: (Required) Phone number (in E.164 format). This number can be in international format `to: '+61412345678` or in national format.
+-   `smsMulti.body`: (Required) The text body of the message. Messages longer than 160 characters will be counted as multiple messages.
+-   `smsMulti.receiptOff`: (Optional) Boolean. Whether Delivery Receipt will be sent back or not.
+
+-   `notifyURL`: Required when `receiptOff` is missing or `receiptOff: false`.
+
+For example:
+
+```javascript
+import { Message } from '@telstra/messaging';
+
+const message = new Message();
+message.sendBulk({
+    smsMulti: [
+        {
+            to: '<MOBILE_NUMBER>',
+            body: 'Hello from Messaging SDK',
+        },
+        {
+            to: '<MOBILE_NUMBER>',
+            body: 'Yes it works',
+        },
+    ],
+    notifyURL: 'https://<WEBHOOK_ENDPOINT>/',
+});
+```
+
 ### Retrieve Message Service Healthcheck
 
 For more information, please see here:
 SMS: <https://dev.telstra.com/content/messaging-api#operation/smsHealthCheck>.
 MMS: <https://dev.telstra.com/content/messaging-api#operation/mmsHealthCheck>.
 
-The function `message.healthCheck` can be used to retrieve
-the sms & mms service health status:
+The function `message.healthCheck` can be used to retrieve the sms & mms service health status.
 
 For example:
 

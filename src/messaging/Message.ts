@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { HttpClient } from './HttpClient';
 import {
     TMessage,
@@ -7,6 +8,7 @@ import {
     AuthConfigProps,
     THealthCheck,
     TMessageHealthCheck,
+    TMessagingMulti,
 } from './types';
 import { Validator } from './Validator';
 
@@ -73,6 +75,107 @@ export class Message extends HttpClient {
 
             const result = await this.instance.post<TMessageSendResponse>(
                 apiResource,
+                message
+            );
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Send multiple messages.
+     * @param message.smsMulti - (Required) Array, multiple SMS. Up to 10 messages can be sent in one API call.
+     * @param message.notifyURL - Contains a URL that will be called once your message has been processed.
+     * @link https://dev.telstra.com/content/messaging-api#operation/sendMultipleSms
+     * @example
+        ```typescript
+        import { Message } from '@telstra/messaging'
+
+        const message = new Message();
+
+        message.sendBulk(
+            [
+                { to: '<MOBILE_NUMBER_1>', body: 'Hello and welcome recipient 1' },
+                { to: '<MOBILE_NUMBER_2>', body: 'New message to recipient 2' }
+                { to: '<MOBILE_NUMBER_3>', body: 'Followup message to recipient 3' }
+            ],
+            notifyURL: '<WEBHOOK_ENDPOINT>'
+        )
+        .then(result => {
+            console.log(result);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+        ```
+     */
+    public async sendBulk(message: TMessagingMulti): Promise<TMessageSendResponse> {
+        try {
+            const validate = new Validator<TMessagingMulti>(message);
+            validate
+                // .schemaRef('SendSmsMultiRequest')
+                .schemaInline({
+                    $id: "https://dev.telstra.com/messages-send-multi.schema.json",
+                    // $schema: "https://dev.telstra.com/telstra-root.schema.json",
+                    description: "A representation of a send multi messages",
+                    type: "object",
+                    properties: {
+                        smsMulti: {
+                            type: "array",
+                            items: { "$ref": "#/$defs/multisms" },
+                            minItems: 1,
+                            maxItems: 10,
+                            uniqueItems: true,
+                        }
+                    },
+                    required: ['smsMulti'],
+                    optionalProperties: {
+                        notifyURL: {
+                            type: 'string',
+                        },
+                    },
+                    $defs: {
+                        multisms: {
+                        type: "object",
+                        required: [ "to", "body" ],
+                        properties: {
+                            to: {
+                                type: "string",
+                                minLength: 10,
+                                maxLength: 12,
+                            },
+                            body: {
+                                type: "string",
+                                minLength: 1,
+                                maxLength: 1900,
+                            },
+                            receiptOff: {
+                                type: 'boolean',
+                            }
+                        }
+                        }
+                    }
+                });
+
+            // Constraint that json schema is not able to cover
+            const receiptOff = message.smsMulti.filter(function (o) {
+                return o.hasOwnProperty('receiptOff');
+            }).length > 0;
+            if (!receiptOff) {
+                validate.schemaInline({
+                    type: 'object',
+                    properties: {
+                        notifyURL: {
+                            type: 'string',
+                        }
+                    },
+                    required: ['notifyURL'],
+                });
+            }
+
+            const result = await this.instance.post<TMessageSendResponse>(
+                `/v2/messages/sms/multi`,
                 message
             );
             return result;
