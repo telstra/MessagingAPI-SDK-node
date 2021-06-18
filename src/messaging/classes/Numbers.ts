@@ -5,7 +5,7 @@ import {
     TSubscriptionRetrieveResponse,
     TSubscriptionDeleteRequest,
     AuthConfigProps,
-} from './types';
+} from '../types';
 import { Validator } from './Validator';
 
 export class Numbers extends HttpClient {

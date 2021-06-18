@@ -1,7 +1,7 @@
 import { storage } from './storage';
-import { TAuthConfig } from './types';
-import { StorageError } from './Errors';
-import { Constants } from './Constants';
+import { TAuthConfig } from '../types';
+import { StorageError } from '../classes';
+import { Constants } from '../constants';
 
 export const setConfig = async (authConfig: TAuthConfig): Promise<void> => {
     await storage()

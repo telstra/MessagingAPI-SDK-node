@@ -1,4 +1,4 @@
-import { ErrorResponse } from './types';
+import { ErrorResponse } from '../types';
 
 export abstract class TError extends Error {
     name: string;

@@ -8,8 +8,8 @@ import axios, {
 import {
     AuthConfigProps,
     AuthCredentials,
-} from './types';
-import { Constants } from './Constants';
+} from '../types';
+import { Constants } from '../constants';
 import { Auth } from './Auth';
 import { URLSearchParams } from 'url';
 import {
@@ -19,7 +19,7 @@ import {
 import {
     getAuthToken,
     setAuthToken,
-} from './config';
+} from '../utils';
 
 declare module 'axios' {
     interface AxiosResponse<T = any> extends Promise<T> {}

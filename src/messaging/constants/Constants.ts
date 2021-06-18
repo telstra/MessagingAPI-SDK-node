@@ -1,4 +1,4 @@
-const os = require('os');
+import os from 'os';
 
 interface ErrorProps {
     errorCode: string;

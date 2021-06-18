@@ -9,7 +9,7 @@ import {
     THealthCheck,
     TMessageHealthCheck,
     TMessagingMulti,
-} from './types';
+} from '../types';
 import { Validator } from './Validator';
 
 export class Message extends HttpClient {

@@ -1,7 +1,6 @@
 /* eslint-disable */
 const { server, rest } = require('./testServer');
-const { Message } = require('../../../src/messaging/Message');
-const { AssertionError } = require('../../../src/messaging/Errors');
+const { Message, AssertionError } = require('../../../src/messaging/classes');
 const AUTH_CONFIG = require('./credentials.json');
 
 const message = new Message(AUTH_CONFIG);
@@ -53,6 +52,16 @@ describe("Message", () => {
 
       it("should pass when [to] is an array of strings having 12 chars", async () => {
         const data = { to: ['+61234567890'], body: "Hello from Messaging SDK!" };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should pass when [type] is string having value [sms]", async () => {
+        const data = { to: ['+61234567890'], body: "Hello from Messaging SDK!", type: 'sms' };
+        await expect(message.send(data)).resolves.toEqual(data);
+      });
+
+      it("should pass when [type] is string having value [mms]", async () => {
+        const data = { to: ['+61234567890'], body: "Hello from Messaging SDK!", type: 'mms' };
         await expect(message.send(data)).resolves.toEqual(data);
       });
 

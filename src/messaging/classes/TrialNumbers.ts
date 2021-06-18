@@ -4,7 +4,7 @@ import {
     TBnumRegisterRequest,
     TBnumRegisterResponse,
     AuthConfigProps,
-} from './types';
+} from '../types';
 import { Validator } from './Validator';
 
 export class TrialNumbers extends HttpClient {
