@@ -15,19 +15,19 @@ const trialNumber = new TrialNumbers(AUTH_CONFIG);
 
 // number.get()
 // .then(result => console.log('SUCCESS:number:get:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+// .catch(error => console.error('ERROR:number:get:', error))
 
 // number.create({
 //     activeDays: 1,
 // })
 // .then(result => console.log('SUCCESS:number:create:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+// .catch(error => console.error('ERROR:number:create:', error))
 
 // number.delete({
 //     emptyArr: '0'
 // })
 // .then(result => console.log('SUCCESS:number:delete:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+// .catch(error => console.error('ERROR:number:delete:', error))
 
 /**
  * Trial Numbers
@@ -35,40 +35,52 @@ const trialNumber = new TrialNumbers(AUTH_CONFIG);
 
 // trialNumber.get()
 // .then(result => console.log('SUCCESS:trialNumber:get:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+// .catch(error => console.error('ERROR:trialNumber:get:', error))
 
 // trialNumber.register()
 // .then(result => console.log('SUCCESS:trialNumber:register:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+// .catch(error => console.error('ERROR:trialNumber:register:', error))
 
 /**
  * Message
  */
 
-// message.healthCheck()
-// .then(result => console.log('SUCCESS:message:healthCheck:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+message.healthCheck()
+.then(result => console.log('SUCCESS:message:healthCheck:', result))
+.catch(error => console.error('ERROR:message:healthCheck:', error))
 
 // message.send({
-//     to: '+61402000823',
+//     to: '<RECIPIENT_1>',
+//     to: ['<RECIPIENT_1>', '<RECIPIENT_2>', '<RECIPIENT_3>'],
 //     body: 'Hello from Messaging SDK',
-//     type: 'sms'
+//     // type: 'sms',
 // })
 // .then(result => console.log('SUCCESS:message:send:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+// .catch(error => console.error('ERROR:message:send:', error))
 
-// message.status('C2B2AE589BCDEB61830000000700E729')
+// message.status('<MESSAGE_ID>')
 // .then(result => console.log('SUCCESS:message:status:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+// .catch(error => console.error('ERROR:message:status:', error))
 
 // message.sendBulk({
-//     smsMulti: [{
-//         to: '<MOBILE_NUMBER>',
-//         body: 'Hello from Messaging SDK',
-//     },{
-//         to: '<MOBILE_NUMBER>',
-//         body: 'Yes it works',
-//     }],
+//     smsMulti: [
+//         {
+//             to: '<RECIPIENT_1>',
+//             body: 'Hello from Messaging SDK',
+//         },
+//         {
+//             to: '<RECIPIENT_1>',
+//             body: 'Yes it works',
+//         },
+//         {
+//             to: '<RECIPIENT_2>',
+//             body: 'Hello from Messaging SDK',
+//         },
+//         {
+//             to: '<RECIPIENT_3>',
+//             body: 'Hello from Messaging SDK',
+//         }
+//     ],
 //     notifyURL: 'https://<WEBHOOK_ENDPOINT>/'
 // })
 // .then(result => console.log('SUCCESS:message:sendBulk:', result))
@@ -76,4 +88,4 @@ const trialNumber = new TrialNumbers(AUTH_CONFIG);
 
 // message.getNextUnreadReply()
 // .then(result => console.log('SUCCESS:message:getNextUnreadReply:', result))
-// .catch(error => console.error('ERROR:message:healthCheck:', error))
+// .catch(error => console.error('ERROR:message:getNextUnreadReply:', error))
