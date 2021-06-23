@@ -89,7 +89,7 @@ message
 
 // message
 //     .send({
-//         to: '+61402000823',
+//         to: '<RECIPIENT_3>',
 //         subject: 'Hello from Messaging SDK',
 //         replyRequest: false,
 //         MMSContent: [
