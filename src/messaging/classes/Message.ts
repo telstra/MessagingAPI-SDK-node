@@ -9,7 +9,6 @@ import {
     THealthCheck,
     TMessageHealthCheck,
     TMessagingMulti,
-    TMultimediaMessageType,
 } from '../types';
 import { Validator } from './Validator';
 
@@ -29,7 +28,7 @@ export class Message extends HttpClient {
      * @param message.replyRequest - If false or not present, then normal message handling is implemented.
      * @param message.priority - When messages are queued up for a number, then it is possible to set where a new message will be placed in the queue.
      * @param message.receiptOff - Whether Delivery Receipt will be sent back or not.
-     * @param message.multimedia - Optional field used by some clients to send a mms.
+     * @param message.MMSContent - Optional field used by some clients to send a mms.
      * @link https://dev.telstra.com/content/messaging-api#operation/sendMms
      * @param message.subject - Optional field used by some clients to send a mms with a subject.
      * @param message.userMsgRef - Optional field used by some clients for custom reporting.
@@ -57,7 +56,7 @@ export class Message extends HttpClient {
             let apiResource: string = '/v2/messages/sms';
             const validate = new Validator<TMessage>(message);
             /** validate a multimedia message */
-            if (message?.multimedia) {
+            if (message?.MMSContent) {
                 validate
                     // .schemaRef('SendMmsRequest')
                     .schemaInline({
@@ -90,53 +89,58 @@ export class Message extends HttpClient {
                                 type: 'string',
                                 maxLength: 64,
                             },
-                            multimedia: {
-                                type: 'object',
-                                properties: {
-                                    type: {
-                                        type: 'string',
-                                        enum: [
-                                            TMultimediaMessageType.AUDIO_AMR,
-                                            TMultimediaMessageType.AUDIO_AAC,
-                                            TMultimediaMessageType.AUDIO_MP3,
-                                            TMultimediaMessageType.AUDIO_MPEG3,
-                                            TMultimediaMessageType.AUDIO_MPEG,
-                                            TMultimediaMessageType.AUDIO_MPG,
-                                            TMultimediaMessageType.AUDIO_WAV,
-                                            TMultimediaMessageType.AUDIO_3GPP,
-                                            TMultimediaMessageType.AUDIO_MP4,
-                                            TMultimediaMessageType.IMAGE_GIF,
-                                            TMultimediaMessageType.IMAGE_JPEG,
-                                            TMultimediaMessageType.IMAGE_JPG,
-                                            TMultimediaMessageType.IMAGE_PNG,
-                                            TMultimediaMessageType.IMAGE_BMP,
-                                            TMultimediaMessageType.VIDEO_MPEG4,
-                                            TMultimediaMessageType.VIDEO_MP4,
-                                            TMultimediaMessageType.VIDEO_MPEG,
-                                            TMultimediaMessageType.VIDEO_3GPP,
-                                            TMultimediaMessageType.VIDEO_3GP,
-                                            TMultimediaMessageType.VIDEO_H263,
-                                            TMultimediaMessageType.TEXT_PLAIN,
-                                            TMultimediaMessageType.TEXT_X_VCARD,
-                                            TMultimediaMessageType.TEXT_X_VCALENDAR,
-                                        ],
-                                    },
-                                    payload: {
-                                        type: 'string',
-                                    },
-                                    fileName: {
-                                        type: 'string',
-                                    },
-                                },
-                                required: ['type', 'payload'],
+                            MMSContent: {
+                                type: 'array',
+                                items: { $ref: '#/$defs/MMSContentObject' },
+                                uniqueItems: true,
                             },
                         },
-                        required: ['to', 'multimedia'],
+                        required: ['to', 'MMSContent'],
                         $defs: {
                             to: {
                                 type: 'string',
                                 minLength: 10,
                                 maxLength: 12,
+                            },
+                            MMSContentObject: {
+                                type: 'object',
+                                properties: {
+                                    type: {
+                                        type: 'string',
+                                        enum: [
+                                            'audio/amr',
+                                            'audio/aac',
+                                            'audio/mp3',
+                                            'audio/mpeg3',
+                                            'audio/mpeg',
+                                            'audio/mpg',
+                                            'audio/wav',
+                                            'audio/3gpp',
+                                            'audio/mp4',
+                                            'image/gif',
+                                            'image/jpeg',
+                                            'image/jpg',
+                                            'image/png',
+                                            'image/bmp',
+                                            'video/mpeg4',
+                                            'video/mp4',
+                                            'video/mpeg',
+                                            'video/3gpp',
+                                            'video/3gp',
+                                            'video/h263',
+                                            'text/plain',
+                                            'text/x-vCard',
+                                            'text/x-vCalendar',
+                                        ],
+                                    },
+                                    payload: {
+                                        type: 'string',
+                                    },
+                                    filename: {
+                                        type: 'string',
+                                    },
+                                },
+                                required: ['type', 'payload'],
                             },
                         },
                     });

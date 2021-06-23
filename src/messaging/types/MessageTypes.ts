@@ -3,7 +3,7 @@ export enum TMessageType {
     MMS = 'mms',
 }
 
-export enum TMultimediaMessageType {
+export enum TMMSContentMessageType {
     AUDIO_AMR = 'audio/amr',
     AUDIO_AAC = 'audio/aac',
     AUDIO_MP3 = 'audio/mp3',
@@ -29,9 +29,9 @@ export enum TMultimediaMessageType {
     TEXT_X_VCALENDAR = 'text/x-vCalendar',
 }
 
-export type TMultimediaObject = {
-    type: TMultimediaMessageType;
-    fileName?: string;
+export type TMMSContentObject = {
+    type: TMMSContentMessageType;
+    filename?: string;
     payload: string;
 };
 
@@ -48,7 +48,7 @@ export type TMessage = {
     userMsgRef?: string;
     type?: TMessageType;
     subject: string;
-    multimedia?: TMultimediaObject;
+    MMSContent?: Array<TMMSContentObject>;
 };
 
 export type TMessageSend = {
