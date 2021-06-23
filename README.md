@@ -273,14 +273,16 @@ For more information, please see here:
 ### Send Message
 
 For more information, please see here:
-<https://dev.telstra.com/content/messaging-api#operation/sendSms>.
 
-The function `message.send` can be used to send SMS.
+-   <https://dev.telstra.com/content/messaging-api#operation/sendSms>.
+-   <https://dev.telstra.com/content/messaging-api#operation/sendMms>.
+
+The function `message.send` can be used to send SMS or MMS.
 
 It takes the following arguments.
 
 -   `to`: The destination address, expected to be a phone number of the form `+614XXXXXXXX` or `04XXXXXXXX`. Accepts an array of strings to send the message to multiple recipients.
--   `body`: The SMS to send.
+-   `body`: (conditionally mandatory) The SMS to send.
 -   `from` (optional): An alphanumeric value which will appear as the sender.
     Note that phone numbers are not supported amd the maximum length is 11
     characters. Certain well know senders will be blocked.
@@ -297,6 +299,13 @@ It takes the following arguments.
 -   `receiptOff` (optional): Whether Delivery Receipt will be sent back or not.
 -   `userMsgRef` (optional): Optional field used by some clients for custom
     reporting.
+-   `MMSContent` (conditionally mandatory): An array of content that will be sent in an MMS message.
+    If this array is present it will cause the `body` element to be ignored, and the message will be sent as an MMS. The mms content will be an object with below listed properties
+    -   `type`: The supported types of the multi media messages.
+    -   `filename` (optional): The file name to be associated with the content. Some devices will display this file name with a placeholder for the content.
+    -   `payload`: Base64 encoded message content.
+-   `subject` (optional): The subject that will be used in an MMS message. Subject is limited to maximum of
+    64 characters.
 
 > :warning: If you are using a domain URL (e.g. http://www.example.com) for the `notifyURL` attribute, you must include a forward slash at the end to receive notifications, for example, `notifyURL: "http://www.example.com/"`.
 

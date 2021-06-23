@@ -3,6 +3,38 @@ export enum TMessageType {
     MMS = 'mms',
 }
 
+export enum TMMSContentMessageType {
+    AUDIO_AMR = 'audio/amr',
+    AUDIO_AAC = 'audio/aac',
+    AUDIO_MP3 = 'audio/mp3',
+    AUDIO_MPEG3 = 'audio/mpeg3',
+    AUDIO_MPEG = 'audio/mpeg',
+    AUDIO_MPG = 'audio/mpg',
+    AUDIO_WAV = 'audio/wav',
+    AUDIO_3GPP = 'audio/3gpp',
+    AUDIO_MP4 = 'audio/mp4',
+    IMAGE_GIF = 'image/gif',
+    IMAGE_JPEG = 'image/jpeg',
+    IMAGE_JPG = 'image/jpg',
+    IMAGE_PNG = 'image/png',
+    IMAGE_BMP = 'image/bmp',
+    VIDEO_MPEG4 = 'video/mpeg4',
+    VIDEO_MP4 = 'video/mp4',
+    VIDEO_MPEG = 'video/mpeg',
+    VIDEO_3GPP = 'video/3gpp',
+    VIDEO_3GP = 'video/3gp',
+    VIDEO_H263 = 'video/h263',
+    TEXT_PLAIN = 'text/plain',
+    TEXT_X_VCARD = 'text/x-vCard',
+    TEXT_X_VCALENDAR = 'text/x-vCalendar',
+}
+
+export type TMMSContentObject = {
+    type: TMMSContentMessageType;
+    filename?: string;
+    payload: string;
+};
+
 export type TMessage = {
     to: string | Array<string>;
     body: string;
@@ -15,7 +47,8 @@ export type TMessage = {
     receiptOff?: boolean;
     userMsgRef?: string;
     type?: TMessageType;
-    multimedia?: TMessageType;
+    subject: string;
+    MMSContent?: Array<TMMSContentObject>;
 };
 
 export type TMessageSend = {
