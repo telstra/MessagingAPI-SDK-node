@@ -299,10 +299,10 @@ It takes the following arguments.
 -   `receiptOff` (optional): Whether Delivery Receipt will be sent back or not.
 -   `userMsgRef` (optional): Optional field used by some clients for custom
     reporting.
--   `multimedia` (conditionally mandatory): An array of content that will be sent in an MMS message.
+-   `MMSContent` (conditionally mandatory): An array of content that will be sent in an MMS message.
     If this array is present it will cause the `body` element to be ignored, and the message will be sent as an MMS. The mms content will be an object with below listed properties
     -   `type`: The supported types of the multi media messages.
-    -   `fileName` (optional): The file name to be associated with the content. Some devices will display this file name with a placeholder for the content.
+    -   `filename` (optional): The file name to be associated with the content. Some devices will display this file name with a placeholder for the content.
     -   `payload`: Base64 encoded message content.
 -   `subject` (optional): The subject that will be used in an MMS message. Subject is limited to maximum of
     64 characters.
