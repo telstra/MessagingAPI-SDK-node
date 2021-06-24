@@ -363,7 +363,7 @@ message
 For more information, please see here:
 
 -   <https://dev.telstra.com/content/messaging-api#operation/retrieveInboundSms>
--   <hhttps://dev.telstra.com/content/messaging-api#operation/retrieveInboundMms>
+-   <https://dev.telstra.com/content/messaging-api#operation/retrieveInboundMms>
 
 The function `message.getNextUnreadReply` can be used to retrieve
 the next unread SMS and MMS reply for your phone number subscription.
