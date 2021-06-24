@@ -20,7 +20,10 @@ describe('Message', () => {
     describe('getNextUnreadReply', () => {
         describe('when the client sends a valid request', () => {
             it('should pass', async () => {
-                const data = [{ status: 'EMPTY' }, { status: 'EMPTY' }];
+                const data = {
+                    sms: { status: 'EMPTY' },
+                    mms: { status: 'EMPTY' },
+                };
                 await expect(message.getNextUnreadReply()).resolves.toEqual(
                     data
                 );

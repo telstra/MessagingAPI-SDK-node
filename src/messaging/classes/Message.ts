@@ -4,6 +4,8 @@ import {
     TMessage,
     TMessageSendResponse,
     TMessageRepliesResponse,
+    TMessageRepliesSMSResponseObject,
+    TMessageRepliesMMSResponseObject,
     TMessageStatusResponse,
     AuthConfigProps,
     THealthCheck,
@@ -358,17 +360,15 @@ export class Message extends HttpClient {
         });
         ```
      */
-    public async getNextUnreadReply(): Promise<Array<TMessageRepliesResponse>> {
+    public async getNextUnreadReply(): Promise<TMessageRepliesResponse> {
         try {
-            const smsResult = await this.instance.get<TMessageRepliesResponse>(
-                `/v2/messages/sms`
-            );
-            const mmsResult = await this.instance.get<TMessageRepliesResponse>(
-                `/v2/messages/mms`
-            );
-            let result = [];
-            result.push(smsResult);
-            result.push(mmsResult);
+            const smsResult = await this.instance.get<
+                TMessageRepliesSMSResponseObject
+            >(`/v2/messages/sms`);
+            const mmsResult = await this.instance.get<
+                TMessageRepliesMMSResponseObject
+            >(`/v2/messages/mms`);
+            let result = { sms: smsResult, mms: mmsResult };
             return result;
         } catch (error) {
             throw error;
