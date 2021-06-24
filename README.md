@@ -331,10 +331,12 @@ message
 ### Reteieve Message Status
 
 For more information, please see here:
-<https://dev.telstra.com/content/messaging-api#operation/getSmsStatus>.
+
+-   <https://dev.telstra.com/content/messaging-api#operation/getSmsStatus>
+-   <https://dev.telstra.com/content/messaging-api#operation/getMmsStatus>
 
 The function `message.status` can be used to retrieve
-the status of a SMS.
+the status of a SMS or MMS.
 
 It takes the following arguments.
 
@@ -359,10 +361,12 @@ message
 ### Retrieve Message Replies
 
 For more information, please see here:
-<https://dev.telstra.com/content/messaging-api#operation/retrieveSmsReplies>.
+
+-   <https://dev.telstra.com/content/messaging-api#operation/retrieveInboundSms>
+-   <https://dev.telstra.com/content/messaging-api#operation/retrieveInboundMms>
 
 The function `message.getNextUnreadReply` can be used to retrieve
-the next unread reply for your phone number subscription.
+the next unread SMS and MMS reply for your phone number subscription.
 
 It takes no arguments.
 

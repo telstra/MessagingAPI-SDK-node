@@ -71,12 +71,28 @@ export type TMessageSendResponse = {
 };
 
 export type TMessageRepliesResponse = {
+    sms: TMessageRepliesSMSResponseObject;
+    mms: TMessageRepliesMMSResponseObject;
+};
+
+export type TMessageRepliesSMSResponseObject = {
     status: string;
     destinationAddress: string;
     senderAddress: string;
     message: string;
     messageId: string;
     sentTimestamp: string;
+};
+
+export type TMessageRepliesMMSResponseObject = {
+    status: string;
+    destinationAddress: string;
+    senderAddress: string;
+    subject: string;
+    messageId: string;
+    apiMsgId: string;
+    sentTimestamp: string;
+    MMSContent: Array<TMMSContentObject>;
 };
 
 export type TMessageStatusRequest = {

@@ -70,6 +70,9 @@ const server = setupServer(
     rest.get('https://tapi.telstra.com/v2/messages/sms', (req, res, ctx) => {
         return res(ctx.status(200), ctx.json({ status: 'EMPTY' }));
     }),
+    rest.get('https://tapi.telstra.com/v2/messages/mms', (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json({ status: 'EMPTY' }));
+    }),
     rest.post('https://tapi.telstra.com/v2/messages/sms', (req, res, ctx) => {
         return res(ctx.status(200), ctx.json(req.body));
     }),
