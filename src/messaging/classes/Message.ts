@@ -91,7 +91,9 @@ export class Message extends HttpClient {
                             },
                             MMSContent: {
                                 type: 'array',
-                                items: { $ref: '#/$defs/MMSContentObject' },
+                                items: {
+                                    $ref: '#/$defs/MMSContentObject',
+                                },
                                 uniqueItems: true,
                             },
                         },
@@ -356,11 +358,17 @@ export class Message extends HttpClient {
         });
         ```
      */
-    public async getNextUnreadReply(): Promise<TMessageRepliesResponse> {
+    public async getNextUnreadReply(): Promise<Array<TMessageRepliesResponse>> {
         try {
-            const result = await this.instance.get<TMessageRepliesResponse>(
+            const smsResult = await this.instance.get<TMessageRepliesResponse>(
                 `/v2/messages/sms`
             );
+            const mmsResult = await this.instance.get<TMessageRepliesResponse>(
+                `/v2/messages/mms`
+            );
+            let result = [];
+            result.push(smsResult);
+            result.push(mmsResult);
             return result;
         } catch (error) {
             throw error;
@@ -389,13 +397,19 @@ export class Message extends HttpClient {
     public async status(messageId: string): Promise<TMessageStatusResponse> {
         try {
             const validate = new Validator<string>(messageId);
+            const regex = /mmsc.telstra.com/g;
+            const isMMS = messageId.match(regex);
             validate.schemaInline({
                 type: 'string',
             });
-
-            const result = await this.instance.get<TMessageStatusResponse>(
-                `/v2/messages/sms/${messageId}/status`
-            );
+            const result =
+                isMMS !== null
+                    ? await this.instance.get<TMessageStatusResponse>(
+                          `/v2/messages/mms/${messageId}/status`
+                      )
+                    : await this.instance.get<TMessageStatusResponse>(
+                          `/v2/messages/sms/${messageId}/status`
+                      );
             return result;
         } catch (error) {
             throw error;
