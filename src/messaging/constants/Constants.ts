@@ -12,6 +12,9 @@ export abstract class Constants {
     static readonly ACCESS_TOKEN_BUCKET_KEY: string = 'accessToken';
     static readonly TOKEN_ATTEMPT_BUCKET_KEY: string = 'tokenAttempt';
     static readonly CLIENT_CREDENTIALS_BUCKET_KEY: string = 'clientCredentials';
+    static readonly USER_AGENT: string = 'Telstra Messaging SDK/0.3.17';
+    static readonly X_TELSTRA_AGENT_MEDIA_TYPE: string =
+        'telstra.messaging.v2; param=full; format=json; lang=javascript';
 
     static readonly ERRORS = {
         STORAGE_ERROR_GET: {

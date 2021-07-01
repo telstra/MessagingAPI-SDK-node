@@ -60,6 +60,9 @@ export abstract class HttpClient {
 
     private _handleRequest = async (config: AxiosRequestConfig) => {
 
+        config.headers['User-Agent'] = Constants.USER_AGENT;
+        config.headers['X-Telstra-Media-Type'] = Constants.X_TELSTRA_AGENT_MEDIA_TYPE;
+
         // set headers due to oauth api proxy differences
         if (config.url === '/v2/oauth/token') {
             config.headers['Accept'] = `*/*`;
