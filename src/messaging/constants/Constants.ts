@@ -9,10 +9,10 @@ export abstract class Constants {
     static readonly SHARED_CREDENTIALS: string = `${os.homedir()}/.telstra/credentials`;
     static readonly API_URL: string = 'https://tapi.telstra.com/';
     static readonly BUCKET_AUTH_STORE: string = 'authStore';
-    static readonly ACCESS_TOKEN_BUCKET_KEY: string = 'accessToken';
-    static readonly TOKEN_ATTEMPT_BUCKET_KEY: string = 'tokenAttempt';
-    static readonly CLIENT_CREDENTIALS_BUCKET_KEY: string = 'clientCredentials';
-    static readonly USER_AGENT: string = 'Telstra Messaging SDK/0.3.17';
+    static readonly BUCKET_KEY_AUTH_RETRY_COUNT: string = 'tokenRetryAttempt';
+    static readonly BUCKET_KEY_ACCESS_TOKEN: string = 'accessToken';
+    static readonly BUCKET_KEY_CLIENT_CREDENTIALS: string = 'clientCredentials';
+    static readonly USER_AGENT: string = 'Telstra Messaging SDK/0.3.18';
     static readonly X_TELSTRA_AGENT_MEDIA_TYPE: string =
         'telstra.messaging.v2; param=full; format=json; lang=javascript';
 

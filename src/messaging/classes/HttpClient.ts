@@ -1,24 +1,19 @@
-/* eslint-disable */
 import axios, {
     AxiosInstance,
     AxiosError,
     AxiosResponse,
-    AxiosRequestConfig
+    AxiosRequestConfig,
 } from 'axios';
-import {
-    AuthConfigProps,
-    AuthCredentials,
-} from '../types';
+import { AuthConfigProps, AuthCredentials } from '../types';
 import { Constants } from '../constants';
 import { Auth } from './Auth';
 import { URLSearchParams } from 'url';
-import {
-    RequestError,
-    AuthError,
-} from './Errors';
+import { RequestError, AuthError } from './Errors';
 import {
     getAuthToken,
     setAuthToken,
+    getAuthTokenRetryCount,
+    setAuthTokenRetryCount,
 } from '../utils';
 
 declare module 'axios' {
@@ -28,6 +23,7 @@ declare module 'axios' {
 export abstract class HttpClient {
     protected readonly instance: AxiosInstance;
     private auth: Auth;
+    private authRetryCount: number = 0;
 
     public constructor(public authConfig?: AuthConfigProps) {
         this.instance = axios.create({
@@ -47,26 +43,28 @@ export abstract class HttpClient {
     private _initializeRequestInterceptor = () => {
         this.instance.interceptors.request.use(
             this._handleRequest,
-            this._handleRequestError,
+            this._handleRequestError
         );
-    }
+    };
 
     private _initializeResponseInterceptor = () => {
         this.instance.interceptors.response.use(
             this._handleResponse,
-            this._handleResponseError,
+            this._handleResponseError
         );
     };
 
     private _handleRequest = async (config: AxiosRequestConfig) => {
-
         config.headers['User-Agent'] = Constants.USER_AGENT;
-        config.headers['X-Telstra-Media-Type'] = Constants.X_TELSTRA_AGENT_MEDIA_TYPE;
+        config.headers['X-Telstra-Media-Type'] =
+            Constants.X_TELSTRA_AGENT_MEDIA_TYPE;
 
         // set headers due to oauth api proxy differences
         if (config.url === '/v2/oauth/token') {
             config.headers['Accept'] = `*/*`;
-            config.headers['Content-Type'] = `application/x-www-form-urlencoded`;
+            config.headers[
+                'Content-Type'
+            ] = `application/x-www-form-urlencoded`;
         } else {
             config.headers['Accept'] = `application/json`;
             config.headers['Content-Type'] = `application/json`;
@@ -96,25 +94,61 @@ export abstract class HttpClient {
                 if (renewToken) {
                     // set authorization headers
                     config.headers['Authorization'] = `Bearer ${renewToken}`;
-                    // set authorization headers in storage
+                    // set authorization token in storage
                     await setAuthToken(renewToken);
                 }
             }
         }
 
         return config;
-    }
+    };
 
-    protected _handleRequestError = (error: AxiosError) => Promise.reject(error);
+    protected _handleRequestError = (error: AxiosError) => {
+        return Promise.reject(error);
+    };
 
-    private _handleResponse = ({ data }: AxiosResponse) => data;
+    private _handleResponse = ({ data }: AxiosResponse) => {
+        return data;
+    };
 
     protected _handleResponseError = async (error: AxiosError) => {
+        const originalRequest = error.config;
+
         // request for token failed, issue with client credentials
-        if (error.response?.status === 401 && error.response?.config.url === '/v2/oauth/token') {
+        if (
+            error.response?.status === 401 &&
+            error.response?.config.url === '/v2/oauth/token'
+        ) {
             return Promise.reject(
-                new AuthError(Constants.ERRORS.AUTH_ERROR_INVALID_CLIENT_CREDENTIALS)
+                new AuthError(
+                    Constants.ERRORS.AUTH_ERROR_INVALID_CLIENT_CREDENTIALS
+                )
             );
+        }
+
+        this.authRetryCount = await getAuthTokenRetryCount();
+
+        // attempt to refresh an auth token
+        if (
+            error.response?.status === 401 &&
+            error.response?.config.url !== '/v2/oauth/token' &&
+            this.authRetryCount < 3
+        ) {
+            // increment auth token retry count
+            this.authRetryCount++;
+            await setAuthTokenRetryCount(this.authRetryCount.toString());
+
+            // retrieve auth credentials
+            const authCredentials = await this.auth.getCredentials();
+
+            // request new token
+            const renewToken = await this.renewToken(authCredentials);
+
+            // set token in storage & action original request
+            if (renewToken) {
+                await setAuthToken(renewToken);
+                return this.instance(originalRequest);
+            }
         }
 
         if (error.response?.data?.code && error.response?.data?.message) {
@@ -126,7 +160,7 @@ export abstract class HttpClient {
             );
         }
 
-        if (error.response?.status && error.response?.statusText ) {
+        if (error.response?.status && error.response?.statusText) {
             return Promise.reject(
                 new RequestError(Constants.ERRORS.UNKNOWN_ERROR)
             );
@@ -135,7 +169,9 @@ export abstract class HttpClient {
         return Promise.reject(error);
     };
 
-    private async renewToken(authCredentials: AuthCredentials): Promise<string> {
+    private async renewToken(
+        authCredentials: AuthCredentials
+    ): Promise<string> {
         const params = new URLSearchParams();
         params.append('client_id', `${authCredentials.client_id}`);
         params.append('client_secret', `${authCredentials.client_secret}`);
@@ -147,5 +183,4 @@ export abstract class HttpClient {
         const { access_token } = auth;
         return access_token;
     }
-
 }
