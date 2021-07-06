@@ -15,6 +15,7 @@ export abstract class Constants {
     static readonly USER_AGENT: string = 'Telstra Messaging SDK/0.3.18';
     static readonly X_TELSTRA_AGENT_MEDIA_TYPE: string =
         'telstra.messaging.v2; param=full; format=json; lang=javascript';
+    static readonly authToken: string = 'SMyAEhIFsqXFQxlC9hyljz7m8kL4';
 
     static readonly ERRORS = {
         STORAGE_ERROR_GET: {

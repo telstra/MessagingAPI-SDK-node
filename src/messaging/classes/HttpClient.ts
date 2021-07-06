@@ -136,7 +136,7 @@ export abstract class HttpClient {
         ) {
             // increment auth token retry count
             this.authRetryCount++;
-            await setAuthTokenRetryCount(this.authRetryCount.toString());
+            await setAuthTokenRetryCount(this.authRetryCount);
 
             // retrieve auth credentials
             const authCredentials = await this.auth.getCredentials();
