@@ -1,7 +1,7 @@
 import { Constants } from '../constants';
 import { getAuthConfig, setAuthConfig } from '../utils';
 import { AuthError } from './Errors';
-import { AuthConfigProps, AuthCredentials } from '../types';
+import { AuthConfigProps, AuthCredentials, TAuthConfig } from '../types';
 
 const fs = require('fs');
 
@@ -128,7 +128,7 @@ export class Auth {
             throw new AuthError(Constants.ERRORS.AUTH_ERROR);
         }
 
-        const credentialsFromStorage = await getAuthConfig();
+        const credentialsFromStorage = (await getAuthConfig()) as TAuthConfig;
         if (!credentialsFromStorage) {
             throw new AuthError(Constants.ERRORS.AUTH_ERROR);
         }

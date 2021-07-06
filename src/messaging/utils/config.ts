@@ -22,15 +22,19 @@ export const setAuthConfig = async (
     }
 };
 
-export const getAuthConfig = async (): Promise<TAuthConfig> => {
+export const getAuthConfig = async (): Promise<TAuthConfig | boolean> => {
     try {
-        const data = await storage().get({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_CLIENT_CREDENTIALS,
-        });
+        const data = await storage()
+            .get({
+                bucket: Constants.BUCKET_AUTH_STORE,
+                key: Constants.BUCKET_KEY_CLIENT_CREDENTIALS,
+            })
+            .catch(() => {
+                throw new StorageError(Constants.ERRORS.STORAGE_ERROR_GET);
+            });
         return JSON.parse(data);
     } catch (error) {
-        throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
+        return false;
     }
 };
 
@@ -82,11 +86,6 @@ export const getAuthTokenRetryCount = async (): Promise<number> => {
         });
         return parseInt(JSON.parse(data));
     } catch (error) {
-        await storage().set({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_AUTH_RETRY_COUNT,
-            data: JSON.stringify(0),
-        });
         return 0;
     }
 };
