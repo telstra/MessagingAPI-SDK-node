@@ -7,6 +7,8 @@ export const setAuthConfig = async (
     authConfig: TAuthConfig
 ): Promise<boolean> => {
     try {
+        if (!authConfig)
+            throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
         await storage()
             .set({
                 bucket: Constants.BUCKET_AUTH_STORE,
@@ -40,6 +42,8 @@ export const getAuthConfig = async (): Promise<TAuthConfig | boolean> => {
 
 export const setAuthToken = async (authToken: string): Promise<boolean> => {
     try {
+        if (!authToken)
+            throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
         await storage().set({
             bucket: Constants.BUCKET_AUTH_STORE,
             key: Constants.BUCKET_KEY_ACCESS_TOKEN,
@@ -64,9 +68,11 @@ export const getAuthToken = async (): Promise<string | boolean> => {
 };
 
 export const setAuthTokenRetryCount = async (
-    retryCount: string
+    retryCount: number
 ): Promise<boolean> => {
     try {
+        if (!retryCount)
+            throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
         await storage().set({
             bucket: Constants.BUCKET_AUTH_STORE,
             key: Constants.BUCKET_KEY_AUTH_RETRY_COUNT,
