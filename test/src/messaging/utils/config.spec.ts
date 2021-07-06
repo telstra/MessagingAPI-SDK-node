@@ -22,6 +22,9 @@ describe('config', () => {
     test('should get auth token', async () => {
         expect(await getAuthToken()).toEqual('XXXXX');
     });
+    test('should get auth token retry count of 0 when storage not yet initialised', async () => {
+        expect(await getAuthTokenRetryCount()).toEqual(0);
+    });
     test('should set auth token retry count', async () => {
         expect(await setAuthTokenRetryCount('1')).toBeTruthy();
     });
