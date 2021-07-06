@@ -1,7 +1,7 @@
 import { Constants } from '../constants';
-import { getConfig, setConfig } from '../utils';
+import { getAuthConfig, setAuthConfig } from '../utils';
 import { AuthError } from './Errors';
-import { AuthConfigProps, AuthCredentials } from '../types';
+import { AuthConfigProps, AuthCredentials, TAuthConfig } from '../types';
 
 const fs = require('fs');
 
@@ -26,7 +26,7 @@ export class Auth {
         if (!TELSTRA_MESSAGING_CLIENT_ID || !TELSTRA_MESSAGING_CLIENT_SECRET)
             return false;
 
-        await setConfig({
+        await setAuthConfig({
             telstra_messaging_client_id: TELSTRA_MESSAGING_CLIENT_ID,
             telstra_messaging_client_secret: TELSTRA_MESSAGING_CLIENT_SECRET,
         });
@@ -41,7 +41,7 @@ export class Auth {
             process.env.TELSTRA_MESSAGING_CLIENT_SECRET
         ) {
             if (!this.hasCredentials) {
-                await setConfig({
+                await setAuthConfig({
                     telstra_messaging_client_id:
                         process.env.TELSTRA_MESSAGING_CLIENT_ID,
                     telstra_messaging_client_secret:
@@ -94,7 +94,7 @@ export class Auth {
                 telstra_messaging_client_secret
             ) {
                 if (!this.hasCredentials) {
-                    await setConfig({
+                    await setAuthConfig({
                         telstra_messaging_client_id,
                         telstra_messaging_client_secret,
                     });
@@ -128,11 +128,15 @@ export class Auth {
             throw new AuthError(Constants.ERRORS.AUTH_ERROR);
         }
 
-        const credentialsFromStorage = await getConfig();
+        const credentialsFromStorage = (await getAuthConfig()) as TAuthConfig;
+        if (!credentialsFromStorage) {
+            throw new AuthError(Constants.ERRORS.AUTH_ERROR);
+        }
+
         const {
             telstra_messaging_client_id,
             telstra_messaging_client_secret,
-        } = JSON.parse(credentialsFromStorage);
+        } = credentialsFromStorage;
 
         if (!telstra_messaging_client_id || !telstra_messaging_client_secret) {
             throw new AuthError(Constants.ERRORS.AUTH_ERROR);
