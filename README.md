@@ -62,7 +62,7 @@ message
 
 ## Authentication
 
-Authentication through environment variables, a shared configuration file and json file import are supported.
+Authentication through environment variables, a shared credentials file and json file import are supported.
 
 ### Environment variables
 
