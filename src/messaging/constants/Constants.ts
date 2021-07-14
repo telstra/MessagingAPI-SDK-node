@@ -27,11 +27,11 @@ export abstract class Constants {
         } as ErrorProps,
         AUTH_ERROR: {
             errorCode: `AUTH_ERROR`,
-            errorMessage: `Unable to detect suitable authorization credentials, please ensure both [TELSTRA_MESSAGING_CLIENT_ID] & [TELSTRA_MESSAGING_CLIENT_SECRET] have been defined.`,
+            errorMessage: `Unable to detect suitable authorization credentials, please ensure both [TELSTRA_CLIENT_ID] & [TELSTRA_CLIENT_SECRET] have been defined.`,
         } as ErrorProps,
         AUTH_ERROR_INVALID_CLIENT_CREDENTIALS: {
             errorCode: `INVALID_CLIENT_CREDENTIALS`,
-            errorMessage: `Invalid client credentials, please ensure both [TELSTRA_MESSAGING_CLIENT_ID] & [TELSTRA_MESSAGING_CLIENT_SECRET] are correct.`,
+            errorMessage: `Invalid client credentials, please ensure both [TELSTRA_CLIENT_ID] & [TELSTRA_CLIENT_SECRET] are correct.`,
         } as ErrorProps,
         UNKNOWN_ERROR: {
             errorCode: `UNKNOWN_ERROR`,

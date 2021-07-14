@@ -1,4 +1,5 @@
 var { Message, Numbers, TrialNumbers } = require('../dist/index.js');
+
 var AUTH_CONFIG = require('./credentials.json');
 
 const message = new Message(AUTH_CONFIG);
@@ -9,9 +10,9 @@ const trialNumber = new TrialNumbers(AUTH_CONFIG);
  * Numbers (Subscription)
  */
 
-// number.get()
-// .then(result => console.log('SUCCESS:number:get:', result))
-// .catch(error => console.error('ERROR:number:get:', error))
+number.get()
+.then(result => console.log('SUCCESS:number:get:', result))
+.catch(error => console.error('ERROR:number:get:', error))
 
 // number.create({
 //     activeDays: 1,
@@ -29,9 +30,9 @@ const trialNumber = new TrialNumbers(AUTH_CONFIG);
  * Trial Numbers
  */
 
-// trialNumber.get()
-// .then(result => console.log('SUCCESS:trialNumber:get:', result))
-// .catch(error => console.error('ERROR:trialNumber:get:', error))
+trialNumber.get()
+.then(result => console.log('SUCCESS:trialNumber:get:', result))
+.catch(error => console.error('ERROR:trialNumber:get:', error))
 
 // trialNumber.register()
 // .then(result => console.log('SUCCESS:trialNumber:register:', result))
