@@ -69,8 +69,8 @@ Authentication through environment variables, a shared credentials file and json
 Export the following two environment variables, replacing the values with your own credentials.
 
 ```shell
-export TELSTRA_MESSAGING_CLIENT_ID="<CLIENT_ID>"
-export TELSTRA_MESSAGING_CLIENT_SECRET="<CLIENT_SECRET>"
+export TELSTRA_CLIENT_ID="<CLIENT_ID>"
+export TELSTRA_CLIENT_SECRET="<CLIENT_SECRET>"
 ```
 
 ### Shared credentials
@@ -79,8 +79,8 @@ Create a `~/.telstra/credentials` file in your home path with the following cont
 
 ```markdown
 [default]
-TELSTRA_MESSAGING_CLIENT_ID = <CLIENT_ID>
-TELSTRA_MESSAGING_CLIENT_SECRET = <CLIENT_SECRET>
+TELSTRA_CLIENT_ID = <CLIENT_ID>
+TELSTRA_CLIENT_SECRET = <CLIENT_SECRET>
 ```
 
 ### JSON file import
@@ -89,8 +89,8 @@ Create a `json` file in your project path with the following contents, replacing
 
 ```json
 {
-    "TELSTRA_MESSAGING_CLIENT_ID": "<CLIENT_ID>",
-    "TELSTRA_MESSAGING_CLIENT_SECRET": "<CLIENT_SECRET>"
+    "TELSTRA_CLIENT_ID": "<CLIENT_ID>",
+    "TELSTRA_CLIENT_SECRET": "<CLIENT_SECRET>"
 }
 ```
 

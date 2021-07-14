@@ -1,11 +1,11 @@
 export type TAuthConfig = {
-    telstra_messaging_client_id: string;
-    telstra_messaging_client_secret: string;
+    telstra_client_id: string;
+    telstra_client_secret: string;
 };
 
 export interface AuthConfigProps {
-    TELSTRA_MESSAGING_CLIENT_ID: string;
-    TELSTRA_MESSAGING_CLIENT_SECRET: string;
+    TELSTRA_CLIENT_ID: string;
+    TELSTRA_CLIENT_SECRET: string;
 }
 
 export interface AuthCredentials {

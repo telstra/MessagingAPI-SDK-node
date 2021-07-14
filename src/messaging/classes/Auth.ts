@@ -18,17 +18,13 @@ export class Auth {
     private async credentialsFromFileImport(): Promise<boolean> {
         if (!this.authConfig) return false;
 
-        const {
-            TELSTRA_MESSAGING_CLIENT_ID,
-            TELSTRA_MESSAGING_CLIENT_SECRET,
-        } = this.authConfig;
+        const { TELSTRA_CLIENT_ID, TELSTRA_CLIENT_SECRET } = this.authConfig;
 
-        if (!TELSTRA_MESSAGING_CLIENT_ID || !TELSTRA_MESSAGING_CLIENT_SECRET)
-            return false;
+        if (!TELSTRA_CLIENT_ID || !TELSTRA_CLIENT_SECRET) return false;
 
         await setAuthConfig({
-            telstra_messaging_client_id: TELSTRA_MESSAGING_CLIENT_ID,
-            telstra_messaging_client_secret: TELSTRA_MESSAGING_CLIENT_SECRET,
+            telstra_client_id: TELSTRA_CLIENT_ID,
+            telstra_client_secret: TELSTRA_CLIENT_SECRET,
         });
         this.hasCredentials = true;
 
@@ -37,15 +33,13 @@ export class Auth {
 
     private async credentialsFromEnvVars(): Promise<boolean> {
         if (
-            process.env.TELSTRA_MESSAGING_CLIENT_ID &&
-            process.env.TELSTRA_MESSAGING_CLIENT_SECRET
+            process.env.TELSTRA_CLIENT_ID &&
+            process.env.TELSTRA_CLIENT_SECRET
         ) {
             if (!this.hasCredentials) {
                 await setAuthConfig({
-                    telstra_messaging_client_id:
-                        process.env.TELSTRA_MESSAGING_CLIENT_ID,
-                    telstra_messaging_client_secret:
-                        process.env.TELSTRA_MESSAGING_CLIENT_SECRET,
+                    telstra_client_id: process.env.TELSTRA_CLIENT_ID,
+                    telstra_client_secret: process.env.TELSTRA_CLIENT_SECRET,
                 });
                 this.hasCredentials = true;
             }
@@ -57,8 +51,8 @@ export class Auth {
 
     private async credentialsFromSharedFile(): Promise<boolean> {
         try {
-            let telstra_messaging_client_id: string | undefined;
-            let telstra_messaging_client_secret: string | undefined;
+            let telstra_client_id: string | undefined;
+            let telstra_client_secret: string | undefined;
             const data: string[] = fs
                 .readFileSync(Constants.SHARED_CREDENTIALS, 'utf8')
                 .toString()
@@ -73,12 +67,12 @@ export class Auth {
                             .split('=');
 
                         switch (lineIndex[0]) {
-                            case 'TELSTRA_MESSAGING_CLIENT_ID': {
-                                telstra_messaging_client_id = lineIndex[1];
+                            case 'TELSTRA_CLIENT_ID': {
+                                telstra_client_id = lineIndex[1];
                                 break;
                             }
-                            case 'TELSTRA_MESSAGING_CLIENT_SECRET': {
-                                telstra_messaging_client_secret = lineIndex[1];
+                            case 'TELSTRA_CLIENT_SECRET': {
+                                telstra_client_secret = lineIndex[1];
                                 break;
                             }
                             default: {
@@ -89,14 +83,11 @@ export class Auth {
                 }
             });
 
-            if (
-                telstra_messaging_client_id &&
-                telstra_messaging_client_secret
-            ) {
+            if (telstra_client_id && telstra_client_secret) {
                 if (!this.hasCredentials) {
                     await setAuthConfig({
-                        telstra_messaging_client_id,
-                        telstra_messaging_client_secret,
+                        telstra_client_id,
+                        telstra_client_secret,
                     });
                     this.hasCredentials = true;
                 }
@@ -134,16 +125,16 @@ export class Auth {
         }
 
         const {
-            telstra_messaging_client_id,
-            telstra_messaging_client_secret,
+            telstra_client_id,
+            telstra_client_secret,
         } = credentialsFromStorage;
 
-        if (!telstra_messaging_client_id || !telstra_messaging_client_secret) {
+        if (!telstra_client_id || !telstra_client_secret) {
             throw new AuthError(Constants.ERRORS.AUTH_ERROR);
         }
 
-        this.authCredentials.client_id = telstra_messaging_client_id;
-        this.authCredentials.client_secret = telstra_messaging_client_secret;
+        this.authCredentials.client_id = telstra_client_id;
+        this.authCredentials.client_secret = telstra_client_secret;
 
         return this.authCredentials;
     }
