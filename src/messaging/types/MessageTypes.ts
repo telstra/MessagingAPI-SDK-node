@@ -47,7 +47,7 @@ export type TMessage = {
     receiptOff?: boolean;
     userMsgRef?: string;
     type?: TMessageType;
-    subject: string;
+    subject?: string;
     MMSContent?: Array<TMMSContentObject>;
 };
 
