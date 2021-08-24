@@ -17,36 +17,36 @@ describe("Numbers", () => {
       it("should throw an assertion error", async () => {
         const callback = async () => number.delete()
         await expect(callback).rejects
-        .toThrow(
-          new AssertionError({
-            errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data should be object`,
-          })
-        );
+          .toThrow(
+            new AssertionError({
+              errorCode: `MISSING_ATTRIBUTE`,
+              errorMessage: `data should be object`,
+            })
+          );
       });
     });
     describe('when the client sends an invalid object', () => {
       it("should throw an assertion error", async () => {
         const callback = async () => number.delete({})
         await expect(callback).rejects
-        .toThrow(
-          new AssertionError({
-            errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data should have required property 'emptyArr'`,
-          })
-        );
+          .toThrow(
+            new AssertionError({
+              errorCode: `MISSING_ATTRIBUTE`,
+              errorMessage: `data should have required property 'emptyArr'`,
+            })
+          );
       });
     });
     describe('when the client sends an invalid object', () => {
       it("should throw an assertion error", async () => {
-        const callback = async () => number.delete({emptyArr: '0'})
+        const callback = async () => number.delete({ emptyArr: '0' })
         await expect(callback).rejects
-        .toThrow(
-          new AssertionError({
-            errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data.emptyArr should be integer`,
-          })
-        );
+          .toThrow(
+            new AssertionError({
+              errorCode: `MISSING_ATTRIBUTE`,
+              errorMessage: `data.emptyArr should be integer`,
+            })
+          );
       });
     });
   });
@@ -59,54 +59,47 @@ describe("Numbers", () => {
     });
 
     describe('when the client sends an empty object', () => {
-      it("should throw an assertion error for required property [activeDays].", async () => {
-        const callback = async () => number.create({})
-        await expect(callback).rejects
-        .toThrow(
-          new AssertionError({
-            errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data should have required property 'activeDays'`,
-          })
-        );
+      it("should pass", async () => {
+        await expect(number.create({})).resolves.toEqual({});
       });
     });
 
     describe('when the client sends the [activeDays] property as a string', () => {
       it("should throw an assertion error for invalid type [activeDays].", async () => {
-        const callback = async () => number.create({activeDays: '123456'})
+        const callback = async () => number.create({ activeDays: '123456' })
         await expect(callback).rejects
-        .toThrow(
-          new AssertionError({
-            errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data.activeDays should be integer`,
-          })
-        );
+          .toThrow(
+            new AssertionError({
+              errorCode: `MISSING_ATTRIBUTE`,
+              errorMessage: `data.activeDays should be number`,
+            })
+          );
       });
     });
 
     describe('when the client sends the [activeDays] property as a number on value [1] and an additional property', () => {
       it("should throw an assertion error for invalid type [activeDays].", async () => {
-        const callback = async () => number.create({activeDays: 1, extraProperty: 123456})
+        const callback = async () => number.create({ activeDays: 1, extraProperty: 123456 })
         await expect(callback).rejects
-        .toThrow(
-          new AssertionError({
-            errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data should NOT have additional properties`,
-          })
-        );
+          .toThrow(
+            new AssertionError({
+              errorCode: `MISSING_ATTRIBUTE`,
+              errorMessage: `data should NOT have additional properties`,
+            })
+          );
       });
     });
 
     describe('when the client sends the [activeDays] property as a number on value [123456] and an additional property', () => {
       it("should throw an assertion error for out of range [activeDays] and no additional properties.", async () => {
-        const callback = async () => number.create({activeDays: 123456, extraProperty: 123456})
+        const callback = async () => number.create({ activeDays: 123456, extraProperty: 123456 })
         await expect(callback).rejects
-        .toThrow(
-          new AssertionError({
-            errorCode: `MISSING_ATTRIBUTE`,
-            errorMessage: `data should NOT have additional properties, data.activeDays should be < 1825`,
-          })
-        );
+          .toThrow(
+            new AssertionError({
+              errorCode: `MISSING_ATTRIBUTE`,
+              errorMessage: `data should NOT have additional properties, data.activeDays should be < 1825`,
+            })
+          );
       });
     });
 
