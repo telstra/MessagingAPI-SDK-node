@@ -38,7 +38,6 @@ export class Numbers extends HttpClient {
             const validate = new Validator<TSubscriptionCreateRequest>(
                 subscription
             );
-            // validate.schemaRef('ProvisionNumberRequest');
             validate.schemaInline({
                 properties: {
                     activeDays: {
