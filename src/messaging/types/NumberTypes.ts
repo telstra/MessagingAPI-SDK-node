@@ -1,5 +1,5 @@
 export type TSubscriptionCreateRequest = {
-    activeDays: number;
+    activeDays?: number;
     notifyURL?: string;
 };
 

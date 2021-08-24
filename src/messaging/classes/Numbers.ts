@@ -15,8 +15,8 @@ export class Numbers extends HttpClient {
 
     /**
      * Invoke the provisioning API to get a dedicated mobile number for an application.
-     * @param subscription.activeDays - (Required) The number of days before for which this number is provisioned.
-     * @param subscription.notifyURL - A notification URL that will be POSTed to whenever a new message (i.e. a reply to a message sent) arrives at this destination address. Must end with a trailing slash.
+     * @param subscription.activeDays - (Optional) The number of days before for which this number is provisioned.
+     * @param subscription.notifyURL - (Optional) A notification URL that will be POSTed to whenever a new message (i.e. a reply to a message sent) arrives at this destination address. Must end with a trailing slash.
      * @link https://dev.telstra.com/content/messaging-api#operation/createSubscription
      * @example
         ```typescript
@@ -38,20 +38,17 @@ export class Numbers extends HttpClient {
             const validate = new Validator<TSubscriptionCreateRequest>(
                 subscription
             );
-            validate.schemaRef('ProvisionNumberRequest').schemaInline({
+            validate.schemaInline({
                 properties: {
                     activeDays: {
                         type: 'number',
                         minimum: 1,
                         exclusiveMaximum: 1825,
                     },
-                },
-                optionalProperties: {
                     notifyURL: {
                         type: 'string',
                     },
                 },
-                required: ['activeDays'],
                 additionalProperties: false,
             });
 
