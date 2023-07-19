@@ -3,7 +3,7 @@ import { AssertionError } from './Errors';
 var Ajv = require('ajv');
 var ajv = new Ajv({ allErrors: true, format: false });
 
-ajv.addSchema(OPENAPISCHEMAS, 'openapi.json');
+ajv.addSchema(OPENAPISCHEMAS, 'Messaging-API-OAS3.json');
 
 export class Validator<T> {
     constructor(public data: T) {}

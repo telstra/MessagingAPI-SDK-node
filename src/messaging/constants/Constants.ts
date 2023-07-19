@@ -7,7 +7,7 @@ interface ErrorProps {
 
 export abstract class Constants {
     static readonly SHARED_CREDENTIALS: string = `${os.homedir()}/.telstra/credentials`;
-    static readonly API_URL: string = 'https://tapi.telstra.com/';
+    static readonly API_URL: string = 'https://products.api.telstra.com/';
     static readonly BUCKET_AUTH_STORE: string = 'authStore';
     static readonly BUCKET_KEY_AUTH_RETRY_COUNT: string = 'tokenRetryAttempt';
     static readonly BUCKET_KEY_ACCESS_TOKEN: string = 'accessToken';

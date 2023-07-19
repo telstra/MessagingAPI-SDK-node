@@ -1,127 +1,129 @@
-export enum TMessageType {
-    SMS = 'sms',
-    MMS = 'mms',
-}
+import { TPaging } from './CommonTypes';
 
-export enum TMMSContentMessageType {
+export enum TMultimediaContentType {
     AUDIO_AMR = 'audio/amr',
-    AUDIO_AAC = 'audio/aac',
     AUDIO_MP3 = 'audio/mp3',
     AUDIO_MPEG3 = 'audio/mpeg3',
-    AUDIO_MPEG = 'audio/mpeg',
-    AUDIO_MPG = 'audio/mpg',
+    AUDIO_MIDI = 'audio/midi',
     AUDIO_WAV = 'audio/wav',
-    AUDIO_3GPP = 'audio/3gpp',
-    AUDIO_MP4 = 'audio/mp4',
+    AUDIO_BASIC = 'audio/basic',
     IMAGE_GIF = 'image/gif',
     IMAGE_JPEG = 'image/jpeg',
-    IMAGE_JPG = 'image/jpg',
     IMAGE_PNG = 'image/png',
     IMAGE_BMP = 'image/bmp',
     VIDEO_MPEG4 = 'video/mpeg4',
     VIDEO_MP4 = 'video/mp4',
+    VIDEO_MPG = 'video/mpg',
     VIDEO_MPEG = 'video/mpeg',
     VIDEO_3GPP = 'video/3gpp',
     VIDEO_3GP = 'video/3gp',
-    VIDEO_H263 = 'video/h263',
-    TEXT_PLAIN = 'text/plain',
-    TEXT_X_VCARD = 'text/x-vCard',
-    TEXT_X_VCALENDAR = 'text/x-vCalendar',
 }
 
-export type TMMSContentObject = {
-    type: TMMSContentMessageType;
-    filename?: string;
+export enum TMessageStatus {
+    QUEUED = 'queued',
+    SENT = 'sent',
+    DELIVERED = 'delivered',
+    EXPIRED = 'expired',
+    UNDELIVERABLE = 'undeliverable',
+}
+
+export enum TMessageDirection {
+    OUTGOING = 'outgoing',
+    INCOMING = 'incoming',
+}
+
+export type TMultimedia = {
+    type: TMultimediaContentType;
+    fileName: string;
     payload: string;
 };
 
-export type TMessage = {
-    to: string | Array<string>;
-    body: string;
-    from?: string;
-    validity?: string;
-    scheduledDelivery?: string;
-    notifyURL?: string;
-    priority?: boolean;
-    replyRequest?: boolean;
-    receiptOff?: boolean;
-    userMsgRef?: string;
-    type?: TMessageType;
-    subject?: string;
-    MMSContent?: Array<TMMSContentObject>;
+export type TMultimediaResponse = {
+    type: TMultimediaContentType;
+    fileName: string;
 };
 
 export type TMessageSend = {
-    to: string;
-    deliveryStatus: string;
-    messageId: string;
-    messageStatusURL?: string;
-};
-
-export type TCountrySend = {
-    AUS: number;
+    to: string | Array<string>;
+    from: string;
+    messageContent?: string;
+    multimedia?: TMultimedia;
+    retryTimeout?: number;
+    scheduleSend?: string;
+    deliveryNotification?: boolean;
+    statusCallbackUrl?: string;
+    queuePriority?: string;
+    tags?: Array<string>;
 };
 
 export type TMessageSendResponse = {
-    messages: Array<TMessageSend>;
-    Country?: Array<TCountrySend>;
-    ReplyAddress?: string;
-    messageType: string;
-    numberSegments: number;
+    messageId: string | Array<string>;
+    status: TMessageStatus;
+    to: string | Array<string>;
+    from: string;
+    messageContent?: string;
+    multimedia?: Array<TMultimediaResponse>;
+    retryTimeout?: number;
+    scheduleSend?: string;
+    deliveryNotification?: boolean;
+    statusCallbackUrl?: string;
+    tags?: Array<string>;
 };
 
-export type TMessageRepliesResponse = {
-    sms: TMessageRepliesSMSResponseObject;
-    mms: TMessageRepliesMMSResponseObject;
-};
-
-export type TMessageRepliesSMSResponseObject = {
-    status: string;
-    destinationAddress: string;
-    senderAddress: string;
-    message: string;
+export type TMessageUpdateTags = {
     messageId: string;
+    tags: Array<string>;
+};
+
+export type TMessageUpdate = {
+    messageId: string;
+    to: string | Array<string>;
+    from: string;
+    messageContent?: string;
+    multimedia?: TMultimedia;
+    retryTimeout?: number;
+    scheduleSend?: string;
+    deliveryNotification?: boolean;
+    statusCallbackUrl?: string;
+    queuePriority?: string;
+    tags?: Array<string>;
+};
+
+// export type TMessageUpdateResponse = {
+//     messageId: string;
+//     status: TMessageStatus;
+//     to: string;
+//     from: string;
+//     messageContent?: string;
+//     multimedia?: Array<TMultimediaResponse>;
+//     retryTimeout?: number;
+//     scheduleSend?: string;
+//     deliveryNotification?: boolean;
+//     statusCallbackUrl?: string;
+//     tags?: Array<string>;
+// };
+
+export type TMessageGetResponse = {
+    messageId: string;
+    status: TMessageStatus;
+    createTimestamp: string;
     sentTimestamp: string;
-};
-
-export type TMessageRepliesMMSResponseObject = {
-    status: string;
-    destinationAddress: string;
-    senderAddress: string;
-    subject: string;
-    messageId: string;
-    apiMsgId: string;
-    sentTimestamp: string;
-    MMSContent: Array<TMMSContentObject>;
-};
-
-export type TMessageStatusRequest = {
-    messageId: string;
-};
-
-export type TMessageStatusResponse = {
+    receivedTimestamp?: string;
     to: string;
-    sentTimestamp: string;
-    receivedTimestamp: string;
-    deliveryStatus: string;
+    from: string;
+    messageContent?: string;
+    multimedia?: Array<TMultimediaResponse>;
+    direction: TMessageDirection;
+    retryTimeout: number;
+    scheduleSend?: string;
+    deliveryNotification: boolean;
+    statusCallbackUrl?: string;
+    queuePriority: number;
+    tags?: Array<string>;
 };
 
-export type THealthCheck = {
-    status?: string;
-};
+export type TMessages = {
+    messages: Array<TMessageGetResponse>;
+    paging: TPaging;
+}
 
-export type TMessageHealthCheck = {
-    sms: THealthCheck;
-    mms: THealthCheck;
-};
-
-export type TMessagingMultiItem = {
-    to: string;
-    body: string;
-    receiptOff: boolean;
-};
-
-export type TMessagingMulti = {
-    smsMulti: Array<TMessagingMultiItem>;
-    notifyURL: string;
-};

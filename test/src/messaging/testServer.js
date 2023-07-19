@@ -1,27 +1,46 @@
 /* eslint-disable */
 const { rest } = require('msw');
 const { setupServer } = require('msw/node');
+const { Constants } = require('./Constants');
 
 const server = setupServer(
     rest.post(
-        'https://tapi.telstra.com/v2/messages/sms/multi',
+        'https://products.api.telstra.com/messaging/v3/messages',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json(req.body));
+            return res(ctx.status(201), ctx.json(Constants.SEND_MESSAGE_RESPONSE));
+        }
+    ),
+    rest.patch(
+        'https://products.api.telstra.com/messaging/v3/messages/8369468e-20c9-11ee-be56-0242ac120002',
+        (req, res, ctx) => {
+            return res(ctx.status(204));
+        }
+    ),
+    rest.put(
+        'https://products.api.telstra.com/messaging/v3/messages/8369468e-20c9-11ee-be56-0242ac120002',
+        (req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(Constants.UPDATE_MESSAGE_RESPONSE));
         }
     ),
     rest.get(
-        'https://tapi.telstra.com/v2/messages/sms/healthcheck',
+        'https://products.api.telstra.com/messaging/v3/messages',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json({ status: 'up' }));
+            return res(ctx.status(200), ctx.json(Constants.GET_ALL_MESSAGES_RESPONSE));
         }
     ),
     rest.get(
-        'https://tapi.telstra.com/v2/messages/mms/healthcheck',
+        'https://products.api.telstra.com/messaging/v3/messages/8369468e-20c9-11ee-be56-0242ac120002',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json({ status: 'up' }));
+            return res(ctx.status(200), ctx.json(Constants.GET_MESSAGE_RESPONSE));
         }
     ),
-    rest.post('https://tapi.telstra.com/v2/oauth/token', (req, res, ctx) => {
+    rest.delete(
+        'https://products.api.telstra.com/messaging/v3/messages/8369468e-20c9-11ee-be56-0242ac120002',
+        (req, res, ctx) => {
+            return res(ctx.status(204));
+        }
+    ),
+    rest.post('https://products.api.telstra.com/v2/oauth/token', (req, res, ctx) => {
         return res(
             ctx.status(200),
             ctx.json({
@@ -32,53 +51,77 @@ const server = setupServer(
         );
     }),
     rest.get(
-        'https://tapi.telstra.com/v2/messages/freetrial/bnum',
+        'https://products.api.telstra.com/messaging/v3/free-trial-numbers',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json({ bnum: ['+61234567890'] }));
+            return res(ctx.status(200), ctx.json(Constants.CREATE_FREETRIAL_NUMBERS_RESPONSE));
         }
     ),
     rest.post(
-        'https://tapi.telstra.com/v2/messages/freetrial/bnum',
+        'https://products.api.telstra.com/messaging/v3/free-trial-numbers',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json(req.body));
+            return res(ctx.status(201), ctx.json(req.body));
         }
     ),
     rest.get(
-        'https://tapi.telstra.com/v2/messages/provisioning/subscriptions',
+        'https://products.api.telstra.com/messaging/v3/virtual-numbers',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json({ status: 'EMPTY' }));
+            return res(ctx.status(200), ctx.json(Constants.GET_ALL_VIRTUAL_NUMBERS_RESPONSE));
+        }
+    ),
+    rest.get(
+        'https://products.api.telstra.com/messaging/v3/virtual-numbers/0412345678',
+        (req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(Constants.GET_ALL_VIRTUAL_NUMBERS_RESPONSE.virtualNumbers[0]));
         }
     ),
     rest.post(
-        'https://tapi.telstra.com/v2/messages/provisioning/subscriptions',
+        'https://products.api.telstra.com/messaging/v3/virtual-numbers',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json(req.body));
+            return res(ctx.status(201), ctx.json(Constants.ASSIGN_VIRTUAL_NUMBER_RESPONSE));
+        }
+    ),
+    rest.put(
+        '',
+        (req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(Constants.UPDATE_VIRTUAL_NUMBER_RESPONSE));
         }
     ),
     rest.delete(
-        'https://tapi.telstra.com/v2/messages/provisioning/subscriptions',
+        'https://products.api.telstra.com/messaging/v3/virtual-numbers/0412345678',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json(req.body));
+            return res(ctx.status(204));
         }
     ),
     rest.get(
-        'https://tapi.telstra.com/v2/messages/sms/XXXXX/status',
+        'https://products.api.telstra.com/messaging/v3/virtual-numbers/0412345678/optouts',
         (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json({ messageId: 'XXXXX' }));
+            return res(ctx.status(200), ctx.json(getOptoutsResponse));
         }
     ),
-    rest.get('https://tapi.telstra.com/v2/messages/sms', (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json({ status: 'EMPTY' }));
-    }),
-    rest.get('https://tapi.telstra.com/v2/messages/mms', (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json({ status: 'EMPTY' }));
-    }),
-    rest.post('https://tapi.telstra.com/v2/messages/sms', (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json(req.body));
-    }),
-    rest.post('https://tapi.telstra.com/v2/messages/mms', (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json(req.body));
-    }),
+    rest.post(
+        'https://products.api.telstra.com/messaging/v3/reports/messages',
+        (req, res, ctx) => {
+            return res(ctx.status(201), ctx.json(Constants.CREATE_MESSAGES_REPORT_RESPONSE));
+        }
+    ),
+    rest.get(
+        'https://products.api.telstra.com/messaging/v3/reports',
+        (req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(Constants.GET_ALL_MESSAGES_REPORT_RESPONSE));
+        }
+    ),
+    rest.get(
+        'https://products.api.telstra.com/messaging/v3/reports/6940c774-4335-4d2b-b758-4ecb19412e85',
+        (req, res, ctx) => {
+            return res(ctx.status(200), ctx.json(Constants.GET_MESSAGES_REPORT_RESPONSE));
+        }
+    ),
+    rest.get(
+        'https://products.api.telstra.com/messaging/v3/health-check',
+        (req, res, ctx) => {
+            return res(ctx.status(200), ctx.json({ status: 'up' }));
+        }
+    ),
     rest.get('*', (req, res, ctx) => {
         console.error(`Please add request handler for ${req.url.toString()}`);
         return res(

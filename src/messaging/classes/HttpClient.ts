@@ -2,7 +2,7 @@ import axios, {
     AxiosInstance,
     AxiosError,
     AxiosResponse,
-    AxiosRequestConfig,
+    InternalAxiosRequestConfig,
 } from 'axios';
 import { AuthConfigProps, AuthCredentials } from '../types';
 import { Constants } from '../constants';
@@ -54,10 +54,11 @@ export abstract class HttpClient {
         );
     };
 
-    private _handleRequest = async (config: AxiosRequestConfig) => {
-        config.headers['User-Agent'] = Constants.USER_AGENT;
-        config.headers['X-Telstra-Media-Type'] =
-            Constants.X_TELSTRA_AGENT_MEDIA_TYPE;
+    private _handleRequest = async (config: InternalAxiosRequestConfig) => {
+        config.headers = config.headers ?? {};
+        // config.headers['User-Agent'] = Constants.USER_AGENT;
+        // config.headers['X-Telstra-Media-Type'] =
+        //     Constants.X_TELSTRA_AGENT_MEDIA_TYPE;
 
         // set headers due to oauth api proxy differences
         if (config.url === '/v2/oauth/token') {
@@ -71,9 +72,7 @@ export abstract class HttpClient {
         }
 
         if (
-            config.url !== '/v2/oauth/token' &&
-            config.url !== '/v2/messages/sms/healthcheck' &&
-            config.url !== '/v2/messages/mms/healthcheck'
+            config.url !== '/v2/oauth/token'
         ) {
             // retrieve token from storage
             const authToken = await getAuthToken();
@@ -147,15 +146,17 @@ export abstract class HttpClient {
             // set token in storage & action original request
             if (renewToken) {
                 await setAuthToken(renewToken);
-                return this.instance(originalRequest);
+                return this.instance(originalRequest as InternalAxiosRequestConfig);
             }
         }
 
-        if (error.response?.data?.code && error.response?.data?.message) {
+        const responseData: any = error.response?.data;
+
+        if (responseData.code && responseData.message) {
             return Promise.reject(
                 new RequestError({
-                    errorCode: error.response?.data?.code,
-                    errorMessage: error.response?.data?.message,
+                    errorCode: responseData.code,
+                    errorMessage: responseData.message,
                 })
             );
         }
@@ -176,7 +177,7 @@ export abstract class HttpClient {
         params.append('client_id', `${authCredentials.client_id}`);
         params.append('client_secret', `${authCredentials.client_secret}`);
         params.append('grant_type', 'client_credentials');
-        params.append('scope', 'NSMS');
+        params.append('scope', 'free-trial-numbers:read free-trial-numbers:write virtual-numbers:read virtual-numbers:write messages:read messaging:write reports:read reports:write');
 
         const auth = await this.instance.post(`/v2/oauth/token`, params);
         if (!auth) return auth;
