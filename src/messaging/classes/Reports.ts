@@ -1,9 +1,5 @@
 import { HttpClient } from './HttpClient';
-import {
-    TReport,
-    AuthConfigProps,
-    TCreateReport,
-} from '../types';
+import { TReport, AuthConfigProps, TCreateReport } from '../types';
 import { Validator } from './Validator';
 import { Schemas } from '../schemas';
 
@@ -35,7 +31,8 @@ export class Reports extends HttpClient {
     public async getAll() {
         try {
             const result = await this.instance.get<TReport[]>(
-                `/messaging/v3/reports`);
+                `/messaging/v3/reports`
+            );
             return result;
         } catch (error) {
             throw error;
@@ -101,7 +98,7 @@ export class Reports extends HttpClient {
         try {
             const validate = new Validator<TCreateReport>(createReport);
             validate.schemaInline(Schemas.CREATE_MESSAGES_REPORT);
-            
+
             const result = await this.instance.post<TReport>(
                 `/messaging/v3/reports/messages`,
                 createReport
@@ -148,20 +145,20 @@ export class Reports extends HttpClient {
                         type: 'string',
                         format: 'date-time',
                         minLength: 10,
-                        maxLength: 24
+                        maxLength: 24,
                     },
                     endDate: {
                         type: 'string',
                         format: 'date-time',
                         minLength: 10,
-                        maxLength: 24
+                        maxLength: 24,
                     },
                     reportCallbackUrl: {
-                        type: 'string'
+                        type: 'string',
                     },
                     filter: {
-                        type: 'string'
-                    }
+                        type: 'string',
+                    },
                 },
                 required: ['startDate', 'endDate'],
             });

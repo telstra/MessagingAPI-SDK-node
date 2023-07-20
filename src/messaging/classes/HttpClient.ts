@@ -71,9 +71,7 @@ export abstract class HttpClient {
             config.headers['Content-Type'] = `application/json`;
         }
 
-        if (
-            config.url !== '/v2/oauth/token'
-        ) {
+        if (config.url !== '/v2/oauth/token') {
             // retrieve token from storage
             const authToken = await getAuthToken();
 
@@ -146,7 +144,9 @@ export abstract class HttpClient {
             // set token in storage & action original request
             if (renewToken) {
                 await setAuthToken(renewToken);
-                return this.instance(originalRequest as InternalAxiosRequestConfig);
+                return this.instance(
+                    originalRequest as InternalAxiosRequestConfig
+                );
             }
         }
 
@@ -177,7 +177,10 @@ export abstract class HttpClient {
         params.append('client_id', `${authCredentials.client_id}`);
         params.append('client_secret', `${authCredentials.client_secret}`);
         params.append('grant_type', 'client_credentials');
-        params.append('scope', 'free-trial-numbers:read free-trial-numbers:write virtual-numbers:read virtual-numbers:write messages:read messaging:write reports:read reports:write');
+        params.append(
+            'scope',
+            'free-trial-numbers:read free-trial-numbers:write virtual-numbers:read virtual-numbers:write messages:read messaging:write reports:read reports:write'
+        );
 
         const auth = await this.instance.post(`/v2/oauth/token`, params);
         if (!auth) return auth;

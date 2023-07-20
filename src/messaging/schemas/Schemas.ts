@@ -1,7 +1,7 @@
 export abstract class Schemas {
     static readonly SEND_MESSAGE = {
         properties: {
-            to: { 
+            to: {
                 oneOf: [
                     {
                         type: 'string',
@@ -14,12 +14,12 @@ export abstract class Schemas {
                         maxItems: 500,
                         uniqueItems: true,
                         items: {
-                            type: "string",
+                            type: 'string',
                             minLength: 5,
-                            maxLength: 16
-                        }
+                            maxLength: 16,
+                        },
                     },
-                ]
+                ],
             },
             from: {
                 type: 'string',
@@ -43,7 +43,24 @@ export abstract class Schemas {
                             type: 'string',
                             minLength: 1,
                             maxLength: 100,
-                            enum: ['audio/amr','audio/mp3','audio/mpeg3','audio/midi','audio/wav','audio/basic','image/gif','image/jpeg','image/png','image/bmp','video/mpeg4','video/mp4','video/mpg','video/mpeg','video/3gpp','video/3gp'],
+                            enum: [
+                                'audio/amr',
+                                'audio/mp3',
+                                'audio/mpeg3',
+                                'audio/midi',
+                                'audio/wav',
+                                'audio/basic',
+                                'image/gif',
+                                'image/jpeg',
+                                'image/png',
+                                'image/bmp',
+                                'video/mpeg4',
+                                'video/mp4',
+                                'video/mpg',
+                                'video/mpeg',
+                                'video/3gpp',
+                                'video/3gp',
+                            ],
                         },
                         fileName: {
                             type: 'string',
@@ -55,8 +72,8 @@ export abstract class Schemas {
                             minLength: 1,
                             maxLength: 999999,
                         },
-                    }
-                }
+                    },
+                },
             },
             retryTimeout: {
                 type: 'integer',
@@ -67,7 +84,7 @@ export abstract class Schemas {
                 type: 'string',
             },
             deliveryNotification: {
-                type: 'boolean',                          
+                type: 'boolean',
             },
             statusCallbackUrl: {
                 type: 'string',
@@ -82,35 +99,35 @@ export abstract class Schemas {
                 minItems: 0,
                 maxItems: 10,
                 items: {
-                    type: "string",
+                    type: 'string',
                     minLength: 1,
-                    maxLength: 64
-                }
-            }
+                    maxLength: 64,
+                },
+            },
         },
         required: ['to', 'from'],
-        oneOf: [ 
+        oneOf: [
             {
-                required: ['messageContent']
+                required: ['messageContent'],
             },
             {
-                required: ['multimedia']
+                required: ['multimedia'],
             },
             {
-                required: ['messageContent', 'multimedia']
-            }
-        ]
+                required: ['messageContent', 'multimedia'],
+            },
+        ],
     };
 
     static readonly UPDATE_MESSAGE = {
         properties: {
             messageId: {
-                type: 'string',                    
+                type: 'string',
                 minLength: 36,
                 maxLength: 36,
                 format: 'uuid',
             },
-            to: {                
+            to: {
                 type: 'string',
                 minLength: 5,
                 maxLength: 16,
@@ -137,7 +154,24 @@ export abstract class Schemas {
                             type: 'string',
                             minLength: 1,
                             maxLength: 100,
-                            enum: ['audio/amr','audio/mp3','audio/mpeg3','audio/midi','audio/wav','audio/basic','image/gif','image/jpeg','image/png','image/bmp','video/mpeg4','video/mp4','video/mpg','video/mpeg','video/3gpp','video/3gp'],
+                            enum: [
+                                'audio/amr',
+                                'audio/mp3',
+                                'audio/mpeg3',
+                                'audio/midi',
+                                'audio/wav',
+                                'audio/basic',
+                                'image/gif',
+                                'image/jpeg',
+                                'image/png',
+                                'image/bmp',
+                                'video/mpeg4',
+                                'video/mp4',
+                                'video/mpg',
+                                'video/mpeg',
+                                'video/3gpp',
+                                'video/3gp',
+                            ],
                         },
                         fileName: {
                             type: 'string',
@@ -149,8 +183,8 @@ export abstract class Schemas {
                             minLength: 1,
                             maxLength: 999999,
                         },
-                    }
-                }
+                    },
+                },
             },
             retryTimeout: {
                 type: 'integer',
@@ -161,7 +195,7 @@ export abstract class Schemas {
                 type: 'string',
             },
             deliveryNotification: {
-                type: 'boolean',                          
+                type: 'boolean',
             },
             statusCallbackUrl: {
                 type: 'string',
@@ -176,23 +210,23 @@ export abstract class Schemas {
                 minItems: 0,
                 maxItems: 10,
                 items: {
-                    type: "string",
+                    type: 'string',
                     minLength: 1,
-                    maxLength: 64
-                }
-            }
+                    maxLength: 64,
+                },
+            },
         },
         required: ['messageId', 'to', 'from'],
-        oneOf: [ 
+        oneOf: [
             {
-                required: ['messageContent']
+                required: ['messageContent'],
             },
             {
-                required: ['multimedia']
+                required: ['multimedia'],
             },
             {
-                required: ['messageContent', 'multimedia']
-            }
+                required: ['messageContent', 'multimedia'],
+            },
         ],
         nullable: false,
     };
@@ -200,7 +234,7 @@ export abstract class Schemas {
     static readonly UPDATE_MESSAGE_TAGS = {
         properties: {
             messageId: {
-                type: 'string',                    
+                type: 'string',
                 minLength: 36,
                 maxLength: 36,
                 format: 'uuid',
@@ -210,11 +244,11 @@ export abstract class Schemas {
                 minItems: 0,
                 maxItems: 10,
                 items: {
-                    type: "string",
+                    type: 'string',
                     minLength: 1,
-                    maxLength: 64
-                }
-            }
+                    maxLength: 64,
+                },
+            },
         },
         required: ['messageId', 'tags'],
     };
@@ -222,7 +256,7 @@ export abstract class Schemas {
     static readonly GET_ALL = {
         properties: {
             limit: {
-                type: 'integer',                    
+                type: 'integer',
                 minimum: 1,
                 maximum: 50,
             },
@@ -233,7 +267,7 @@ export abstract class Schemas {
             },
             filter: {
                 type: 'string',
-            }
+            },
         },
     };
 
@@ -260,20 +294,20 @@ export abstract class Schemas {
                 type: 'string',
                 format: 'date-time',
                 minLength: 10,
-                maxLength: 24
+                maxLength: 24,
             },
             endDate: {
                 type: 'string',
                 format: 'date-time',
                 minLength: 10,
-                maxLength: 24
+                maxLength: 24,
             },
             reportCallbackUrl: {
-                type: 'string'
+                type: 'string',
             },
             filter: {
-                type: 'string'
-            }
+                type: 'string',
+            },
         },
         required: ['startDate', 'endDate'],
     };

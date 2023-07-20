@@ -3,12 +3,12 @@ import { TPaging } from './CommonTypes';
 export type TAssignVirtualNumberRequest = {
     replyCallbackUrl?: string;
     tags?: Array<string>;
-}
+};
 
 export type TUpdateVirtualNumberRequest = {
     virtualNumber: string;
     updateData?: TAssignVirtualNumberRequest;
-}
+};
 
 export type TVirtualNumber = {
     virtualNumber: string;
@@ -27,9 +27,9 @@ export type TRecipientOptout = {
     virtualNumber: string;
     optoutNumber: string;
     createTimestamp: string;
-}
+};
 
 export type TRecipientOptouts = {
     recipientOptotuts: Array<TRecipientOptout>;
     paging: TPaging;
-}
+};

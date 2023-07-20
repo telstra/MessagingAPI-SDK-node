@@ -125,5 +125,4 @@ export type TMessageGetResponse = {
 export type TMessages = {
     messages: Array<TMessageGetResponse>;
     paging: TPaging;
-}
-
+};

@@ -41,9 +41,7 @@ export class VirtualNumbers extends HttpClient {
      */
     public async assign(data: TAssignVirtualNumberRequest) {
         try {
-            const validate = new Validator<TAssignVirtualNumberRequest>(
-                data
-            );
+            const validate = new Validator<TAssignVirtualNumberRequest>(data);
             validate.schemaInline({
                 properties: {
                     tags: {
@@ -51,10 +49,10 @@ export class VirtualNumbers extends HttpClient {
                         minItems: 0,
                         maxItems: 10,
                         items: {
-                            type: "string",
+                            type: 'string',
                             minLength: 1,
-                            maxLength: 64
-                        }
+                            maxLength: 64,
+                        },
                     },
                     replyCallbackUrl: {
                         type: 'string',
@@ -63,9 +61,10 @@ export class VirtualNumbers extends HttpClient {
                 additionalProperties: false,
             });
 
-            const result = await this.instance.post<
-                TVirtualNumber
-            >(`/messaging/v3/virtual-numbers`, data);
+            const result = await this.instance.post<TVirtualNumber>(
+                `/messaging/v3/virtual-numbers`,
+                data
+            );
             return result;
         } catch (error) {
             throw error;
@@ -93,12 +92,11 @@ export class VirtualNumbers extends HttpClient {
     public async getAll(data: TGetAll) {
         try {
             const validate = new Validator<TGetAll>(data);
-            validate
-                .schemaInline(Schemas.GET_ALL);
-                
-            const result = await this.instance.get<
-                TVirtualNumbers
-            >(`/messaging/v3/virtual-numbers`);
+            validate.schemaInline(Schemas.GET_ALL);
+
+            const result = await this.instance.get<TVirtualNumbers>(
+                `/messaging/v3/virtual-numbers`
+            );
             return result;
         } catch (error) {
             throw error;
@@ -126,9 +124,7 @@ export class VirtualNumbers extends HttpClient {
      */
     public async get(virtualNumber: string) {
         try {
-            const validate = new Validator<object>(
-                { virtualNumber }
-            );
+            const validate = new Validator<object>({ virtualNumber });
             validate.schemaInline({
                 properties: {
                     virtualNumber: {
@@ -139,9 +135,9 @@ export class VirtualNumbers extends HttpClient {
                 },
                 additionalProperties: false,
             });
-            const result = await this.instance.get<
-                TVirtualNumber
-            >(`/messaging/v3/virtual-numbers/${virtualNumber}`);
+            const result = await this.instance.get<TVirtualNumber>(
+                `/messaging/v3/virtual-numbers/${virtualNumber}`
+            );
             return result;
         } catch (error) {
             throw error;
@@ -172,9 +168,7 @@ export class VirtualNumbers extends HttpClient {
      */
     public async update(data: TUpdateVirtualNumberRequest) {
         try {
-            const validate = new Validator<TUpdateVirtualNumberRequest>(
-                data
-            );
+            const validate = new Validator<TUpdateVirtualNumberRequest>(data);
             validate.schemaInline({
                 properties: {
                     updateData: {
@@ -185,10 +179,10 @@ export class VirtualNumbers extends HttpClient {
                                 minItems: 0,
                                 maxItems: 10,
                                 items: {
-                                    type: "string",
+                                    type: 'string',
                                     minLength: 1,
-                                    maxLength: 64
-                                }
+                                    maxLength: 64,
+                                },
                             },
                             replyCallbackUrl: {
                                 type: 'string',
@@ -205,9 +199,10 @@ export class VirtualNumbers extends HttpClient {
                 additionalProperties: false,
             });
 
-            const result = await this.instance.put<
-                TVirtualNumber
-            >(`/messaging/v3/virtual-numbers/${data.virtualNumber}`, data.updateData);
+            const result = await this.instance.put<TVirtualNumber>(
+                `/messaging/v3/virtual-numbers/${data.virtualNumber}`,
+                data.updateData
+            );
             return result;
         } catch (error) {
             throw error;
@@ -237,10 +232,10 @@ export class VirtualNumbers extends HttpClient {
         try {
             const validate = new Validator<string>(virtualNumber);
             validate.schemaInline({
-                        type: 'string',
-                        minLength: 10,
-                        maxLength: 10,
-                    });
+                type: 'string',
+                minLength: 10,
+                maxLength: 10,
+            });
 
             const result = await this.instance.delete(
                 `/messaging/v3/virtual-numbers/${virtualNumber}`
@@ -271,9 +266,7 @@ export class VirtualNumbers extends HttpClient {
      */
     public async getOptouts(virtualNumber: string) {
         try {
-            const validate = new Validator<object>(
-                { virtualNumber }
-            );
+            const validate = new Validator<object>({ virtualNumber });
             validate.schemaInline({
                 properties: {
                     virtualNumber: {
@@ -285,9 +278,9 @@ export class VirtualNumbers extends HttpClient {
                 additionalProperties: false,
             });
 
-            const result = await this.instance.get<
-                TRecipientOptouts
-            >(`/messaging/v3/virtual-numbers/${virtualNumber}/optouts`);
+            const result = await this.instance.get<TRecipientOptouts>(
+                `/messaging/v3/virtual-numbers/${virtualNumber}/optouts`
+            );
             return result;
         } catch (error) {
             throw error;

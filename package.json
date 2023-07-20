@@ -15,14 +15,9 @@
     "build": "tsdx build",
     "test": "tsdx test --coverage",
     "lint": "tsdx lint",
-    "prepare": "tsdx build",
+    "prepare": "tsdx build && husky install",
     "size": "size-limit",
     "analyze": "size-limit --why"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
   },
   "prettier": {
     "printWidth": 80,
@@ -52,7 +47,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "^8.2.4",
     "@types/uuid": "^9.0.2",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "msw": "^1.2.1",
     "size-limit": "^8.2.4",
     "tsdx": "^0.14.1",

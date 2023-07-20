@@ -1,9 +1,5 @@
 import { HttpClient } from './HttpClient';
-import {
-    TFreeTrialNumbers,
-    AuthConfigProps,
-    TGetAll,
-} from '../types';
+import { TFreeTrialNumbers, AuthConfigProps, TGetAll } from '../types';
 import { Validator } from './Validator';
 import { Schemas } from '../schemas';
 
@@ -42,8 +38,7 @@ export class FreeTrialNumbers extends HttpClient {
     public async create(data: TFreeTrialNumbers) {
         try {
             const validate = new Validator<TFreeTrialNumbers>(data);
-            validate
-                .schemaInline(Schemas.CREATE_FREETRIAL_NUMBER);
+            validate.schemaInline(Schemas.CREATE_FREETRIAL_NUMBER);
 
             const result = await this.instance.post<TFreeTrialNumbers>(
                 `/messaging/v3/free-trial-numbers`,
@@ -76,8 +71,7 @@ export class FreeTrialNumbers extends HttpClient {
     public async getAll(data: TGetAll) {
         try {
             const validate = new Validator<TGetAll>(data);
-            validate
-                .schemaInline(Schemas.GET_ALL);
+            validate.schemaInline(Schemas.GET_ALL);
 
             const result = await this.instance.get<TFreeTrialNumbers>(
                 `/messaging/v3/free-trial-numbers`

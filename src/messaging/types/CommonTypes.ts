@@ -13,4 +13,4 @@ export type TGetAll = {
     limit?: number;
     offset?: number;
     filter?: string;
-}
+};
