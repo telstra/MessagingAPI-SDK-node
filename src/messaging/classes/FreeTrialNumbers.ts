@@ -2,6 +2,7 @@ import { HttpClient } from './HttpClient';
 import { TFreeTrialNumbers, AuthConfigProps, TGetAll } from '../types';
 import { Validator } from './Validator';
 import { Schemas } from '../schemas';
+import { ToQueryString } from '../utils';
 
 export class FreeTrialNumbers extends HttpClient {
     public constructor(public authConfig?: AuthConfigProps) {
@@ -23,7 +24,7 @@ export class FreeTrialNumbers extends HttpClient {
         const freeTrialNumber = new FreeTrialNumber();
 
         freeTrialNumber.create({
-            bnum: [
+            freeTrialNumbers: [
                 "<MOBILE_NUMBER>"
             ]
         })
@@ -59,7 +60,7 @@ export class FreeTrialNumbers extends HttpClient {
 
         const freeTrialNumber = new FreeTrialNumber();
 
-        freeTrialNumber.getAll()
+        freeTrialNumber.getAll({ limit: 10, offset: 0, filter: 'V3' })
         .then(result => {
             console.log(result);
         })
@@ -68,13 +69,18 @@ export class FreeTrialNumbers extends HttpClient {
         });
         ```
      */
-    public async getAll(data: TGetAll) {
+    public async getAll(data?: TGetAll) {
         try {
-            const validate = new Validator<TGetAll>(data);
-            validate.schemaInline(Schemas.GET_ALL);
+            let qs = '';
+            if (data) {
+                const validate = new Validator<TGetAll>(data);
+                validate.schemaInline(Schemas.GET_ALL);
+
+                qs = `?${ToQueryString(data)}`;
+            }
 
             const result = await this.instance.get<TFreeTrialNumbers>(
-                `/messaging/v3/free-trial-numbers`
+                `/messaging/v3/free-trial-numbers${qs}`
             );
             return result;
         } catch (error) {

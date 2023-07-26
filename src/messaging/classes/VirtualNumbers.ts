@@ -10,6 +10,7 @@ import {
 } from '../types';
 import { Validator } from './Validator';
 import { Schemas } from '../schemas';
+import { ToQueryString } from '../utils';
 
 export class VirtualNumbers extends HttpClient {
     public constructor(public authConfig?: AuthConfigProps) {
@@ -39,27 +40,31 @@ export class VirtualNumbers extends HttpClient {
         });
         ```
      */
-    public async assign(data: TAssignVirtualNumberRequest) {
+    public async assign(data?: TAssignVirtualNumberRequest) {
         try {
-            const validate = new Validator<TAssignVirtualNumberRequest>(data);
-            validate.schemaInline({
-                properties: {
-                    tags: {
-                        type: 'array',
-                        minItems: 0,
-                        maxItems: 10,
-                        items: {
+            if (data) {
+                const validate = new Validator<TAssignVirtualNumberRequest>(
+                    data
+                );
+                validate.schemaInline({
+                    properties: {
+                        tags: {
+                            type: 'array',
+                            minItems: 0,
+                            maxItems: 10,
+                            items: {
+                                type: 'string',
+                                minLength: 1,
+                                maxLength: 64,
+                            },
+                        },
+                        replyCallbackUrl: {
                             type: 'string',
-                            minLength: 1,
-                            maxLength: 64,
                         },
                     },
-                    replyCallbackUrl: {
-                        type: 'string',
-                    },
-                },
-                additionalProperties: false,
-            });
+                    additionalProperties: false,
+                });
+            }
 
             const result = await this.instance.post<TVirtualNumber>(
                 `/messaging/v3/virtual-numbers`,
@@ -89,13 +94,18 @@ export class VirtualNumbers extends HttpClient {
         });
         ```
      */
-    public async getAll(data: TGetAll) {
+    public async getAll(data?: TGetAll) {
         try {
-            const validate = new Validator<TGetAll>(data);
-            validate.schemaInline(Schemas.GET_ALL);
+            let qs = '';
+            if (data) {
+                const validate = new Validator<TGetAll>(data);
+                validate.schemaInline(Schemas.GET_ALL);
+
+                qs = `?${ToQueryString(data)}`;
+            }
 
             const result = await this.instance.get<TVirtualNumbers>(
-                `/messaging/v3/virtual-numbers`
+                `/messaging/v3/virtual-numbers${qs}`
             );
             return result;
         } catch (error) {

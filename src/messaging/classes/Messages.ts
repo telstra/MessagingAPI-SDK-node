@@ -14,13 +14,14 @@ import { Validator } from './Validator';
 import { Schemas } from '../schemas';
 import { AssertionError } from './Errors';
 import * as uuid from 'uuid';
+import { ToQueryString } from '../utils';
 
 export class Messages extends HttpClient {
     public constructor(public authConfig?: AuthConfigProps) {
         super(authConfig);
     }
 
-    private validateSendUpdateMessageArgs(message: TMessageSend) {
+    private validateSendUpdateMessageArgs(message: TMessageSend | TMessageUpdate) {
         if(message.scheduleSend) {
             const regExp = new RegExp('^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d*)?)(Z)$');
             if(!regExp.test(message.scheduleSend)) {
@@ -241,13 +242,17 @@ export class Messages extends HttpClient {
         });
         ```
      */
-    public async getAll(data: TGetAll): Promise<TMessages> {
+    public async getAll(data?: TGetAll): Promise<TMessages> {
         try {
-            const validate = new Validator<TGetAll>(data);
-            validate
-                .schemaInline(Schemas.GET_ALL);
+            let qs = '';
+            if(data){
+                const validate = new Validator<TGetAll>(data);
+                validate.schemaInline(Schemas.GET_ALL);
+
+                qs = `?${ToQueryString(data)}`;
+            }
             
-            const result = await this.instance.get<TMessages>(`/messaging/v3/messages`);            
+            const result = await this.instance.get<TMessages>(`/messaging/v3/messages${qs}`);
             return result;
         } catch (error) {
             throw error;

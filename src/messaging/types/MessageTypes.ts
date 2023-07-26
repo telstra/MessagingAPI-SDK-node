@@ -47,7 +47,7 @@ export type TMessageSend = {
     to: string | Array<string>;
     from: string;
     messageContent?: string;
-    multimedia?: TMultimedia;
+    multimedia?: Array<TMultimedia>;
     retryTimeout?: number;
     scheduleSend?: string;
     deliveryNotification?: boolean;
