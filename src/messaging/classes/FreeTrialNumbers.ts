@@ -1,8 +1,7 @@
 import { HttpClient } from './HttpClient';
-import { TFreeTrialNumbers, AuthConfigProps, TGetAll } from '../types';
+import { TFreeTrialNumbers, AuthConfigProps } from '../types';
 import { Validator } from './Validator';
 import { Schemas } from '../schemas';
-import { ToQueryString } from '../utils';
 
 export class FreeTrialNumbers extends HttpClient {
     public constructor(public authConfig?: AuthConfigProps) {
@@ -69,18 +68,10 @@ export class FreeTrialNumbers extends HttpClient {
         });
         ```
      */
-    public async getAll(data?: TGetAll) {
+    public async getAll() {
         try {
-            let qs = '';
-            if (data) {
-                const validate = new Validator<TGetAll>(data);
-                validate.schemaInline(Schemas.GET_ALL);
-
-                qs = `?${ToQueryString(data)}`;
-            }
-
             const result = await this.instance.get<TFreeTrialNumbers>(
-                `/messaging/v3/free-trial-numbers${qs}`
+                `/messaging/v3/free-trial-numbers`
             );
             return result;
         } catch (error) {
