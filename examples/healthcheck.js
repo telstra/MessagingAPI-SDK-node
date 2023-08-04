@@ -1,16 +1,15 @@
-import { HealthCheck } from '../dist/index.js'
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var index_js_1 = require("../dist/index.js");
 // Auth using JSON file import
 // var AUTH_CONFIG = require('./credentials.json');
 // const healthCheck = new HealthCheck(AUTH_CONFIG);
-
 // Auth via ENV VARS or SHARED CREDENTIALS
-const healthCheck = new HealthCheck();
-
+var healthCheck = new index_js_1.HealthCheck();
 healthCheck.get()
-.then(result => {
+    .then(function (result) {
     console.log('SUCCESS:healthCheck:', result);
 })
-.catch(error => {
+    .catch(function (error) {
     console.error('ERROR:healthCheck:', error);
 });

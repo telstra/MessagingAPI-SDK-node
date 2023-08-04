@@ -56,9 +56,6 @@ export abstract class HttpClient {
 
     private _handleRequest = async (config: InternalAxiosRequestConfig) => {
         config.headers = config.headers ?? {};
-        // config.headers['User-Agent'] = Constants.USER_AGENT;
-        // config.headers['X-Telstra-Media-Type'] =
-        //     Constants.X_TELSTRA_AGENT_MEDIA_TYPE;
 
         // set headers due to oauth api proxy differences
         if (config.url === '/v2/oauth/token') {
@@ -67,6 +64,9 @@ export abstract class HttpClient {
                 'Content-Type'
             ] = `application/x-www-form-urlencoded`;
         } else {
+            config.headers['Telstra-api-version'] = `3.x`;
+            config.headers['Content-Language'] = `en-au`;
+            config.headers['Accept-Charset'] = `utf-8`;
             config.headers['Accept'] = `application/json`;
             config.headers['Content-Type'] = `application/json`;
         }
