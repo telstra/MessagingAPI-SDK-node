@@ -179,7 +179,7 @@ export abstract class HttpClient {
         params.append('grant_type', 'client_credentials');
         params.append(
             'scope',
-            'free-trial-numbers:read free-trial-numbers:write virtual-numbers:read virtual-numbers:write messages:read messaging:write reports:read reports:write'
+            'free-trial-numbers:read free-trial-numbers:write messages:read messages:write virtual-numbers:read virtual-numbers:write reports:read reports:write'
         );
 
         const auth = await this.instance.post(`/v2/oauth/token`, params);
