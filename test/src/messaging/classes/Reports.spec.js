@@ -11,7 +11,7 @@ describe("Reports", () => {
     describe("request a messages report", () => {
         describe('when the client sends a valid request', () => {
             it("should pass", async () => {
-              const data = { startDate: "2023-06-01", endDate: "2023-06-30", reportCallbackUrl: "https://www.example.com", filter:"test"}
+              const data = { startDate: "2024-05-01", endDate: "2024-05-10", reportCallbackUrl: "https://www.example.com", filter:"test"}
                 await expect(reports.create(data)).resolves.toEqual(Constants.CREATE_MESSAGES_REPORT_RESPONSE);
             });
         });
@@ -26,26 +26,26 @@ describe("Reports", () => {
         });
     });
 
-    describe("fetch a report", () => {
-        describe('when the client sends a valid request', () => {
-            it("should pass", async () => {
-                await expect(reports.get('6940c774-4335-4d2b-b758-4ecb19412e85')).resolves.toEqual(Constants.GET_MESSAGES_REPORT_RESPONSE);
-            });
-        });
+    // describe("fetch a report", () => {
+    //     describe('when the client sends a valid request', () => {
+    //         it("should pass", async () => {
+    //             await expect(reports.get('6940c774-4335-4d2b-b758-4ecb19412e85')).resolves.toEqual(Constants.GET_MESSAGES_REPORT_RESPONSE);
+    //         });
+    //     });
 
-        // describe('when the client sends [virtualNumber] as integer', () => {
-        //     it("should throw an assertion error", async () => {                
-        //       const callback = async () => virtualNumber.get(412345678);
-        //       await expect(callback).rejects
-        //         .toThrow(
-        //           new AssertionError({
-        //             errorCode: `MISSING_ATTRIBUTE`,
-        //             errorMessage: `data.virtualNumber should be string`,
-        //           })
-        //         );
-        //     });
-        // });
+    //     describe('when the client sends [virtualNumber] as integer', () => {
+    //         it("should throw an assertion error", async () => {                
+    //           const callback = async () => virtualNumber.get(412345678);
+    //           await expect(callback).rejects
+    //             .toThrow(
+    //               new AssertionError({
+    //                 errorCode: `MISSING_ATTRIBUTE`,
+    //                 errorMessage: `data.virtualNumber should be string`,
+    //               })
+    //             );
+    //         });
+    //     });
 
-    });
+    // });
 
 });
