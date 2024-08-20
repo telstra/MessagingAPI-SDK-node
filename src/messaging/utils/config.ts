@@ -67,31 +67,3 @@ export const getAuthToken = async (): Promise<string | boolean> => {
     }
 };
 
-export const setAuthTokenRetryCount = async (
-    retryCount: number
-): Promise<boolean> => {
-    try {
-        if (!retryCount)
-            throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
-        await storage().set({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_AUTH_RETRY_COUNT,
-            data: JSON.stringify(retryCount),
-        });
-        return true;
-    } catch (error) {
-        return false;
-    }
-};
-
-export const getAuthTokenRetryCount = async (): Promise<number> => {
-    try {
-        const data = await storage().get({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_AUTH_RETRY_COUNT,
-        });
-        return parseInt(JSON.parse(data));
-    } catch (error) {
-        return 0;
-    }
-};
