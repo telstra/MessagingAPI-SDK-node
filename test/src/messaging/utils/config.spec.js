@@ -3,9 +3,7 @@ const {
     setAuthConfig,
     getAuthConfig,
     setAuthToken,
-    getAuthToken,
-    setAuthTokenRetryCount,
-    getAuthTokenRetryCount,
+    getAuthToken
 } = require('../../../../src/messaging/utils');
 
 const AUTH_CONFIG = require('../credentials.json');
@@ -46,31 +44,5 @@ describe('config', () => {
         });
     });
 
-    describe('when getAuthTokenRetryCount is called', () => {
-        it('should return 0 as a number', async () => {
-            expect(await getAuthTokenRetryCount()).toEqual(0);
-        });
-    });
-
-    describe('when setAuthTokenRetryCount is called', () => {
-        it('should get auth token retry count of 0 when storage not yet initialised', async () => {
-            expect(await getAuthTokenRetryCount()).toEqual(0);
-        });
-    });
-
-    describe('when setAuthTokenRetryCount is called', () => {
-        it('should return true given a number', async () => {
-            expect(await setAuthTokenRetryCount(1)).toBeTruthy();
-        });
-        it('should return false given no payload', async () => {
-            expect(await setAuthTokenRetryCount()).toBeFalsy();
-        });
-    });
-
-    describe('when getAuthTokenRetryCount is called', () => {
-        it('should return 1 as a number', async () => {
-            expect(await getAuthTokenRetryCount()).toEqual(1);
-        });
-    });
 
 });

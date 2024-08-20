@@ -11,9 +11,7 @@ import { URLSearchParams } from 'url';
 import { RequestError, AuthError } from './Errors';
 import {
     getAuthToken,
-    setAuthToken,
-    getAuthTokenRetryCount,
-    setAuthTokenRetryCount,
+    setAuthToken
 } from '../utils';
 
 declare module 'axios' {
@@ -23,7 +21,6 @@ declare module 'axios' {
 export abstract class HttpClient {
     protected readonly instance: AxiosInstance;
     private auth: Auth;
-    private authRetryCount: number = 0;
 
     public constructor(public authConfig?: AuthConfigProps) {
         this.instance = axios.create({
@@ -123,18 +120,11 @@ export abstract class HttpClient {
             );
         }
 
-        this.authRetryCount = await getAuthTokenRetryCount();
-
         // attempt to refresh an auth token
         if (
             error.response?.status === 401 &&
-            error.response?.config.url !== '/v2/oauth/token' &&
-            this.authRetryCount < 3
+            error.response?.config.url !== '/v2/oauth/token'
         ) {
-            // increment auth token retry count
-            this.authRetryCount++;
-            await setAuthTokenRetryCount(this.authRetryCount);
-
             // retrieve auth credentials
             const authCredentials = await this.auth.getCredentials();
 
