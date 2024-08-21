@@ -25,6 +25,11 @@ export class Memory implements IStorage {
 
     constructor() {
         this.memoryStorage = {};
+        for (const bucket in this.memoryStorage) {
+            for (const key in this.memoryStorage[bucket]) {
+                this.memoryStorage[bucket][key] = '';
+            }
+        }
     }
 
     get(params: IGetParams): Promise<TData> {
