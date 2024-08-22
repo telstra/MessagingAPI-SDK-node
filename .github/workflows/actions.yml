@@ -1,7 +1,9 @@
 name: SDK CI-CD
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - release/MessagingAPI-V3-SDK
 
 jobs:
   test:
