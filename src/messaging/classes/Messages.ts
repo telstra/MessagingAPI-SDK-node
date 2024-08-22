@@ -12,7 +12,7 @@ import {
 } from '../types';
 import { Validator } from './Validator';
 import { Schemas } from '../schemas';
-import { AssertionError } from './Errors';
+import { AssertionError } from '../common/Errors';
 import * as uuid from 'uuid';
 import { ToQueryString } from '../utils';
 

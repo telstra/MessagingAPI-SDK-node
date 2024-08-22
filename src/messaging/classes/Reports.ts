@@ -2,7 +2,7 @@ import { HttpClient } from './HttpClient';
 import { TReport, AuthConfigProps, TCreateReport } from '../types';
 import { Validator } from './Validator';
 import { Schemas } from '../schemas';
-import { AssertionError } from './Errors';
+import { AssertionError } from '../common/Errors';
 import * as uuid from 'uuid';
 
 export class Reports extends HttpClient {

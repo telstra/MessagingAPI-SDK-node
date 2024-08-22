@@ -1,6 +1,6 @@
 /* eslint-disable */
 const { server, rest } = require('../testServer');
-const { Reports, AssertionError } = require('../../../../src/messaging/classes');
+const { Reports} = require('../../../../src/messaging/classes');
 const AUTH_CONFIG = require('../credentials.json');
 const { Constants } = require('../Constants');
 const { format, subDays } = require('date-fns');

@@ -1,6 +1,6 @@
 import { Constants } from '../constants';
 import { getAuthConfig, setAuthConfig } from '../utils';
-import { AuthError } from './Errors';
+import { AuthError } from '../common/Errors';
 import { AuthConfigProps, AuthCredentials, TAuthConfig } from '../types';
 
 const fs = require('fs');

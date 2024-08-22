@@ -19,27 +19,31 @@ describe('config', () => {
             });
         });
 
+        it('should return null if the token is empty string', async () => {                        
+            const access_token = await checkTokenValidity();
+            expect(access_token).toBeNull();
+        });
         
-        it('should return true if the token is valid', async () => {
+        it('should return token if the token is valid', async () => {
             const token = 'valid_token';
             const timeExp = new Date().getTime() + 40 * 60 * 1000; // 40 minutes later            
             expect(await setAuthToken(token, String(timeExp))).toBeTruthy();
-            const isValid = await checkTokenValidity();            
-            expect(isValid).toBeTruthy();
+            const access_token = await checkTokenValidity();            
+            expect(access_token).toEqual(token);
         });
 
-        it('should return false if the token is expired', async () => {
+        it('should return null if the token is expired', async () => {
             const token = 'expired_token';
             const timeExp = new Date().getTime() - 60 * 60 * 1000; // 60 minutes ago
             setAuthToken(token, String(timeExp));
-            const isValid = await checkTokenValidity();
-            expect(isValid).toBeFalsy();
+            const access_token = await checkTokenValidity();
+            expect(access_token).toBeNull();
         });
 
-        it('should return false if the token is null', async () => {            
+        it('should return null if the token is null', async () => {            
             expect(await setAuthToken(null, null)).toBeFalsy();
-            const isValid = await checkTokenValidity();
-            expect(isValid).toBeFalsy();
+            const access_token = await checkTokenValidity();
+            expect(access_token).toBeNull();
         });
 
     });
