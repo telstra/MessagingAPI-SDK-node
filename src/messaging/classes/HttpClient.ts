@@ -9,10 +9,8 @@ import { Constants } from '../constants';
 import { Auth } from './Auth';
 import { URLSearchParams } from 'url';
 import { RequestError, AuthError } from './Errors';
-import {
-    getAuthToken,
-    setAuthToken
-} from '../utils';
+import { getAuthToken, setAuthToken, checkTokenValidity } from '../utils';
+import { addMinutes } from 'date-fns';
 
 declare module 'axios' {
     interface AxiosResponse<T = any> extends Promise<T> {}
@@ -69,27 +67,37 @@ export abstract class HttpClient {
         }
 
         if (config.url !== '/v2/oauth/token') {
-            // retrieve token from storage
-            const authToken = await getAuthToken();
+            // check token validity
+            const isTokenValid = await checkTokenValidity();
 
-            if (authToken) {
-                // set authorization headers from storage
-                config.headers['Authorization'] = `Bearer ${authToken}`;
-            }
+            if (isTokenValid) {
+                // retrieve token from storage
+                const authToken = await getAuthToken();
 
-            if (!authToken) {
+                if (authToken) {
+                    // set authorization headers from storage
+                    config.headers['Authorization'] = `Bearer ${authToken}`;
+                }
+            } else {
                 // retrieve auth credentials
                 const authCredentials = await this.auth.getCredentials();
 
                 // request new token
-                const renewToken = await this.renewToken(authCredentials);
+                const { access_token } = await this.renewToken(authCredentials);
 
                 // set token if valid
-                if (renewToken) {
+                if (access_token) {
                     // set authorization headers
-                    config.headers['Authorization'] = `Bearer ${renewToken}`;
+                    config.headers['Authorization'] = `Bearer ${access_token}`;
                     // set authorization token in storage
-                    await setAuthToken(renewToken);
+                    const futureTimeStamp = addMinutes(
+                        new Date(),
+                        Constants.TOKEN_EXPIRE_IN_50_MINS
+                    );
+                    await setAuthToken(
+                        access_token,
+                        futureTimeStamp.toISOString()
+                    );
                 }
             }
         }
@@ -129,11 +137,17 @@ export abstract class HttpClient {
             const authCredentials = await this.auth.getCredentials();
 
             // request new token
-            const renewToken = await this.renewToken(authCredentials);
+            const { access_token } = await this.renewToken(authCredentials);
 
-            // set token in storage & action original request
-            if (renewToken) {
-                await setAuthToken(renewToken);
+            // set token if valid
+            if (access_token) {
+                // set authorization token in storage
+                const futureTimeStamp = addMinutes(
+                    new Date(),
+                    Constants.TOKEN_EXPIRE_IN_50_MINS
+                );
+                await setAuthToken(access_token, futureTimeStamp.toISOString());
+
                 return this.instance(
                     originalRequest as InternalAxiosRequestConfig
                 );
@@ -162,7 +176,7 @@ export abstract class HttpClient {
 
     private async renewToken(
         authCredentials: AuthCredentials
-    ): Promise<string> {
+    ): Promise<{ access_token: string }> {
         const params = new URLSearchParams();
         params.append('client_id', `${authCredentials.client_id}`);
         params.append('client_secret', `${authCredentials.client_secret}`);

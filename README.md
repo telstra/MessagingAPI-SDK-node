@@ -3,7 +3,7 @@
 The SDK for the Telstra Messaging API enables you to send and receive messages
 to Australian mobile numbers. For more information about this product, please
 see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverview?version=3.x>
+<https://dev.telstra.com/apis/messaging-api/sdks>
 
 > :warning: **This SDK is experimental, everything is subject to change**
 
@@ -17,7 +17,7 @@ npm i -s @telstra/messaging
 
 Set the `TELSTRA_CLIENT_ID` and `TELSTRA_CLIENT_SECRET` environment variables.
 
-You can find the `Client id` and `Client secret` here: <https://dev.telstra.com/user/me/apps>.
+You can find the `Client id` and `Client secret` here: <https://accounts.dev.telstra.com/secrets/view-all-secrets>.
 
 ### Getting started using CJS (CommonJS)
 
@@ -116,14 +116,14 @@ it meets your needs. There are some restrictions that apply compared to the
 full API, including a maximum number of messages that can be sent and requiring the
 registration of a limited number of destinations before a message can be sent to that
 destination. For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#FreeTrial>.
+<https://dev.telstra.com/apis/messaging-api/tutorials/register-a-free-trial-number>.
 
 ### Registering Free Trial Numbers
 
 > :information_source: **Only required for the free trial accounts**
 
 Register destinations for the free trial. For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#RegisteraFreeTrialNumber>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/free-trial-numbers/operation/createTrialNumbers>.
 
 The function `freeTrialNumbers.create` can be used to register destinations.
 
@@ -159,7 +159,7 @@ freeTrialNumbers
 
 Fetch the Free Trial Number(s) currently assigned to your account. For more information,
 please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#FetchyourFreeTrialNumbers>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/free-trial-numbers/operation/getTrialNumbers>.
 
 The function `freeTrialNumbers.getAll` can be used to retrieve registered destinations.
 
@@ -185,7 +185,7 @@ freeTrialNumbers
 Gives you a dedicated mobile number tied to an application which
 enables you to receive replies from your customers. For more information,
 please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#VirtualNumbers>.
+<https://dev.telstra.com/apis/messaging-api/tutorials/get-a-virtual-number>.
 
 ### Assign Virtual Number
 
@@ -193,7 +193,7 @@ When a recipient receives your message, you can choose whether they'll see a pri
 Virtual Number or senderName (paid plans only) in the from field.
 If you want to use a Virtual Number, use this function to assign one.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#AssignaVirtualNumber>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/virtual-numbers/operation/assignNumber>.
 
 The function `virtualNumbers.assign` can be used to create a subscription.
 
@@ -227,7 +227,7 @@ virtualNumbers
 
 Fetch the tags, replyCallbackUrl and lastUse date for a Virtual Number.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#FetchaVirtualNumber>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/virtual-numbers/operation/getVirtualNumber>.
 
 The function `virtualNumbers.get` can be used to get the details of a Virtual Number.
 
@@ -263,7 +263,7 @@ virtualNumbers
 
 Fetch all Virtual Numbers currently assigned to your account.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#FetchallVirtualNumbers>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/virtual-numbers/operation/getNumbers>.
 
 The function `virtualNumbers.getAll` can be used to get the all virtual numbers associated to your account.
 
@@ -294,7 +294,7 @@ virtualNumbers
 ### Update a Virtual Number
 
 Update a virtual number attributes. For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#UpdateaVirtualNumber>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/virtual-numbers/operation/updateNumber>.
 
 The function `virtualNumbers.update` can be used to update a virtual number.
 
@@ -333,7 +333,7 @@ virtualNumbers
 ### Delete Virtual Number
 
 Delete the a virtual number. For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#DeleteaVirtualNumber>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/virtual-numbers/operation/deleteNumber>.
 
 The function `virtualNumbers.get` can be used to unassign a Virtual Number.
 
@@ -359,13 +359,13 @@ virtualNumbers
 ## Message
 
 Send and receive messages. For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Messages>.
+<https://dev.telstra.com/apis/messaging-api/tutorials/send-an-mms>.
 
 ### Send Message
 
 Send a message to a mobile number, or to multiple mobile numbers.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#SendanSMSorMMS>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/messages/operation/sendMessages>.
 
 The function `messages.send` can be used to send a message.
 
@@ -445,7 +445,7 @@ messages
 Use the messageId to fetch a message that's been sent from/to
 your account within the last 30 days.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Fetchamessage>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/messages/operation/getMessageById>.
 
 The function `messages.get` can be used to retrieve the a message.
 
@@ -490,7 +490,7 @@ message
 
 Fetch messages that have been sent from/to your account in the last 30 days.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Fetchallsent/receivedmessages>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/messages/operation/getMessages>.
 
 The function `messages.getAll` can be used to fetch all messages.
 
@@ -523,7 +523,7 @@ messages
 Update a message that's scheduled for sending, you can change any of
 the below parameters, as long as the message hasn't been sent yet.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Updateamessage>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/messages/operation/updateMessageById>.
 
 The function `messages.send` can be used to send a message.
 
@@ -592,7 +592,7 @@ message
 
 Update message tags, you can update them even after your message has been delivered.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Updatemessagetags>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/messages/operation/updateMessageTags>.
 
 The function `messages.updateTags` can be used to update message tags.
 
@@ -623,7 +623,7 @@ message
 
 Delete a scheduled message, but hasn't yet sent.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Deleteamessage>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/messages/operation/deleteMessageById>.
 
 The function `messages.delete` can be used to delete a message.
 
@@ -656,7 +656,7 @@ Create and fetch reports. For more information, please see here:
 Request a CSV report of messages (both incoming and outgoing)
 that have been sent to/from your account within the last three months.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Submitarequestforamessagesreport>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/reports/operation/messagesReport>.
 
 The function `reports.create` can be used to create a report.
 
@@ -704,7 +704,7 @@ reports
 Request a CSV report daily summary of messages (both incoming and outgoing)
 that have been sent to/from your account within the last three months.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Submitarequestforamessagesreport>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/reports/operation/getReports>.
 
 The function `reports.createDailySummary` can be used to create a report.
 
@@ -751,7 +751,7 @@ reports
 
 Use the report_id to fetch a download link for a report generated.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#FetchaReport>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/reports/operation/getReport>.
 
 The function `reports.get` can be used to retrieve
 the a report download link. It takes the following arguments:
@@ -783,7 +783,7 @@ Fetch details of all reports recently generated for your account.
 Use it to check the status of a report, plus fetch the report ID,
 status, report type and expiry date.
 For more information, please see here:
-<https://dev.telstra.com/docs/messaging-api/apiReference/apiReferenceOverviewEndpoints?version=3.x#Fetchallreports>.
+<https://dev.telstra.com/apis/messaging-api/endpoints#tag/reports/operation/getReports>.
 
 The function `reports.getAll` can be used to fetch all reports.
 
