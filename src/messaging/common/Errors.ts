@@ -18,4 +18,13 @@ export class RequestError extends TError {}
 
 export class AuthError extends TError {}
 
-export class AssertionError extends TError {}
+export class AssertionError extends TError {
+    errorCode: string;
+    errorMessage: string;
+  
+    constructor({ errorCode, errorMessage }: { errorCode: string; errorMessage: string }) {
+      super({ errorCode, errorMessage });
+      this.errorCode = errorCode;
+      this.errorMessage = errorMessage;
+    }
+} 

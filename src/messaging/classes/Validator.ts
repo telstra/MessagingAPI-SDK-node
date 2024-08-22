@@ -1,4 +1,4 @@
-import { AssertionError } from './Errors';
+import { AssertionError } from '../common/Errors';
 var Ajv = require('ajv');
 var ajv = new Ajv({ allErrors: true, format: false });
 

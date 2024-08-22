@@ -8,8 +8,8 @@ import { AuthConfigProps, AuthCredentials } from '../types';
 import { Constants } from '../constants';
 import { Auth } from './Auth';
 import { URLSearchParams } from 'url';
-import { RequestError, AuthError } from './Errors';
-import { getAuthToken, setAuthToken, checkTokenValidity } from '../utils';
+import { RequestError, AuthError } from '../common/Errors';
+import { setAuthToken, checkTokenValidity } from '../utils';
 import { addMinutes } from 'date-fns';
 
 declare module 'axios' {
@@ -68,16 +68,10 @@ export abstract class HttpClient {
 
         if (config.url !== '/v2/oauth/token') {
             // check token validity
-            const isTokenValid = await checkTokenValidity();
+            const access_token = await checkTokenValidity();
 
-            if (isTokenValid) {
-                // retrieve token from storage
-                const authToken = await getAuthToken();
-
-                if (authToken) {
-                    // set authorization headers from storage
-                    config.headers['Authorization'] = `Bearer ${authToken}`;
-                }
+            if (access_token) {
+                config.headers['Authorization'] = `Bearer ${access_token}`;                
             } else {
                 // retrieve auth credentials
                 const authCredentials = await this.auth.getCredentials();
@@ -101,6 +95,7 @@ export abstract class HttpClient {
                 }
             }
         }
+
 
         return config;
     };

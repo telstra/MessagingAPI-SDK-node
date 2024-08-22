@@ -1,6 +1,6 @@
 import { storage } from './storage';
 import { TAuthConfig } from '../types';
-import { StorageError } from '../classes';
+import { StorageError } from '../common/Errors';
 import { Constants } from '../constants';
 import { getTime } from 'date-fns';
 
@@ -106,33 +106,27 @@ export const getAuthToken = async (): Promise<
     }
 };
 
-export const checkTokenValidity = async (): Promise<boolean> => {
+export const checkTokenValidity = async (): Promise<string | null> => {
     try {
         const authData = await getAuthToken();
-        const accessToken = (authData as {
-            accessToken: string;
-            timeExp: string;
-        })?.accessToken;
+        const { accessToken, timeExp } = authData as { accessToken: string; timeExp: string };
 
-        const timeExp = (authData as { accessToken: string; timeExp: string })
-            ?.timeExp;
         const timeExpTimestamp = Number(timeExp);
-
         const currentTimeStamp = getTime(new Date());
 
         if (accessToken && timeExp) {
             if (currentTimeStamp < timeExpTimestamp) {
                 // Token is still valid
-                return true;
+                return accessToken;
             } else {
-                // Token has expired, renew token
-                return false;
+                // Token has expired
+                return null;
             }
         } else {
-            // Token, expire_in or timestamp not found, renew token
-            return false;
+            // Token or timeExp not found
+            return null;
         }
     } catch (error) {
-        return false;
+        return null;
     }
 };

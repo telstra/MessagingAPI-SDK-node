@@ -1,6 +1,7 @@
 /* eslint-disable */
 const { server, rest } = require('../testServer');
-const { FreeTrialNumbers, AssertionError } = require('../../../../src/messaging/classes');
+const { FreeTrialNumbers} = require('../../../../src/messaging/classes');
+const { AssertionError } = require('../../../../src/messaging/common');
 const AUTH_CONFIG = require('../credentials.json');
 const { Constants } = require('../Constants');
 

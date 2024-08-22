@@ -1,6 +1,7 @@
 /* eslint-disable */
 const { server, rest } = require('../testServer');
-const { VirtualNumbers, AssertionError } = require('../../../../src/messaging/classes');
+const { VirtualNumbers } = require('../../../../src/messaging/classes');
+const { AssertionError } = require('../../../../src/messaging/common');
 const AUTH_CONFIG = require('../credentials.json');
 const { Constants } = require('../Constants');
 
