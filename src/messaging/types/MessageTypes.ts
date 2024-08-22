@@ -17,6 +17,10 @@ export enum TMultimediaContentType {
     VIDEO_MPEG = 'video/mpeg',
     VIDEO_3GPP = 'video/3gpp',
     VIDEO_3GP = 'video/3gp',
+    TEXT_PLAIN = 'text/plain',
+    APPLICATION_PDF = 'application/pdf',
+    TEXT_X_VCARD = 'text/x-vcard',
+    TEXT_VCARD = 'text/vcard',
 }
 
 export enum TMessageStatus {

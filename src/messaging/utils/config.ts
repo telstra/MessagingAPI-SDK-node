@@ -2,6 +2,7 @@ import { storage } from './storage';
 import { TAuthConfig } from '../types';
 import { StorageError } from '../classes';
 import { Constants } from '../constants';
+import { getTime } from 'date-fns';
 
 export const setAuthConfig = async (
     authConfig: TAuthConfig
@@ -40,108 +41,87 @@ export const getAuthConfig = async (): Promise<TAuthConfig | boolean> => {
     }
 };
 
-export const setAuthToken = async (authToken: string): Promise<boolean> => {
+export const setAuthToken = async (
+    authToken: string,
+    timeExp: string
+): Promise<boolean> => {
     try {
         if (!authToken)
             throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
-        await storage().set({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_ACCESS_TOKEN,
-            data: JSON.stringify(authToken),
-        });
+
+        await storage()
+            .set({
+                bucket: Constants.BUCKET_AUTH_STORE,
+                key: Constants.BUCKET_KEY_ACCESS_TOKEN,
+                data: JSON.stringify(authToken),
+            })
+            .catch(() => {
+                throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
+            });
+
+        await storage()
+            .set({
+                bucket: Constants.BUCKET_AUTH_STORE,
+                key: Constants.BUCKET_KEY_AUTH_TIME_EXP,
+                data: JSON.stringify(timeExp),
+            })
+            .catch(() => {
+                throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
+            });
+
         return true;
     } catch (error) {
         return false;
     }
 };
 
-export const getAuthToken = async (): Promise<string | boolean> => {
-
-
+export const getAuthToken = async (): Promise<
+    { accessToken: string; timeExp: string } | boolean
+> => {
     try {
-        const data = await storage().get({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_ACCESS_TOKEN,
-        });
-        return JSON.parse(data);
+        const accessTokenData = await storage()
+            .get({
+                bucket: Constants.BUCKET_AUTH_STORE,
+                key: Constants.BUCKET_KEY_ACCESS_TOKEN,
+            })
+            .catch(() => {
+                throw new StorageError(Constants.ERRORS.STORAGE_ERROR_GET);
+            });
+
+        const timeExpData = await storage()
+            .get({
+                bucket: Constants.BUCKET_AUTH_STORE,
+                key: Constants.BUCKET_KEY_AUTH_TIME_EXP,
+            })
+            .catch(() => {
+                throw new StorageError(Constants.ERRORS.STORAGE_ERROR_GET);
+            });
+
+        return {
+            accessToken: JSON.parse(accessTokenData),
+            timeExp: JSON.parse(timeExpData),
+        };
     } catch (error) {
         return false;
     }
 };
-
-
-export const setAuthTokenExp = async (
-    tokenExp: number
-): Promise<boolean> => {
-    try {
-        if (!tokenExp)
-            throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
-        await storage().set({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_TOKEN_EXP,
-            data: JSON.stringify(tokenExp),
-        });
-        return true;
-    } catch (error) {
-        return false;
-    }
-};
-
-export const getAuthTokenExp = async (): Promise<number | boolean> => {
-    try {
-        const data = await storage().get({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_TOKEN_EXP,
-        });
-        return parseInt(JSON.parse(data));
-    } catch (error) {
-        return false;
-    }
-};
-
-
-export const setAuthTimeStamp = async (
-    timeStamp: number
-): Promise<boolean> => {
-    try {
-        if (!timeStamp)
-            throw new StorageError(Constants.ERRORS.STORAGE_ERROR_SET);
-        await storage().set({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_AUTH_TIME_STAMP,
-            data: JSON.stringify(timeStamp),
-        });
-        return true;
-    } catch (error) {
-        return false;
-    }
-};
-
-export const getAuthTimeStamp = async (): Promise<number | boolean> => {
-    try {
-        const data = await storage().get({
-            bucket: Constants.BUCKET_AUTH_STORE,
-            key: Constants.BUCKET_KEY_AUTH_TIME_STAMP,
-        });
-        return parseInt(JSON.parse(data));
-    } catch (error) {
-        return false;
-    }
-};
-
 
 export const checkTokenValidity = async (): Promise<boolean> => {
     try {
-        const token = await getAuthToken();
-        const tokenExp = await getAuthTokenExp();
-        const authTimeStamp = await getAuthTimeStamp();
-        const currentTimestamp = Date.now();
+        const authData = await getAuthToken();
+        const accessToken = (authData as {
+            accessToken: string;
+            timeExp: string;
+        })?.accessToken;
 
-        if (token && tokenExp && authTimeStamp) {
-            const timeDifference = currentTimestamp - Number(authTimeStamp);
-            const tokenValidityPeriod = Number(tokenExp) * 1000; // Convert tokenExp to milliseconds
+        const timeExp = (authData as { accessToken: string; timeExp: string })
+            ?.timeExp;
+        const timeExpTimestamp = Number(timeExp);
 
-            if (timeDifference < tokenValidityPeriod) {
+        const currentTimeStamp = getTime(new Date());
+
+        if (accessToken && timeExp) {
+            if (currentTimeStamp < timeExpTimestamp) {
                 // Token is still valid
                 return true;
             } else {

@@ -9,13 +9,8 @@ import { Constants } from '../constants';
 import { Auth } from './Auth';
 import { URLSearchParams } from 'url';
 import { RequestError, AuthError } from './Errors';
-import {
-    getAuthToken,
-    setAuthToken,
-    setAuthTimeStamp,
-    setAuthTokenExp,
-    checkTokenValidity,
-} from '../utils';
+import { getAuthToken, setAuthToken, checkTokenValidity } from '../utils';
+import { addMinutes } from 'date-fns';
 
 declare module 'axios' {
     interface AxiosResponse<T = any> extends Promise<T> {}
@@ -72,7 +67,6 @@ export abstract class HttpClient {
         }
 
         if (config.url !== '/v2/oauth/token') {
-             
             // check token validity
             const isTokenValid = await checkTokenValidity();
 
@@ -89,21 +83,23 @@ export abstract class HttpClient {
                 const authCredentials = await this.auth.getCredentials();
 
                 // request new token
-                const { access_token, expires_in } = await this.renewToken(authCredentials);
+                const { access_token } = await this.renewToken(authCredentials);
 
                 // set token if valid
-                if (access_token && expires_in) {
+                if (access_token) {
                     // set authorization headers
                     config.headers['Authorization'] = `Bearer ${access_token}`;
                     // set authorization token in storage
-                    await setAuthToken(access_token);
-                    // Save current timestamp and token expiration
-                    await setAuthTimeStamp(Date.now());
-                    await setAuthTokenExp(parseInt(expires_in));
-
+                    const futureTimeStamp = addMinutes(
+                        new Date(),
+                        Constants.TOKEN_EXPIRE_IN_50_MINS
+                    );
+                    await setAuthToken(
+                        access_token,
+                        futureTimeStamp.toISOString()
+                    );
                 }
             }
-
         }
 
         return config;
@@ -140,21 +136,21 @@ export abstract class HttpClient {
             // retrieve auth credentials
             const authCredentials = await this.auth.getCredentials();
 
-            // request new token            
-            const { access_token, expires_in } = await this.renewToken(authCredentials);
+            // request new token
+            const { access_token } = await this.renewToken(authCredentials);
 
             // set token if valid
-            if (access_token && expires_in) {
+            if (access_token) {
                 // set authorization token in storage
-                await setAuthToken(access_token);                
-                // Save current timestamp and token expiration
-                await setAuthTimeStamp(Date.now());
-                await setAuthTokenExp(parseInt(expires_in));
+                const futureTimeStamp = addMinutes(
+                    new Date(),
+                    Constants.TOKEN_EXPIRE_IN_50_MINS
+                );
+                await setAuthToken(access_token, futureTimeStamp.toISOString());
 
                 return this.instance(
                     originalRequest as InternalAxiosRequestConfig
                 );
-
             }
         }
 
@@ -180,7 +176,7 @@ export abstract class HttpClient {
 
     private async renewToken(
         authCredentials: AuthCredentials
-    ): Promise<{ access_token: string, expires_in: string }> {
+    ): Promise<{ access_token: string }> {
         const params = new URLSearchParams();
         params.append('client_id', `${authCredentials.client_id}`);
         params.append('client_secret', `${authCredentials.client_secret}`);
@@ -189,11 +185,10 @@ export abstract class HttpClient {
             'scope',
             'free-trial-numbers:read free-trial-numbers:write messages:read messages:write virtual-numbers:read virtual-numbers:write reports:read reports:write'
         );
-    
+
         const auth = await this.instance.post(`/v2/oauth/token`, params);
         if (!auth) return auth;
-        const { access_token, expires_in } = auth;
-    
-        return { access_token, expires_in };
+        const { access_token } = auth;
+        return access_token;
     }
 }

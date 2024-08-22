@@ -1,9 +1,7 @@
 name: SDK CI-CD
 
 on:
-  push:
-    branches:
-      - release/MessagingAPI-V3-SDK
+  workflow_dispatch:
 
 jobs:
   test:
@@ -23,7 +21,7 @@ jobs:
       - name: install dependencies
         if: steps.cache-node_modules.outputs.cache-hit != 'true'
         run: |
-          npm install      
+          npm install
         shell: bash
       - name: run tests
         run: |
@@ -62,7 +60,7 @@ jobs:
       - uses: actions/setup-node@v2.1.4
         with:
           node-version: 14.x
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
       - name: cache node_modules
         id: cache-node_modules
         uses: actions/cache@v2
