@@ -108,13 +108,20 @@ export const getAuthToken = async (): Promise<
 
 export const checkTokenValidity = async (): Promise<string | null> => {
     try {
-        const authData = await getAuthToken();
-        const { accessToken, timeExp } = authData as { accessToken: string; timeExp: string };
+        const authData = await getAuthToken();        
+  
+        if (authData) {
+            let { accessToken, timeExp } = authData as { accessToken: string; timeExp: string };
+            let timeExpTimestamp: number = 0;
+            if ((timeExp !== '') && (accessToken !== '')) {
+                timeExpTimestamp = Number(timeExp);
+            }
+            else {
+                return null;
+            } 
 
-        const timeExpTimestamp = Number(timeExp);
-        const currentTimeStamp = getTime(new Date());
+            const currentTimeStamp = getTime(new Date());
 
-        if (accessToken && timeExp) {
             if (currentTimeStamp < timeExpTimestamp) {
                 // Token is still valid
                 return accessToken;
