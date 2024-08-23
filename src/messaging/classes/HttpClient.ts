@@ -64,38 +64,37 @@ export abstract class HttpClient {
             config.headers['Accept-Charset'] = `utf-8`;
             config.headers['Accept'] = `application/json`;
             config.headers['Content-Type'] = `application/json`;
+            //config.headers['content-type'] = `application/json`;
         }
 
         if (config.url !== '/v2/oauth/token') {
             // check token validity
-            const access_token = await checkTokenValidity();
-
+            let access_token = await checkTokenValidity();
+                       
             if (access_token) {
-                config.headers['Authorization'] = `Bearer ${access_token}`;                
+                config.headers['Authorization'] = `Bearer ${access_token}`;                    
             } else {
                 // retrieve auth credentials
                 const authCredentials = await this.auth.getCredentials();
 
-                // request new token
-                const { access_token } = await this.renewToken(authCredentials);
-
+                // request new token                                
+                let renewed_token = await this.renewToken(authCredentials);                
                 // set token if valid
-                if (access_token) {
+                if (renewed_token) {
                     // set authorization headers
-                    config.headers['Authorization'] = `Bearer ${access_token}`;
+                    config.headers['Authorization'] = `Bearer ${renewed_token}`;                   
                     // set authorization token in storage
                     const futureTimeStamp = addMinutes(
                         new Date(),
                         Constants.TOKEN_EXPIRE_IN_50_MINS
                     );
                     await setAuthToken(
-                        access_token,
+                        renewed_token,
                         futureTimeStamp.toISOString()
                     );
                 }
             }
         }
-
 
         return config;
     };
@@ -132,16 +131,16 @@ export abstract class HttpClient {
             const authCredentials = await this.auth.getCredentials();
 
             // request new token
-            const { access_token } = await this.renewToken(authCredentials);
+            let renewed_token = await this.renewToken(authCredentials);
 
             // set token if valid
-            if (access_token) {
+            if (renewed_token) {
                 // set authorization token in storage
                 const futureTimeStamp = addMinutes(
                     new Date(),
                     Constants.TOKEN_EXPIRE_IN_50_MINS
                 );
-                await setAuthToken(access_token, futureTimeStamp.toISOString());
+                await setAuthToken(renewed_token, futureTimeStamp.toISOString());
 
                 return this.instance(
                     originalRequest as InternalAxiosRequestConfig
@@ -169,9 +168,7 @@ export abstract class HttpClient {
         return Promise.reject(error);
     };
 
-    private async renewToken(
-        authCredentials: AuthCredentials
-    ): Promise<{ access_token: string }> {
+    private async renewToken(authCredentials: AuthCredentials): Promise<string | null> {
         const params = new URLSearchParams();
         params.append('client_id', `${authCredentials.client_id}`);
         params.append('client_secret', `${authCredentials.client_secret}`);
@@ -180,10 +177,17 @@ export abstract class HttpClient {
             'scope',
             'free-trial-numbers:read free-trial-numbers:write messages:read messages:write virtual-numbers:read virtual-numbers:write reports:read reports:write'
         );
-
-        const auth = await this.instance.post(`/v2/oauth/token`, params);
-        if (!auth) return auth;
-        const { access_token } = auth;
-        return access_token;
+    
+        try {
+            const auth = await this.instance.post(`/v2/oauth/token`, params);
+    
+            if (auth && auth.access_token) {
+                return auth.access_token;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
     }
 }
