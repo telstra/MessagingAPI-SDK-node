@@ -161,7 +161,10 @@ export abstract class HttpClient {
 
         if (error.response?.status && error.response?.statusText) {
             return Promise.reject(
-                new RequestError(Constants.ERRORS.UNKNOWN_ERROR)
+                new RequestError({
+                    errorCode: `${error.response.status}`,
+                    errorMessage: error.response.statusText,
+                })
             );
         }
 
