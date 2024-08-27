@@ -150,7 +150,7 @@ export abstract class HttpClient {
 
         const responseData: any = error.response?.data;
 
-        if (responseData.code && responseData.message) {
+        if (responseData?.code && responseData?.message) {
             return Promise.reject(
                 new RequestError({
                     errorCode: responseData.code,
